@@ -1,4 +1,6 @@
-const rooms = {
+import { RoomVariable } from '../../types.js';
+
+const rooms:{[key:string]:RoomVariable} = {
     // Rooms
     'office': { type: 'room' },
     'attic': { type: 'room' },
@@ -21,4 +23,5 @@ const rooms = {
     'basement': { type: 'room' },
     'secret room': { type: 'room' }
 };
+
 export default rooms;

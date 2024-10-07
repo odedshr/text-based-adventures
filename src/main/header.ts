@@ -32,7 +32,7 @@ function updateTimer(timeLeft:number) {
 
 function updateScore(score:number) {
     const scoreElement = document.getElementById('score') as HTMLSpanElement;
-    scoreElement.textContent = `Score: ${score}`;
+    scoreElement.textContent = `${score}`;
 }
 
 export {

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An engine for text based adventures",
   "main": "server.js",
+  "type":"module",
   "directories": {
     "doc": "docs"
   },

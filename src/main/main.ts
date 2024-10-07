@@ -1,5 +1,5 @@
-import { NumberVariable, Variable } from './types';
-// Example main.js file with ES6 module syntax
+import { ListVariable, NumberVariable, Variable } from './types.js';
+
 import processMethod from './processor.js';
 import log from './log.js';
 import gameDefinition from './scenarios/mansion-escape/game.js';
@@ -27,7 +27,7 @@ function appendToConsole(text:string) {
 function init() {
     gameDefinition.handlers.push((variableName:string, item:Variable) => {
         switch(variableName) {
-            case 'score': updateScore((item as NumberVariable).value); break;
+            case 'achivements': updateScore((item as ListVariable).value.length); break;
             case 'countdown': updateTimer((item as NumberVariable).value); break;
         }
     });

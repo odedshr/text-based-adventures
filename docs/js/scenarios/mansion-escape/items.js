@@ -1,13 +1,16 @@
 const items = {
+    portrait: {
+        type: 'item',
+        state: 'unknown-figure:on-the-wall',
+        location: 'office',
+    },
     'trash bin': {
         type: 'item',
         location: 'office',
-        touched: false
     },
     'crumpled newspaper': {
         type: 'item',
         location: 'trash bin',
-        touched: false
     }
 };
 export default items;

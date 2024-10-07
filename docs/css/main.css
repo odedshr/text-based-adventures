@@ -25,6 +25,10 @@ header {
     border-radius: 5px;
 }
 
+.score:empty, #timer:empty {
+    display: none;
+}
+
 form {
     display: flex;
     flex-direction: column;

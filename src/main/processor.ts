@@ -1,10 +1,11 @@
-import { GameDefinition } from "./types";
+import { GameDefinition } from './types.js';
 
 import normalizeInput from "./normalize-input.js";
 import handleProfanity from "./profanity.js"
-import { pickUpItem } from "./generic-actions/pick-up.js";
+import { pickUpItem } from './generic-actions/pick-up.js';
 import inspectItem from './generic-actions/inspect-item.js';
 import inspectRoom from './generic-actions/inspect-room.js';
+import handlePassage from './generic-actions/handle-passage.js';
 
 // List of common question words
 const questionWords = ["what", "who", "where", "when", "why", "how", "is", "are", "do", "does", "can", "could", "will", "would", "should"];
@@ -49,6 +50,14 @@ export default async function processMethod(input:string, gameDefinition:GameDef
     input = normalizeInput(input);
     let response;
 
+    // Loop through each action defined in the state
+    for (const action of actions) {
+        // Test if the input matches the action's verb (regular expression)
+        if (action.verb.test(input)) {
+            return action.execute(input, gameDefinition, userId);
+        }
+    }
+
     if (response = inspectRoom(input, gameDefinition, userId)) {
         return response;
     }
@@ -66,12 +75,8 @@ export default async function processMethod(input:string, gameDefinition:GameDef
         return response;
     }
 
-    // Loop through each action defined in the state
-    for (const action of actions) {
-        // Test if the input matches the action's verb (regular expression)
-        if (action.verb.test(input)) {
-            return action.execute(input, variables, userId);
-        }
+    if (response = handlePassage(input, gameDefinition, userId)) {
+        return response;
     }
 
     // If no action matched, return a default message

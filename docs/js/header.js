@@ -28,6 +28,6 @@ function updateTimer(timeLeft) {
 }
 function updateScore(score) {
     const scoreElement = document.getElementById('score');
-    scoreElement.textContent = `Score: ${score}`;
+    scoreElement.textContent = `${score}`;
 }
 export { updateTimer, updateScore };

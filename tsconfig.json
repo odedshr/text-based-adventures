@@ -1,14 +1,14 @@
 // tsconfig.base.json
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ES6",
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./docs/js",
-    "rootDir": "./src",
+    "rootDir": "./src/main",
     "lib": [
       "DOM",
       "ES6"

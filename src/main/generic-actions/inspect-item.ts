@@ -54,7 +54,7 @@ function isInspectInventoryQuestion(input:string, state:any) {
 export default function inspectItem(input:string, gameDefinition:GameDefinition, userId: string) {
     const { variables } = gameDefinition;
     let itemName = isSpatialQuestion(input);
-    
+
     if (!!itemName) {
         const item = variables[itemName] as ItemVariable;
         return item

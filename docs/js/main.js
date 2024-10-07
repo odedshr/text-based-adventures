@@ -1,4 +1,12 @@
-// Example main.js file with ES6 module syntax
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import processMethod from './processor.js';
 import log from './log.js';
 import gameDefinition from './scenarios/mansion-escape/game.js';
@@ -7,9 +15,11 @@ import { updateScore, updateTimer } from './header.js';
 const outputElement = document.getElementById('output');
 const userId = 'player1';
 // Function to handle user input and update the console
-async function handleInput(input) {
-    log(input);
-    appendToConsole(await processMethod(input, gameDefinition, userId));
+function handleInput(input) {
+    return __awaiter(this, void 0, void 0, function* () {
+        log(input);
+        appendToConsole(yield processMethod(input, gameDefinition, userId));
+    });
 }
 // Append text to the console element
 function appendToConsole(text) {
@@ -21,8 +31,8 @@ function appendToConsole(text) {
 function init() {
     gameDefinition.handlers.push((variableName, item) => {
         switch (variableName) {
-            case 'score':
-                updateScore(item.value);
+            case 'achivements':
+                updateScore(item.value.length);
                 break;
             case 'countdown':
                 updateTimer(item.value);
