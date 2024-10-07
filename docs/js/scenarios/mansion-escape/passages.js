@@ -1,0 +1,135 @@
+const passages = {
+    'grand archway': {
+        type: 'passage',
+        between: ['foyer', 'hallway'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'parlor door': {
+        type: 'passage',
+        between: ['foyer', 'living room'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'modest oak': {
+        type: 'passage',
+        between: ['foyer', 'toilet'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'dining entrance': {
+        type: 'passage',
+        between: ['foyer', 'dining room'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'chef\'s swing': {
+        type: 'passage',
+        between: ['kitchen', 'dining room'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'larder hatch': {
+        type: 'passage',
+        between: ['kitchen', 'pantry'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'cellar stairs': {
+        type: 'passage',
+        between: ['basement', 'pantry'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'attic ladder': {
+        type: 'passage',
+        between: ['hallway', 'attic'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'craft door': {
+        type: 'passage',
+        between: ['hallway', 'hobbies room'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'guest’s welcome': {
+        type: 'passage',
+        between: ['hallway', 'guest room'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'washroom entry': {
+        type: 'passage',
+        between: ['hallway', 'bathroom'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'scholar\'s passage': {
+        type: 'passage',
+        between: ['hallway', 'office'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'master\'s threshold': {
+        type: 'passage',
+        between: ['hallway', 'master bedroom'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'bathing nook': {
+        type: 'passage',
+        between: ['master bedroom', 'ensuite bathroom'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'spiralling stairs': {
+        type: 'passage',
+        between: ['office', 'library'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'lounge arch': {
+        type: 'passage',
+        between: ['living room', 'library'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'garden view': {
+        type: 'passage',
+        between: ['living room', 'conservatory'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'garden gate': {
+        type: 'passage',
+        between: ['conservatory', 'back yard'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'stone path arch': {
+        type: 'passage',
+        between: ['back yard', 'garage'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'workshop hatch': {
+        type: 'passage',
+        between: ['garage', 'basement'],
+        allowedStates: ['open'],
+        state: 'open',
+    },
+    'hidden passage': {
+        type: 'passage',
+        between: ['basement', 'secret room'],
+        allowedStates: ['hidden', 'open'],
+        state: 'hidden',
+    },
+    'entrance door': {
+        state: 'locked',
+        allowedStates: ['locked', 'unlocked'],
+        type: 'passage',
+        between: ['foyer door', 'outside'],
+    }
+};
+export default passages;
