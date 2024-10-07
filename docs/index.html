@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-Based Quest Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Top Bar with Score and Timer -->
+    <header>
+        <div class="score"><span>Score:</span><span id="score">0</span></div>
+        <time id="timer"></time>
+    </header>
+
+    <!-- Form for the game with output and input -->
+    <form id="terminal">
+        <output id="output"></output>
+        <input type="text" id="input" placeholder="Type your command here..." autocomplete="off" autofocus>
+    </form>
+
+    <!-- Load main.js as a module -->
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>

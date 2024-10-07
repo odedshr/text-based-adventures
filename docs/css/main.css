@@ -1,0 +1,63 @@
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 2px solid #444;
+}
+
+.score, #timer {
+    padding: 5px 20px;
+    background-color: #444;
+    border-radius: 5px;
+}
+
+.score:empty, #timer:empty {
+    display: none;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin: 0;
+}
+
+output {
+    display: block;
+    flex-grow: 1;
+    padding: 10px;
+    background-color: #333;
+    overflow-y: auto;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    border: 2px solid #444;
+    color: #fff;
+    height: calc(100vh - 160px); /* Adjust based on header and input field height */
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Press Start 2P', cursive;
+    border: none;
+    outline: none;
+    background-color: #444;
+    color: #fff;
+    box-sizing: border-box;
+}
