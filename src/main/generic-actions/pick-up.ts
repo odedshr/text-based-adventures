@@ -8,33 +8,37 @@ function pickUpItem(input:String, variables:Variables, userId:string) {
     if (match) {
         // Extract the item name from the input
         const itemName = input.replace(pickUpVerbs, '').replace(/^the /,'').trim();  // Remove the verb part, leaving just the item
-
-        // Search for the item in the state.elements
-        const item:ItemVariable = variables[itemName] as ItemVariable;
-        
-        if (item && item.type === 'item') {
-            if (!item.canBeHeld) {
-                return 'You can\'t pick up that.';
-            }
-
-            // Check if the item is already with the user
-            if (isItemSomewhereInLocation(variables, userId, item)) {
-                return `You already have the ${itemName}.`;
-            }
-
-            if (!itemFitInContainer(variables, userId, itemName)) {
-                return `You're carrying too many things`;
-            }
-            
-            // Update the item's parent to be with the user
-            item.location = userId;
-            return `You pick up the ${itemName}.`;
-        } else {
-            return `There is no ${itemName} to pick up.`;
-        }
+        return addToInventory(variables, userId, itemName);
     }
 
     return undefined;
+}
+
+function addToInventory(variables:Variables, userId:string, itemName:string) {
+    // Search for the item in the state.elements
+    const item:ItemVariable = variables[itemName] as ItemVariable;
+    
+    if (item && item.type === 'item') {
+        if (!item.canBeHeld) {
+            return 'You can\'t pick up that.';
+        }
+
+        // Check if the item is already with the user
+        if (isItemSomewhereInLocation(variables, userId, item)) {
+            return `You already have the ${itemName}.`;
+        }
+
+        if (!itemFitInContainer(variables, userId, itemName)) {
+            return `You're carrying too many things`;
+        }
+        
+        // Update the item's parent to be with the user
+        variables[itemName] = {...item, location: userId};
+        //TODO: 1 pick up into bag if there is one
+        return `You pick up the ${itemName}.`;
+    } else {
+        return `There is no ${itemName} to pick up.`;
+    }
 }
 
 function isItemSomewhereInLocation(variables:Variables, expectedLocation:string, item:ItemVariable) {
@@ -80,6 +84,7 @@ function findItemsInLocation(variables:Variables, location:string) {
 }
 
 export {
+    addToInventory,
     isItemSomewhereInLocation,
     pickUpItem
 }

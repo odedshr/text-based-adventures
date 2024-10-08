@@ -7,8 +7,8 @@ export default function handleProfanity(input) {
         const hasProfanity = foulLanguageList.some(word => lowerInput.includes(word));
         if (hasProfanity) {
             return `It's understandable to get frustrated, but getting upset won't help.
-        Take a deep breath, and maybe try exploring your surroundings or interacting with items.`;
-        }    
+            Take a deep breath, and maybe try exploring your surroundings or interacting with items.`;
+        }
     }
     return undefined; // No profanity detected
 }

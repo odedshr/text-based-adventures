@@ -31,5 +31,5 @@ export default function normalizeInput(input) {
         input = input.replace(regex, fullForm);
     }
     // removed multiple spaces
-    return input.toLowerCase().replace(/\s+/g, ' ');
+    return input.replace(/\s+/g, ' ');
 }

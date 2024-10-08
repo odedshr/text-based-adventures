@@ -27,7 +27,7 @@ function stopTimer(name) {
     clearInterval(timers[name]);
     delete timers[name];
 }
-function addAchievements(userId, achievement) {
+function addAchievement(userId, achievement) {
     const achievementWithUserId = `${userId} ${achievement}`;
     const achivements = variablesProxy.achivements;
     if ((achivements.value.indexOf(achievementWithUserId) === -1)) {
@@ -41,7 +41,7 @@ const gameDefinition = {
     strings,
     startTimer,
     stopTimer,
-    addAchievements
+    addAchievement
 };
 initTimers(gameDefinition);
 export default gameDefinition;

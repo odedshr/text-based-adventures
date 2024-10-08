@@ -5,28 +5,32 @@ function pickUpItem(input, variables, userId) {
     if (match) {
         // Extract the item name from the input
         const itemName = input.replace(pickUpVerbs, '').replace(/^the /, '').trim(); // Remove the verb part, leaving just the item
-        // Search for the item in the state.elements
-        const item = variables[itemName];
-        if (item && item.type === 'item') {
-            if (!item.canBeHeld) {
-                return 'You can\'t pick up that.';
-            }
-            // Check if the item is already with the user
-            if (isItemSomewhereInLocation(variables, userId, item)) {
-                return `You already have the ${itemName}.`;
-            }
-            if (!itemFitInContainer(variables, userId, itemName)) {
-                return `You're carrying too many things`;
-            }
-            // Update the item's parent to be with the user
-            item.location = userId;
-            return `You pick up the ${itemName}.`;
-        }
-        else {
-            return `There is no ${itemName} to pick up.`;
-        }
+        return addToInventory(variables, userId, itemName);
     }
     return undefined;
+}
+function addToInventory(variables, userId, itemName) {
+    // Search for the item in the state.elements
+    const item = variables[itemName];
+    if (item && item.type === 'item') {
+        if (!item.canBeHeld) {
+            return 'You can\'t pick up that.';
+        }
+        // Check if the item is already with the user
+        if (isItemSomewhereInLocation(variables, userId, item)) {
+            return `You already have the ${itemName}.`;
+        }
+        if (!itemFitInContainer(variables, userId, itemName)) {
+            return `You're carrying too many things`;
+        }
+        // Update the item's parent to be with the user
+        variables[itemName] = Object.assign(Object.assign({}, item), { location: userId });
+        //TODO: 1 pick up into bag if there is one
+        return `You pick up the ${itemName}.`;
+    }
+    else {
+        return `There is no ${itemName} to pick up.`;
+    }
 }
 function isItemSomewhereInLocation(variables, expectedLocation, item) {
     const itemLocation = item.location;
@@ -59,4 +63,4 @@ function findItemsInLocation(variables, location) {
     return Object.keys(variables)
         .filter(item => variables[item].location === location);
 }
-export { isItemSomewhereInLocation, pickUpItem };
+export { addToInventory, isItemSomewhereInLocation, pickUpItem };

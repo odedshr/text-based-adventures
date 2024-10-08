@@ -3,7 +3,7 @@ import normalizeInput from '../../docs/js/normalize-input.js';
 describe('normalizeInput function', () => {
   it('should return input with no abbreviations unchanged', () => {
     const input = 'Hello World';
-    const expectedOutput = 'hello world';
+    const expectedOutput = 'Hello World';
     expect(normalizeInput(input)).toBe(expectedOutput);
   });
 
@@ -21,7 +21,7 @@ describe('normalizeInput function', () => {
 
   it('should replace abbreviations in different cases', () => {
     const input = "What's Up, WHO'S THERE?";
-    const expectedOutput = 'what is up, who is there?';
+    const expectedOutput = 'what is Up, who is THERE?';
     expect(normalizeInput(input)).toBe(expectedOutput);
   });
 

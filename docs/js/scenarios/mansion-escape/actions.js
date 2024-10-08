@@ -1,38 +1,27 @@
+import atticActions from './actions-per-room/attic-actions.js';
+import backyardActions from './actions-per-room/backyard-actions.js';
+import basementActions from './actions-per-room/basement-actions.js';
+import conservatoryActions from './actions-per-room/conservatory.js';
+import diningRoomActions from './actions-per-room/dining-room-actions.js';
+import garageActions from './actions-per-room/garage-actions.js';
+import guestRoomActions from './actions-per-room/guest-room-actions.js';
+import masterBedroomActions from './actions-per-room/master-bedroom-actions.js';
+import officeActions from './actions-per-room/office-actions.js';
+import pantryActions from './actions-per-room/pantry-actions.js';
+import securityRoomActions from './actions-per-room/security-room-actions.js';
+import toiletActions from './actions-per-room/toilet-actions.js';
 const actions = [
-    {
-        verb: /\b(remove|take)\s(the\s)?(portrait|picture|painting)\s(off|from)(\s(the\s)?wall)?\b/,
-        execute: (input, gameDefinition, userId) => {
-            var _a;
-            const { variables } = gameDefinition;
-            const portrait = variables.portrait;
-            if ((_a = portrait.state) === null || _a === void 0 ? void 0 : _a.includes('wall')) {
-                portrait.state = (portrait.state || '').replace('wall', 'floor');
-                addAchivements(variables, 'find vault');
-                return `You removed the portrait from the wall. There's a vault hidden behind the portrait!`;
-            }
-            return `it's already off the wall`;
-        }
-    },
-    {
-        verb: /\b(put|place|hang)\s(the\s)?(portrait|picture|painting)\s(back\s)?(on|onto)\s((the\s)?wall)?\b/,
-        execute: (input, gameDefinition, userId) => {
-            var _a;
-            const { variables } = gameDefinition;
-            const portrait = variables.portrait;
-            if ((_a = portrait.state) === null || _a === void 0 ? void 0 : _a.includes('on-the-floor')) {
-                portrait.state = (portrait.state || '').replace(/floor/g, 'wall');
-                addAchivements(variables, 'hide vault');
-                portrait.touched = true;
-                return `You put the portrait back on the wall. The vault is hidden again.`;
-            }
-            return `it's already on the wall`;
-        }
-    }
+    ...atticActions,
+    ...backyardActions,
+    ...basementActions,
+    ...conservatoryActions,
+    ...diningRoomActions,
+    ...garageActions,
+    ...guestRoomActions,
+    ...masterBedroomActions,
+    ...officeActions,
+    ...pantryActions,
+    ...securityRoomActions,
+    ...toiletActions
 ];
-function addAchivements(variables, achievement) {
-    const achivements = variables.achivements;
-    if ((achivements.value.indexOf(achievement) === -1)) {
-        variables.achivements = { type: "list", value: [...achivements.value, achievement] };
-    }
-}
 export default actions;

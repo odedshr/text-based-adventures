@@ -129,7 +129,7 @@ const passages:{[key:string]:PassageVariable} = {
     },
     'entrance door': {
         state: 'locked',
-        allowedStates: ['locked', 'unlocked'],
+        allowedStates: ['locked', 'closed', 'opened'],
         type: 'passage',
         between: ['foyer door','outside'],
     }

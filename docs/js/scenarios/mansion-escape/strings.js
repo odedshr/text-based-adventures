@@ -1,26 +1,30 @@
 export default {
     exposition: `You wake up lying on the carpeted floor with a massive headache.
-    You can't remember anything, not ever your name.
+    You can't remember anything, not even your name.
     You can't remember how you got here, let alone where is here.
     Your watch shows a countdown with less than an hour to go, but you can't tell what it signifies.`,
     myself: 'You are standing here, ready for action.',
     'unknown-item': `I don't know what that is.`,
+    help: `No point in crying for help. You're own your own. Take a deep breath, and maybe try exploring your surroundings or interacting with items.`,
+    window: `It's very dark outside. You can't see a thing. This place is probably very isolated.`,
+    'open-window': 'Alas! the window is bolted shut. You can\'t open it.',
     office: `The room looks like a home-office.
     It has a sturdy oak desk at its center, papers neatly stacked on one side, and a leather journal lying open.
-    There's large portrait behind the desk hanging on the wall.
+    There's large portrait behind the desk hanging on the wall. There's a closed blue door on the opposite wall.
+    A spiral staircase leads down to what looks like a library.
     To the side of the desk is a small bin, inside of which is a crumpled newspaper.
     On the floor, near the window, a broken vase lies in pieces.`,
-    'portrait:unknown-figure:on-the-wall': `It's quite a big painting. The name of the person is on the tip of your tounge.`,
+    'portrait:unknown-figure:on-the-wall': `It's quite a big painting. The name of the person is on the tip of your tongue.`,
     'portrait:cartwright:on-the-wall': `It's a big painting of John Cartwright, the mansion's owner.`,
-    'portrait:unknown-figure:on-the-floor': `It's quite a big painting, placed neatly beside the vault it used to hide`,
-    'portrait:cartwright:on-the-floor': `It's a big painting of John Cartwright, the mansion's owner. It's placed neatly next to the vault it used to hide.`,
+    'portrait:unknown-figure:on-the-floor': `It's quite a big painting, placed neatly beside the safe it used to hide`,
+    'portrait:cartwright:on-the-floor': `It's a big painting of John Cartwright, the mansion's owner. It's placed neatly next to the safe it used to hide.`,
     attic: 'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.',
     hallway: 'A long corridor lined with portraits and elegant sconces. The soft carpet muffles footsteps, and several doors lead off into other rooms.',
     'ensuite bathroom': 'A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures. Towels hang neatly on heated racks.',
     'master bedroom': 'A luxurious bedroom with a king-sized bed, ornate wooden furniture, a walk-in closet, and a grand view of the estate grounds.',
     'hobbies room': 'A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and musical instruments in one corner.',
     'guest room': 'A cozy room with a queen-sized bed, a small wardrobe, and a vanity. It is warmly decorated, with a welcoming atmosphere for visitors.',
-    bathroom: 'A shared bathroom with a tiled floor, a large mirror, and a simple but elegant bathtub and shower. Basic toiletries are neatly arranged on the countertop.',
+    bathroom: 'A shared bathroom with a tiled floor, a large mirror, and a simple but elegant bathtub and shower. Basic toiletries are neatly arranged on the counter-top.',
     pantry: 'A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies.',
     kitchen: 'A modern kitchen with stainless steel appliances, marble countertops, and a large central island. The room smells of fresh herbs and baking bread.',
     'dining room': 'A formal dining room with a long table, elegant chandeliers, and a sideboard for serving. Fine china and silverware are neatly arranged for guests.',

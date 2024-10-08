@@ -49,7 +49,7 @@ export default function processMethod(input, gameDefinition, userId) {
         // Loop through each action defined in the state
         for (const action of actions) {
             // Test if the input matches the action's verb (regular expression)
-            if (action.verb.test(input)) {
+            if (action.input.test(input)) {
                 return action.execute(input, gameDefinition, userId);
             }
         }
@@ -61,7 +61,16 @@ export default function processMethod(input, gameDefinition, userId) {
         }
         if (isQuestion(input)) {
             // Default response if the question doesn't match any specific pattern
-            return `I don't know how to answer that.`;
+            return `I don't know how to answer to "${input}".`;
+        }
+        if (/\bhelp|(?:get|call|seek|find|need|ask\s+for|please\s+get|please\s+call|help\s+me|get\s+me|how\s+do\s+I|what\s+can\s+I|someone\s+help|anyone\s+help|could\s+someone|should\s+I)\s*(?:help|assistance|aid|support|rescue|someone|a\s+way)\b/.test(input)) {
+            return gameDefinition.strings.help;
+        }
+        if ((/\b(?:look|peek|glance|gaze|stare|check|peer|observe)\s*(?:out\s*(?:of)?|through)\s*(?:the|a)?\s*(?:window|windows|glass|pane)\b/).test(input)) {
+            return gameDefinition.strings.window;
+        }
+        if ((/\b(?:open|crack|push|slide|lift|unlock|unlatch|pull|pry)\s*(?:the|a)?\s*(?:window|windows|glass|pane)\b/).test(input)) {
+            return gameDefinition.strings['open-window'];
         }
         if (response = pickUpItem(input, variables, userId)) {
             return response;
@@ -70,6 +79,6 @@ export default function processMethod(input, gameDefinition, userId) {
             return response;
         }
         // If no action matched, return a default message
-        return `I don't understand that command. Try something else!`;
+        return `I don't understand what "${input}" means. Try something else!`;
     });
 }

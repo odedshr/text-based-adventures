@@ -21,7 +21,8 @@ const rooms:{[key:string]:RoomVariable} = {
     'back yard': { type: 'room' },
     'garage': { type: 'room' },
     'basement': { type: 'room' },
-    'secret room': { type: 'room' }
+    'secret room': { type: 'room' },
+    'security room': { type: 'room' }
 };
 
 export default rooms;
