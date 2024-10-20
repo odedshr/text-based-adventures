@@ -1,4 +1,4 @@
-import { ListVariable, NumberVariable, Variable } from './types.js';
+import { ConsoleVariable, ItemVariable, ListVariable, NumberVariable, Variable } from './types.js';
 
 import processMethod from './processor.js';
 import log from './log.js';
@@ -17,12 +17,12 @@ async function handleInput(input:string) {
     history.push(input);
 
     log(input);
-    appendToConsole(`> ${input}`);
-    appendToConsole(await processMethod(input, gameDefinition, userId));
+    appendToprint(`> ${input}`);
+    appendToprint(await processMethod(input, gameDefinition, userId));
 }
 
 // Append text to the console element
-function appendToConsole(text:string) {
+function appendToprint(text:string) {
     const paragraph = document.createElement('p');
     paragraph.innerHTML = text.replace(/\n/g, '<br>');
     outputElement.appendChild(paragraph);
@@ -63,16 +63,18 @@ function onKeyDown(event:KeyboardEvent) {
 }
 
 function init() {
+    const inputField = document.getElementById('input') as HTMLInputElement;
+    inputField.addEventListener('keydown', onKeyDown);
+
     gameDefinition.handlers.push((variableName:string, item:Variable) => {
         switch(variableName) {
             case 'achievements': updateScore((item as ListVariable).value.length); break;
             case 'countdown': updateTimer((item as NumberVariable).value); break;
+            case 'console': appendToprint((item as ConsoleVariable).value); break;
+            case 'lives': if ((item as NumberVariable).value===0) { inputField.setAttribute('hidden', 'true') } break;
         }
     });
     
-    const inputField = document.getElementById('input') as HTMLInputElement;
-    inputField.addEventListener('keydown', onKeyDown);
-
     // Hook into the form submission event
     (document.getElementById('terminal') as HTMLFormElement).addEventListener('submit', (event) => {
         event.preventDefault();  // Prevent form from submitting and refreshing the page
@@ -88,7 +90,7 @@ function init() {
         }
     });
 
-    appendToConsole(gameDefinition.strings.exposition);
+    appendToprint(gameDefinition.strings.exposition);
 }
 
 init();

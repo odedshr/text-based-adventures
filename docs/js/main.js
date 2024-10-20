@@ -22,12 +22,12 @@ function handleInput(input) {
         historyIndex = -1;
         history.push(input);
         log(input);
-        appendToConsole(`> ${input}`);
-        appendToConsole(yield processMethod(input, gameDefinition, userId));
+        appendToprint(`> ${input}`);
+        appendToprint(yield processMethod(input, gameDefinition, userId));
     });
 }
 // Append text to the console element
-function appendToConsole(text) {
+function appendToprint(text) {
     const paragraph = document.createElement('p');
     paragraph.innerHTML = text.replace(/\n/g, '<br>');
     outputElement.appendChild(paragraph);
@@ -65,6 +65,8 @@ function onKeyDown(event) {
     }
 }
 function init() {
+    const inputField = document.getElementById('input');
+    inputField.addEventListener('keydown', onKeyDown);
     gameDefinition.handlers.push((variableName, item) => {
         switch (variableName) {
             case 'achievements':
@@ -73,10 +75,16 @@ function init() {
             case 'countdown':
                 updateTimer(item.value);
                 break;
+            case 'console':
+                appendToprint(item.value);
+                break;
+            case 'lives':
+                if (item.value === 0) {
+                    inputField.setAttribute('hidden', 'true');
+                }
+                break;
         }
     });
-    const inputField = document.getElementById('input');
-    inputField.addEventListener('keydown', onKeyDown);
     // Hook into the form submission event
     document.getElementById('terminal').addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent form from submitting and refreshing the page
@@ -88,6 +96,6 @@ function init() {
             inputField.value = '';
         }
     });
-    appendToConsole(gameDefinition.strings.exposition);
+    appendToprint(gameDefinition.strings.exposition);
 }
 init();

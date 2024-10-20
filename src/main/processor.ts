@@ -2,10 +2,6 @@ import { GameDefinition } from './types.js';
 
 import normalizeInput from "./normalize-input.js";
 import handleProfanity from "./profanity.js"
-import { pickUpItem } from './generic-actions/pick-up.js';
-import inspectItem from './generic-actions/inspect-item.js';
-import inspectRoom from './generic-actions/inspect-room.js';
-import handlePassage from './generic-actions/handle-passage.js';
 
 // List of common question words
 const questionWords = ["what", "who", "where", "when", "why", "how", "is", "are", "do", "does", "can", "could", "will", "would", "should"];
@@ -37,7 +33,7 @@ function isQuestion(input:string) {
 }
 
 export default async function processMethod(input:string, gameDefinition:GameDefinition, userId: string):Promise<string> {
-    const { variables, actions } = gameDefinition;
+    const { actions } = gameDefinition;
 
     input = input.trim().toLowerCase();
 
@@ -53,22 +49,14 @@ export default async function processMethod(input:string, gameDefinition:GameDef
     // Loop through each action defined in the state
     for (const action of actions) {
         // Test if the input matches the action's verb (regular expression)
-        if (action.input.test(input)) {
-            return action.execute(input, gameDefinition, userId);
+        if (action.input.test(input) && (response = action.execute(input, gameDefinition, userId))) {
+            return '';
         }
-    }
-
-    if (response = inspectRoom(input, gameDefinition, userId)) {
-        return response;
-    }
-
-    if (response = inspectItem(input, gameDefinition, userId)) {
-        return response;
     }
 
     if (isQuestion(input)) {
         // Default response if the question doesn't match any specific pattern
-        return `I don't know how to answer to "${input}".`;
+        return `I'm afraid I don't know how to answer to that.`;
     }
 
     if (/\bhelp|(?:get|call|seek|find|need|ask\s+for|please\s+get|please\s+call|help\s+me|get\s+me|how\s+do\s+I|what\s+can\s+I|someone\s+help|anyone\s+help|could\s+someone|should\s+I)\s*(?:help|assistance|aid|support|rescue|someone|a\s+way)\b/.test(input)) {
@@ -83,16 +71,6 @@ export default async function processMethod(input:string, gameDefinition:GameDef
         return gameDefinition.strings['open-window'];
     }
     
-
-
-    if (response = pickUpItem(input, variables, userId)) {
-        return response;
-    }
-
-    if (response = handlePassage(input, gameDefinition, userId)) {
-        return response;
-    }
-
     // If no action matched, return a default message
     return `I don't understand what "${input}" means. Try something else!`;
 }

@@ -1,20 +1,34 @@
-import { PlayerVariable, PassageVariable, GameDefinition } from "../types.js";
+import passages from "../scenarios/mansion-escape/passages.js";
+import { PlayerVariable, PassageVariable, GameDefinition, Action } from "../types.js";
 import getElementDescription from "./get-element-description.js";
 
-function isInspectCurrentRoomQuestion(input:string) {
-    const relevantQuestions = /(where am i\?|what is this place\?|describe the room|what is around me|show me the room|what do i see|what is in this place|tell me about my location|give me a description of the room)/;
-    
-    return relevantQuestions.test(input);
-}
+const inspectRoomActions:Action[] = [
+    {
+        // inspect current room
+        input: /(look around|where am i\?|what is this place\?|describe the room|what is around me|show me the room|what do i see|what is in this place|tell me about my location|give me a description of the room)/,
+        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+            const { print, variables } = gameDefinition;
+            const currentRoomName = (variables[userId] as PlayerVariable).location;
 
-function isLookForDoorQuestion(input:string) {
-    const relevantQuestions = /(are there any doors( in (here|(the|this) room))?\??)|(look|search|check|find|where|is\s+there|how)\s+(for\s+)?(a\s+)?(door|exit|way\s+out|escape|path|entrance|way)/;
-    return relevantQuestions.test(input);
-}
+            print(getElementDescription(gameDefinition, currentRoomName));
+            return true;
+        }
+    },
+    {
+        // look for door
+        input: /(are there any doors( in (here|(the|this) room))?\??)|(what doors are there\?)|(look|search|check|find|where|is\s+there|how)\s+(for\s+)?(a\s+)?(door|exit|way\s+out|escape|path|entrance|way)/,
+        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+            const { print, variables } = gameDefinition;
+            const currentRoomName = (variables[userId] as PlayerVariable).location;
+            print('available doors', listRoomPassages(gameDefinition, currentRoomName));
+            return true;
+        }
+    }
+];
 
 function listRoomPassages(gameDefinition:GameDefinition, roomName:string) {
     const { variables } = gameDefinition;
-    return Object.keys(variables).filter(key=>{
+    const passages = Object.keys(variables).filter(key=>{
         const passage = variables[key] as PassageVariable;
         return passage.type === 'passage' && passage.between.includes(roomName) && passage.state !== 'hidden';
     }).map(doorName => {
@@ -22,20 +36,9 @@ function listRoomPassages(gameDefinition:GameDefinition, roomName:string) {
         const otherRoomName = passage.between.find(x => x !== roomName);
 
         return (!passage.state || passage.state === 'opened'|| passage.passed) ? `a ${doorName} leading to the ${otherRoomName}` : `a ${doorName}`;
-    }).join(', ');
+    });
+
+    return passages.length > 1 ? passages.slice(0, -1).join(', ') + ' and ' + passages.slice(-1) : passages[0]
 }
 
-export default function inspectRoom(input:string, gameDefinition:GameDefinition, userId: string) {
-    const { variables } = gameDefinition;
-    const currentRoomName = (variables[userId] as PlayerVariable).location
-
-    if (isInspectCurrentRoomQuestion(input)) {
-        return getElementDescription(gameDefinition, currentRoomName);
-    }
-
-    if (isLookForDoorQuestion(input)) {
-        return `Doors that I can see: ${listRoomPassages(gameDefinition, currentRoomName)}`;
-    }
-    
-    return undefined;
-};
+export default inspectRoomActions;

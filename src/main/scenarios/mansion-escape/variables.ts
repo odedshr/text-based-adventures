@@ -4,9 +4,10 @@ import passages from './passages.js';
 import items from './items.js';
 
 const variables:Variables = {
-    achivements:  { type: "list", value: [] },
+    achievements:  { type: "list", value: [] },
     countdown: { type: "number", value: 3600 },
-    player1: { type: "player", maxInventory: 1, location: "office" },
+    player1: { type: "player", location: "office", canContain: 1 },
+    lives: { type:"number", value: 1 },
     ...rooms,
     ...passages,
     ...items

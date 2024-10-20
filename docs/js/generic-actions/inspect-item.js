@@ -1,67 +1,87 @@
 import getElementDescription from "./get-element-description.js";
-import { isItemSomewhereInLocation } from "./pick-up.js";
-function isInspectQuestion(input) {
-    const objectRegex = /(?:what is|describe|tell me about|look at|examine|inspect) (the|a|an)?\s*(\w+)/;
-    const match = input.match(objectRegex);
-    return match ? match[2] : false;
-}
-function isSpatialQuestion(input) {
-    // Regular expression to match questions about the location of items
-    const spatialQuestions = /where is the (.+?)\?|where are the (.+?)\?|what is in my (.+?)\?|what do I have|can you tell me where the (.+?) is\?|is there a (.+?) here|where can I find the (.+?)/i;
-    // Test if the input matches the spatial question patterns
-    const match = input.match(spatialQuestions);
-    // If a match is found, extract the item name from the capturing groups
-    if (match) {
-        // The item name is captured in the first non-null group
-        for (let i = 1; i < match.length; i++) {
-            if (match[i]) {
-                return match[i].trim(); // Return the item name, trimming any whitespace
+const inspectItemRegExp = /(?:what is|describe|tell me about|look at|examine|inspect) (the|a|an)?\s*(\w+)/;
+const inspectLocationRegExp = /where is the (.+?)\?|where are the (.+?)\?|what is in my (.+?)\?|what do I have|can you tell me where the (.+?) is\?|is there a (.+?) here|where can I find the (.+?)/;
+const inspectInventory = /what's in my (.+?)\?|show me my (.+?)|what do I have in my (.+?)|what's in my inventory\?|can you show me my (.+?)\?|check my (.+?)/;
+const inspectItemActions = [
+    {
+        input: inspectItemRegExp,
+        execute: (input, gameDefinition, userId) => {
+            const { print } = gameDefinition;
+            const match = input.match(inspectItemRegExp);
+            if (!match) {
+                return false;
             }
+            print(getElementDescription(gameDefinition, match[2]));
+            return true;
+        }
+    },
+    {
+        input: inspectLocationRegExp,
+        execute: (input, gameDefinition, userId) => {
+            const { variables, print } = gameDefinition;
+            const match = input.match(inspectLocationRegExp);
+            if (!match) {
+                return false;
+            }
+            const itemName = match[2];
+            const item = variables[itemName];
+            if (!item) {
+                print('not sure what is item', itemName);
+            }
+            else if (item.touched) {
+                print('the item is in the location', itemName, item.location);
+            }
+            else {
+                print('not sure where is item', itemName);
+            }
+            return true;
+        }
+    },
+    {
+        input: inspectInventory,
+        execute: (input, gameDefinition, userId) => {
+            const { print } = gameDefinition;
+            const match = input.match(inspectInventory);
+            if (!match) {
+                return false;
+            }
+            const items = getEverythingIn(gameDefinition.variables, userId);
+            if (items.length > 0) {
+                print('you have items', items.length > 1 ? items.slice(0, -1).join(', ') + ' and ' + items.slice(-1) : items[0]);
+            }
+            else {
+                print('you have no items');
+            }
+            return true;
         }
     }
-    return false; // Return false if no spatial question is found
-}
-function isInspectInventoryQuestion(input, state) {
-    // Regular expression to match questions about the user's inventory
-    const inventoryQuestions = /what's in my (.+?)\?|show me my (.+?)|what do I have in my (.+?)|what's in my inventory\?|can you show me my (.+?)\?|check my (.+?)/i;
-    // Test if the input matches the inventory question patterns
-    const match = input.match(inventoryQuestions);
-    // If a match is found, extract the type of inventory from the capturing groups
-    if (match) {
-        // The inventory type is captured in the first non-null group
-        for (let i = 1; i < match.length; i++) {
-            if (match[i]) {
-                return match[i].trim() === state.inventoryKeyword;
-            }
-        }
-    }
-    return false; // Return null if no inventory question is found
-}
-export default function inspectItem(input, gameDefinition, userId) {
-    const { variables } = gameDefinition;
-    let itemName = isSpatialQuestion(input);
-    if (!!itemName) {
-        const item = variables[itemName];
-        return item
-            ? (item.touched ? `The ${itemName} is in ${item.location}.` : `I'm not sure where the ${itemName} is.`)
-            : `I'm not sure what the ${itemName} is.`;
-    }
-    if (isInspectInventoryQuestion(input, variables)) {
-        return listEverythingIn(variables, userId);
-    }
-    itemName = isInspectQuestion(input);
-    if (!itemName) {
-        return undefined;
-    }
-    const userLocation = variables[userId].location;
-    // Check if the object is in the player's inventory
-    const theItem = variables[itemName];
-    if (theItem && isItemSomewhereInLocation(variables, userLocation, theItem)) {
-        return getElementDescription(gameDefinition, itemName) || "You see nothing special about it.";
-    }
-    return `You don't see any ${itemName} anywhere`;
-}
-function listEverythingIn(variables, location) {
+];
+export default inspectItemActions;
+// export default function inspectItem(input:string, gameDefinition:GameDefinition, userId: string) {
+//     const { variables } = gameDefinition;
+//     let itemName = isSpatialQuestion(input);
+//     if (!!itemName) {
+//         const item = variables[itemName] as ItemVariable;
+//         return item
+//         ? (item.touched ? `The ${itemName} is in ${item.location}.` : `I'm not sure where the ${itemName} is.`) 
+//         : `I'm not sure what the ${itemName} is.`
+//     }
+//     if (isInspectInventoryQuestion(input, variables)) {
+//         return listEverythingIn(variables, userId);
+//     }
+//     itemName = isInspectQuestion(input);
+//     if (!itemName) {
+//         return undefined;
+//     }
+//     const userLocation = (variables[userId] as PlayerVariable).location;
+//     // Check if the object is in the player's inventory
+//     const theItem = variables[itemName] as ItemVariable
+//     if (theItem && isItemAvailable(variables, userLocation, itemName)) {
+//         return getElementDescription(gameDefinition, itemName) || "You see nothing special about it.";
+//     }
+//     return `You don't see any ${itemName} anywhere`;
+// }
+function getEverythingIn(variables, location) {
     const possessions = [];
     const reversedTree = {};
     const queue = [location];
@@ -78,7 +98,5 @@ function listEverythingIn(variables, location) {
         }
         queue.push(...reversedTree[item]);
     }
-    return possessions.length > 0
-        ? `so far you got ${possessions.join(", ")}.`
-        : `You're kind empty handed right now'`;
+    return possessions;
 }

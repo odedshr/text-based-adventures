@@ -1,8 +1,9 @@
+// return textId (the key of items in "strings")
 export default function getElementDescription(gameDefinition, itemName) {
-    const { strings, variables } = gameDefinition;
+    const { variables } = gameDefinition;
     const item = variables[itemName];
     if (item === undefined) {
-        return strings['unknown-item'];
+        return 'unknown-item';
     }
-    return strings[item.state !== undefined ? `${itemName}:${item.state}` : itemName];
+    return item.state !== undefined ? `${itemName}:${item.state}` : itemName;
 }

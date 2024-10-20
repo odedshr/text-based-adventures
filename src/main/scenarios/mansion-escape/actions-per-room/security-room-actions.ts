@@ -1,9 +1,25 @@
-import { Action } from '../../../types';
+import { Action, GameDefinition } from '../../../types';
 
 const securityRoomActions:Action[] = [
-    // in security room:
-    //9 - check video and see partner in the sex dungeon
-    //0 - delete cctv recording
+    {
+        input: /\b(?:check|inspect|review|examine|look\s*at)\s*(?:the\s*)?(?:cctv\s*recording|cctv\s*footage|video\s*recording)\b/,
+        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+            //9 - check video and see partner in the sex dungeon
+            const { print } = gameDefinition;
+            print('not-yet-implemented');
+            return false;
+        }
+    },
+    {
+        input: /\b(?:delete|remove|erase|discard|clear)\s*(?:the\s*)?(?:cctv\s*recording|cctv\s*footage|video\s*recording)\b/,
+        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+            //0 - delete cctv recording
+            const { print } = gameDefinition;
+            print('not-yet-implemented');
+            return false;
+        }
+    }  
+    
     //1 - get flashlight
 ];
 

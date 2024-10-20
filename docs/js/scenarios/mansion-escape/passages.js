@@ -68,14 +68,15 @@ const passages = {
     'blue door': {
         type: 'passage',
         between: ['hallway', 'office'],
-        allowedStates: ['closed', 'opened'],
         state: 'closed',
+        synonyms: ['door']
     },
     'lavish door': {
         type: 'passage',
         between: ['hallway', 'master bedroom'],
         allowedStates: ['opened'],
         state: 'opened',
+        synonyms: ['door']
     },
     'bathing nook': {
         type: 'passage',
@@ -83,11 +84,19 @@ const passages = {
         allowedStates: ['opened'],
         state: 'opened',
     },
+    'secret door': {
+        type: 'passage',
+        between: ['master bedroom', 'secret room'],
+        allowedStates: ['opened', 'hidden'],
+        state: 'hidden',
+        synonyms: ['door']
+    },
     'spiralling stairs': {
         type: 'passage',
         between: ['office', 'library'],
         allowedStates: ['opened'],
         state: 'opened',
+        synonyms: ['stairs']
     },
     'lounge arch': {
         type: 'passage',
@@ -119,9 +128,9 @@ const passages = {
         allowedStates: ['opened'],
         state: 'opened',
     },
-    'hidden passage': {
+    'vault door': {
         type: 'passage',
-        between: ['basement', 'secret room'],
+        between: ['basement', 'security room'],
         allowedStates: ['hidden', 'opened'],
         state: 'hidden',
     },

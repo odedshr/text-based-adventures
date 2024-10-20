@@ -1,11 +1,12 @@
 import { GameDefinition, ItemVariable } from '../types.js';
 
+// return textId (the key of items in "strings")
 export default function getElementDescription(gameDefinition: GameDefinition, itemName: string) {
-    const { strings, variables } = gameDefinition;
+    const { variables } = gameDefinition;
     const item = variables[itemName] as ItemVariable;
     if (item===undefined) {
-        return strings['unknown-item'];
+        return 'unknown-item';
     }
 
-    return strings[item.state !== undefined ? `${itemName}:${item.state}` : itemName];
+    return item.state !== undefined ? `${itemName}:${item.state}` : itemName;
 }

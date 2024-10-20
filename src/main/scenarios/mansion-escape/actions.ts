@@ -12,6 +12,11 @@ import pantryActions from './actions-per-room/pantry-actions.js';
 import securityRoomActions from './actions-per-room/security-room-actions.js';
 import toiletActions from './actions-per-room/toilet-actions.js';
 
+import pickGenericItem from '../../generic-actions/pick-up.js';
+import pickGenericItemOutOfContainer from '../../generic-actions/take-out.js';
+import inspectRoomActions from '../../generic-actions/inspect-room.js';
+import passageActions from '../../generic-actions/handle-passage.js';
+import inspectItemActions from '../../generic-actions/inspect-item.js';
 
 const actions:Action[] = [
     ...atticActions,
@@ -25,7 +30,12 @@ const actions:Action[] = [
     ...officeActions,
     ...pantryActions,
     ...securityRoomActions,
-    ...toiletActions
+    ...toiletActions,
+    pickGenericItem,
+    pickGenericItemOutOfContainer,
+    ...inspectRoomActions,
+    ...passageActions,
+    ...inspectItemActions
 ];
 
 export default actions;
