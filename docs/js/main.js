@@ -22,12 +22,15 @@ function handleInput(input) {
         historyIndex = -1;
         history.push(input);
         log(input);
-        appendToprint(`> ${input}`);
-        appendToprint(yield processMethod(input, gameDefinition, userId));
+        const inputs = input.split(/[,;]| and /i).map(command => command.trim()).filter(Boolean);
+        for (const input of inputs) {
+            appendToPrint(`> ${input}`);
+            appendToPrint(yield processMethod(input, gameDefinition, userId));
+        }
     });
 }
 // Append text to the console element
-function appendToprint(text) {
+function appendToPrint(text) {
     const paragraph = document.createElement('p');
     paragraph.innerHTML = text.replace(/\n/g, '<br>');
     outputElement.appendChild(paragraph);
@@ -76,7 +79,7 @@ function init() {
                 updateTimer(item.value);
                 break;
             case 'console':
-                appendToprint(item.value);
+                appendToPrint(item.value);
                 break;
             case 'lives':
                 if (item.value === 0) {
@@ -96,6 +99,6 @@ function init() {
             inputField.value = '';
         }
     });
-    appendToprint(gameDefinition.strings.exposition);
+    appendToPrint(gameDefinition.strings.exposition);
 }
 init();

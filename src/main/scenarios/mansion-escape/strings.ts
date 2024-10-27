@@ -1,104 +1,16 @@
+import strings from '../../default/strings.js';
+import { strings as atticStrings } from './rooms/attic.js';
+import { strings as guestRoomStrings } from './rooms/guest-room.js';
+import { strings as hobbyRoomStrings } from './rooms/hobbies-room.js';
+import { strings as officeStrings } from './rooms/office.js';
+import { strings as passageStrings } from '../../default/passages.js';
+
+
 export default {
-    exposition: `You wake up lying on the carpeted floor with a massive headache.
-    You can't remember anything, not even your name.
-    You can't remember how you got here, let alone where is here.
-    Your watch shows a countdown with less than an hour to go, but you can't tell what it signifies.`,
-    myself: 'You are standing here, ready for action.',
-    'unknown-item': `I don't know what that is.`,
-    help: `No point in crying for help. You're own your own. Take a deep breath, and maybe try exploring your surroundings or interacting with items.`,
-    'time\'s up': `You hear the main entrance door open. You were too late and it's time to face the consequences!\n   ---=== GAME OVER ===---\n\nRefresh the page to play again.`,
-    'location-fail:user': 'You are not in the right place to try that',
-    'location-fail:item': `It's nowhere near you`,
-    'not sure what is item': `I'm not sure what the item is.`,
-    'not sure where is item': `I'm not sure where the item is.`,
-    'the item is in the location': 'The item is in the location.',
-    'you have no items': `You're kind empty handed right now'`,
-    'you have items': 'so far you got item',
-    'no-item-to-pick-up': `I don't know what the item is.`,
-    'you-cant-pick-up-that': `You can't pick that up.`,
-    'already-have-item': `You already have the item.`,
-    'carrying-too-many-things': `You're carrying too many things`,
-    'you-picked-up-the-item': 'You picked up the item.',
-    'available doors': 'item',
-    window: `It's very dark outside. You can't see a thing. This place is probably very isolated.`,
-    'open-window': 'Alas! the window is bolted shut. You can\'t open it.',
-    'destination-unknown': `I don't know where the item is.`,
-    'the item is already open': 'The item is already open.',
-    'the item is locked': 'The item is locked.',
-    'the item is closed': 'The item is closed.',
-    'the item is hidden': 'is there a item here?',
-    'the item is opened': 'The item is now opened.',
-    'you entered the item': 'You entered the item.',
-    'how-to-get-there': `I don't know where you can get there.`,
-    office: `The room looks like a home-office.
-    It has a sturdy oak desk at its center, papers neatly stacked on one side, and a leather journal lying open.
-    There's large portrait behind the desk hanging on the wall. There's a closed blue door on the opposite wall.
-    A spiral staircase leads down to what looks like a library.
-    To the side of the desk is a small bin, inside of which is a crumpled newspaper.
-    On the floor, near the window, a broken vase lies in pieces.`,
-    'portrait:unknown-figure:on-the-wall': `It's quite a big painting. The name of the person is on the tip of your tongue.`,
-    'portrait:cartwright:on-the-wall': `It's a big painting of John Cartwright, the mansion's owner.`,
-    'portrait:unknown-figure:on-the-floor': `It's quite a big painting, placed neatly beside the safe it used to hide`,
-    'portrait:cartwright:on-the-floor': `It's a big painting of John Cartwright, the mansion's owner. It's placed neatly next to the safe it used to hide.`,
-    'removed portrait from wall': `You removed the portrait from the wall. There's a safe hidden behind the portrait!`, 
-    'put portrait back on wall': `You put the portrait back on the wall. The safe is hidden again.`,
-    'stole ledger': 'You got the ledger!',
-    'read newspaper': `You skim through the newspaper.
-    The main headline says that John Cartwright, a police inspector that was charged with corruption allegation was found not guilty due to lack of evidence.
-    The photo matches the portrait on the wall. You are in Cartwright's mansion!
-    The rest of the newspaper is rather boring. Could it be that you're here to find incriminating evidence?`,
-    'read journal': `Well, according to this, the owner of the diary should be back in less than an hour. At least now you know what's the countdown on your watch!`,
-    attic: 'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.',
-    hallway: 'A long corridor lined with portraits and elegant sconces. The soft carpet muffles footsteps, and several doors lead off into other rooms.',
-    'ensuite bathroom': 'A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures. Towels hang neatly on heated racks.',
-    'master bedroom': 'A luxurious bedroom with a king-sized bed, ornate wooden furniture, a walk-in closet, and a grand view of the estate grounds.',
-    'hobbies room': 'A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and musical instruments in one corner.',
-    'guest room': 'A cozy room with a queen-sized bed, a small wardrobe, and a vanity. It is warmly decorated, with a welcoming atmosphere for visitors.',
-    bathroom: 'A shared bathroom with a tiled floor, a large mirror, and a simple but elegant bathtub and shower. Basic toiletries are neatly arranged on the counter-top.',
-    pantry: 'A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies.',
-    kitchen: 'A modern kitchen with stainless steel appliances, marble countertops, and a large central island. The room smells of fresh herbs and baking bread.',
-    'dining room': 'A formal dining room with a long table, elegant chandeliers, and a sideboard for serving. Fine china and silverware are neatly arranged for guests.',
-    toilet: 'A small, functional room with a simple toilet, a sink, and a mirror. The space is clean and brightly lit.',
-    library: 'A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs. The scent of old books fills the air.',
-    'living room': 'A spacious room with plush sofas, a fireplace, and a large window offering a view of the garden. Family portraits decorate the walls.',
-    conservatory: 'A sunlit room filled with potted plants and wicker furniture. Glass walls offer a panoramic view of the surrounding garden and yard.',
-    foyer: 'The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug. A coat stand and an umbrella holder are by the door.',
-    'back yard': 'An open outdoor area with manicured lawns, flowerbeds, and a few benches. A stone path leads to the garden and the back entrance of the mansion.',
-    garage: 'A large space with room for several cars, tools hanging neatly on the walls, and shelves filled with spare parts and car cleaning supplies.',
-    basement: 'A dimly lit, musty room filled with old furniture, storage boxes, and tools. The air is cool, and the walls are lined with exposed brick.',
-    'secret room': 'A hidden room, accessible only by a secret passage. It contains mysterious artifacts, old documents, and a single desk covered in dust.',
-    'grand archway': 'A wide archway framed with ornate molding, allowing the sound of footsteps to echo faintly between the foyer and hallway. A fine runner rug extends into the corridor, welcoming guests deeper into the mansion.',
-    'parlor door': 'A pair of heavy oak doors with intricate carvings of vines and flowers. They swing open easily, revealing the warm and inviting living room beyond.',
-    'modest oak': 'A discreet wooden door tucked in a corner of the foyer. Simple in design, it blends in with the walls, leading quietly to the small guest toilet.',
-    'dining entrance': 'Tall double doors with brass handles, polished to a shine. The scent of food often drifts from behind them when the dining room is in use, hinting at the feast beyond.',
-    'chef\'s swing': 'A large, swinging door, padded to reduce noise. It swings silently back and forth, allowing the kitchen staff to easily transport dishes between the kitchen and dining room.',
-    'larder hatch': 'A small, creaky wooden door with iron hinges, leading to the pantry. It’s worn from years of use, often left ajar as fresh ingredients are constantly fetched for the kitchen.',
-    'cellar stairs': 'A narrow stone staircase spirals down from the pantry into the cool, dark basement. The walls are lined with shelves, holding jars and preserves.',
-    'attic ladder': 'A retractable wooden ladder hidden in the ceiling. When pulled down, it creaks ominously, allowing access to the dusty attic above.',
-    'craft door': 'A light wooden door with a small window, often covered in paint splatters or craft supplies. It leads into a room of creative chaos where hobbies are pursued.',
-    'guest\'s welcome': 'A simple yet elegant door with a brass knocker. It gives an inviting air, ushering visitors into the cozy guest room beyond.',
-    'washroom entry': 'A frosted glass door, providing privacy while still letting light through. It swings gently, revealing the shared bathroom beyond.',
-    'scholar\'s passage': 'A solid mahogany door with a brass handle, engraved with faint scholarly symbols.',
-    'master\'s threshold': 'A grand double door, featuring polished wood and gold accents. It opens into the luxurious master bedroom, offering comfort and privacy.',
-    'bathing nook': 'A sliding door with frosted glass panes, separating the bedroom from the ensuite bathroom. The sound of running water can often be heard behind it.',
-    'spiralling stairs': 'A magnificent spiral staircase crafted from polished oak, with ornate wrought-iron railings spiraling upward.',
-    'lounge arch': 'A wide arch framed by elegant wooden beams. Bookshelves line the wall beyond, offering easy access from the cozy living room to the expansive library.',
-    'garden view': 'French doors framed with ivy lead to the conservatory. The sunlight filters through the glass panes, offering a glimpse of the garden beyond.',
-    'garden gate': 'A wrought-iron gate adorned with climbing roses. It swings open with a soft creak, leading from the glass-walled conservatory into the open back yard.',
-    'stone path arch': 'A simple wooden gate along the stone path, separating the lush back yard from the functional garage. Moss grows on its hinges, adding to its rustic charm.',
-    'workshop hatch': 'A heavy trapdoor hidden beneath a workbench in the garage. When lifted, it reveals a ladder descending into the basement.',
-    'hidden passage': 'A concealed door behind a shelf of wine barrels. It leads to the mansion’s secret room, known only to a select few, hidden deep beneath the house.',
-    'entrance door:locked': 'A grand double door made of rich mahogany, adorned with intricate carvings and a polished brass handle. It is locked.',
-    'entrance door:unlocked': 'A grand double door made of rich mahogany, adorned with intricate carvings and a polished brass handle. It is unlocked, your freedom awaits!',
-    'business card:idle': 'a business card with a phone number 555-3532',
-    'bedroom:entered': 'A small bedroom with a bed, a nightstand, and a door leading to the kitchen.',
-    'kitchen:locked': 'A kitchen. The door is locked from the bedroom.',
-    'kitchen:unlocked': 'A clean kitchen with a fridge and a dining table.',
-    'kitchen door:locked': 'The door is locked. You need a key to open it.',
-    'kitchen door:unlocked': 'The door is unlocked. You can go through.',
-    'small key:onTable': 'A small key is lying on the nightstand.',
-    'small key:held': 'You are holding the small key.',
-    'nightstand:closed': 'A small nightstand with a drawer that can be opened.',
-    'nightstand:open': 'The drawer is open. There is nothing inside.'
+    ...strings,
+    ...atticStrings,
+    ...guestRoomStrings,
+    ...hobbyRoomStrings,
+    ...officeStrings,
+    ...passageStrings
 };
-      

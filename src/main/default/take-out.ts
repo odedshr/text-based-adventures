@@ -1,4 +1,4 @@
-import { GameDefinition,Action } from './../types';
+import { GameDefinition,Action } from '../types';
 import addToInventory from "./add-to-inventory";
 
 const pickItemOutOfContainer = /\b(?:take|remove|pull|get|grab|retrieve)\s+(\w+)\s+(?:out\s*of|from)\s+(\w+)\b/;  // Regular expression to match "pick up" commands

@@ -8,7 +8,7 @@ const rooms:{[key:string]:RoomVariable} = {
     'ensuite bathroom': { type: 'room' },
     'master bedroom': { type: 'room' },
     'hobbies room': { type: 'room' },
-    'guest room': { type: 'room' },
+    'guest room': { type: 'room', state: 'dark' },
     'bathroom': { type: 'room' },
     'pantry': { type: 'room' },
     'kitchen': { type: 'room' },

@@ -2,7 +2,7 @@ import getElementDescription from "./get-element-description.js";
 const inspectRoomActions = [
     {
         // inspect current room
-        input: /(look around|where am i\?|what is this place\?|describe the room|what is around me|show me the room|what do i see|what is in this place|tell me about my location|give me a description of the room)/,
+        input: /(what is here\??|look around|where am i\??|what is (in )?this place\??|describe( the)? room|what is around me|show me the room|what do i see|tell me about my location|give me a description of the room)/,
         execute: (_, gameDefinition, userId) => {
             const { print, variables } = gameDefinition;
             const currentRoomName = variables[userId].location;
@@ -12,7 +12,7 @@ const inspectRoomActions = [
     },
     {
         // look for door
-        input: /(are there any doors( in (here|(the|this) room))?\??)|(what doors are there\?)|(look|search|check|find|where|is\s+there|how)\s+(for\s+)?(a\s+)?(door|exit|way\s+out|escape|path|entrance|way)/,
+        input: /(are there any doors( in (here|(the|this) room))?\??)|(what doors are (there|available)\?)|(look|search|check|find|where|is\s+there|how)\s+(for\s+)?(a\s+)?(door|exit|way\s+out|escape|path|entrance|way)/,
         execute: (_, gameDefinition, userId) => {
             const { print, variables } = gameDefinition;
             const currentRoomName = variables[userId].location;

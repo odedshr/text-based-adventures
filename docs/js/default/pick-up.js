@@ -4,20 +4,15 @@ const pickUpItem = /(pick up|take|grab|get|retrieve|can i take|i'll grab|i want 
 const pickGenericItem = {
     input: pickUpItem,
     execute: (input, gameDefinition, userId) => {
-        console.log('11');
         // Execute the regex on the input string
         const match = input.match(pickUpItem);
-        console.log('22');
         if (!match) {
             return false;
         }
-        console.log('33');
         const item = findByReference(gameDefinition, userId, match[1]);
-        console.log('44');
         if (!item) {
             return false;
         }
-        console.log('55');
         // addToInventory will verify the item can be picked up and that it's in the same room as the user  
         return addToInventory(gameDefinition, userId, item);
     }

@@ -44,8 +44,7 @@ const passages = {
     'attic ladder': {
         type: 'passage',
         between: ['hallway', 'attic'],
-        allowedStates: ['opened'],
-        state: 'opened',
+        synonyms: ['ladder'],
     },
     'craft door': {
         type: 'passage',
@@ -56,8 +55,8 @@ const passages = {
     'bedroom door': {
         type: 'passage',
         between: ['hallway', 'guest room'],
-        allowedStates: ['opened'],
-        state: 'opened',
+        allowedStates: ['closed', 'opened'],
+        state: 'closed',
     },
     'washroom entry': {
         type: 'passage',
@@ -68,6 +67,7 @@ const passages = {
     'blue door': {
         type: 'passage',
         between: ['hallway', 'office'],
+        allowedStates: ['closed', 'opened'],
         state: 'closed',
         synonyms: ['door']
     },
@@ -94,8 +94,6 @@ const passages = {
     'spiralling stairs': {
         type: 'passage',
         between: ['office', 'library'],
-        allowedStates: ['opened'],
-        state: 'opened',
         synonyms: ['stairs']
     },
     'lounge arch': {

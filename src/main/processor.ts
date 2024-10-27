@@ -32,6 +32,7 @@ function isQuestion(input:string) {
     return false;
 }
 
+
 export default async function processMethod(input:string, gameDefinition:GameDefinition, userId: string):Promise<string> {
     const { actions } = gameDefinition;
 
@@ -60,15 +61,15 @@ export default async function processMethod(input:string, gameDefinition:GameDef
     }
 
     if (/\bhelp|(?:get|call|seek|find|need|ask\s+for|please\s+get|please\s+call|help\s+me|get\s+me|how\s+do\s+I|what\s+can\s+I|someone\s+help|anyone\s+help|could\s+someone|should\s+I)\s*(?:help|assistance|aid|support|rescue|someone|a\s+way)\b/.test(input)) {
-        return gameDefinition.strings.help;
+        return gameDefinition.strings.help as string;
     }
 
     if ((/\b(?:look|peek|glance|gaze|stare|check|peer|observe)\s*(?:out\s*(?:of)?|through)\s*(?:the|a)?\s*(?:window|windows|glass|pane)\b/).test(input)) {
-        return gameDefinition.strings.window;
+        return gameDefinition.strings.window as string;
     }
 
     if ((/\b(?:open|crack|push|slide|lift|unlock|unlatch|pull|pry)\s*(?:the|a)?\s*(?:window|windows|glass|pane)\b/).test(input)) {
-        return gameDefinition.strings['open-window'];
+        return gameDefinition.strings['open-window'] as string;
     }
     
     // If no action matched, return a default message

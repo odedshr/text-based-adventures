@@ -1,4 +1,4 @@
-import { GameDefinition, Variables, VariableModifyUpdate, NumberVariable, ListVariable, ItemVariable, Variable } from '../../types.js';
+import { GameDefinition, Variables, VariableModifyUpdate, NumberVariable, ListVariable, ItemVariable, Variable, GetStringMethod } from '../../types.js';
 
 import variables from './variables.js';
 import strings from './strings.js';
@@ -72,6 +72,9 @@ function getReferences(variables: Variables):{[key:string]:string[]} {
 function appendToConsole(textId:string, itemName?:string, locationName?: string) {
     //@ts-ignore
     let value:string = strings[textId];
+    if (typeof(value as unknown as GetStringMethod) === "function") {
+        value = (value as unknown as GetStringMethod)(variablesProxy);
+    }
     if (itemName) {
         value = value.replace(/item/g, itemName);
     }

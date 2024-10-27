@@ -17,12 +17,15 @@ async function handleInput(input:string) {
     history.push(input);
 
     log(input);
-    appendToprint(`> ${input}`);
-    appendToprint(await processMethod(input, gameDefinition, userId));
+    const inputs = input.split(/[,;]| and /i).map(command => command.trim()).filter(Boolean)
+    for (const input of inputs) {
+        appendToPrint(`> ${input}`);
+        appendToPrint(await processMethod(input, gameDefinition, userId));        
+    }
 }
 
 // Append text to the console element
-function appendToprint(text:string) {
+function appendToPrint(text:string) {
     const paragraph = document.createElement('p');
     paragraph.innerHTML = text.replace(/\n/g, '<br>');
     outputElement.appendChild(paragraph);
@@ -70,7 +73,7 @@ function init() {
         switch(variableName) {
             case 'achievements': updateScore((item as ListVariable).value.length); break;
             case 'countdown': updateTimer((item as NumberVariable).value); break;
-            case 'console': appendToprint((item as ConsoleVariable).value); break;
+            case 'console': appendToPrint((item as ConsoleVariable).value); break;
             case 'lives': if ((item as NumberVariable).value===0) { inputField.setAttribute('hidden', 'true') } break;
         }
     });
@@ -90,7 +93,7 @@ function init() {
         }
     });
 
-    appendToprint(gameDefinition.strings.exposition);
+    appendToPrint(gameDefinition.strings.exposition as string);
 }
 
 init();

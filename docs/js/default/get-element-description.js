@@ -5,5 +5,11 @@ export default function getElementDescription(gameDefinition, itemName) {
     if (item === undefined) {
         return 'unknown-item';
     }
-    return item.state !== undefined ? `${itemName}:${item.state}` : itemName;
+    if (item.state == undefined) {
+        return itemName;
+    }
+    else if (typeof (item.state) === 'string') {
+        return `${itemName}:${item.state}`;
+    }
+    return `${itemName}:${JSON.stringify(item.state)}`;
 }

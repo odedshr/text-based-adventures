@@ -58,6 +58,9 @@ function getReferences(variables) {
 function appendToConsole(textId, itemName, locationName) {
     //@ts-ignore
     let value = strings[textId];
+    if (typeof value === "function") {
+        value = value(variablesProxy);
+    }
     if (itemName) {
         value = value.replace(/item/g, itemName);
     }
