@@ -1,13 +1,11 @@
-import { GameDefinition, NumberVariable } from '../../types.js';
+import { GameDefinition, TimerHandler } from '../../types.js';
+import print from "../../default/print.js";
 
-export default function initTimers (gameDefinition: GameDefinition) {
-    const { variables, handlers, print } = gameDefinition;
-    
-    handlers.push((variableName, variable) => {
-        if (variableName === 'countdown' && (variable as NumberVariable).value === 0) {
-            print('time\'s up');
-            variables.lives = { type: 'number', value: 0 };
-        }
-    })
-    gameDefinition.startTimer('countdown');
-}
+const timerHandlers:{ [key:string]:TimerHandler } = {
+    countdown: (gameDefinition: GameDefinition) => {
+        print(gameDefinition, 'time\'s up');
+        gameDefinition.variables.lives = { type: 'number', value: 0 };
+    }
+};
+
+export default timerHandlers

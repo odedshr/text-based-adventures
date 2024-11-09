@@ -1,10 +1,8 @@
-export default function initTimers(gameDefinition) {
-    const { variables, handlers, print } = gameDefinition;
-    handlers.push((variableName, variable) => {
-        if (variableName === 'countdown' && variable.value === 0) {
-            print('time\'s up');
-            variables.lives = { type: 'number', value: 0 };
-        }
-    });
-    gameDefinition.startTimer('countdown');
-}
+import print from "../../default/print.js";
+const timerHandlers = {
+    countdown: (gameDefinition) => {
+        print(gameDefinition, 'time\'s up');
+        gameDefinition.variables.lives = { type: 'number', value: 0 };
+    }
+};
+export default timerHandlers;

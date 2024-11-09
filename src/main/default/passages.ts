@@ -1,8 +1,11 @@
 import { Action, GameDefinition, PassageVariable, PlayerVariable, RoomVariable } from "../types";
+import addAchievement from "./add-achievement.js";
 import findByReference from "./find-by-reference.js";
+import print from "./print.js";
 
 const openDoorCommands = /open\s?(the\s+)?(.*)/;
 const closeDoorCommands = /close (the)\s+?(.*)/;
+const enterRoom = /enter (the\s+)?(.*)/;
 const goCommands = /(climb|go|walk|move|enter|step|pass|proceed)\s+(through|into|to|toward|towards|in)\s+(the\s)?(.*)/;
 const climbCommands = /climb\s(?:up\s|down\s)?(?:the\s)?(.*)/;
 
@@ -10,43 +13,33 @@ const actions:Action[] = [
     {
         input: openDoorCommands,
         execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
-            const reference = input.match(openDoorCommands)?.pop()
-            if (!reference) { return false; }
+            const passageName = findItem(gameDefinition, userId, input.match(openDoorCommands)?.pop());
 
-            const passageName = findByReference(gameDefinition, userId, reference);
-            if (!passageName) { return false; }
-
-            return openPassage(gameDefinition, passageName, userId);
+            if (passageName) {
+                openPassage(gameDefinition, passageName, userId);
+            }
         }
     },
     {
         input: closeDoorCommands,
         execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
-            const reference = input.match(closeDoorCommands)?.pop()
-            if (!reference) { return false; }
-            const passageName = findByReference(gameDefinition, userId, reference);
-            if (!passageName) { return false; }
+            const passageName = findItem(gameDefinition, userId, input.match(closeDoorCommands)?.pop());
 
-            return closePassage(gameDefinition, passageName, userId);
+            if (passageName) {
+                closePassage(gameDefinition, passageName, userId);
+            }
         }
     },
     {
         input: goCommands,
 
         execute(input, gameDefinition, userId) {
-            const { variables, print } = gameDefinition;
-
-            const reference = input.match(goCommands)?.pop()
-
-            if (!reference) { return false; }
-            const destination = findByReference(gameDefinition, userId, reference);
+            const destination = findItem(gameDefinition, userId, input.match(goCommands)?.pop());
+            const { variables } = gameDefinition;
 
             if (!destination) {
-                print('destination-unknown', destination);
-                return true;
-            }
-    
-            if ((variables[destination] as PassageVariable).type ==='passage') {
+                return;
+            } else if ((variables[destination] as PassageVariable).type ==='passage') {
                 return passThroughPassage(gameDefinition, destination, userId );
             } else if ((variables[destination] as RoomVariable).type ==='room') {
                 const userLocation = (variables[userId] as PlayerVariable).location;
@@ -59,14 +52,39 @@ const actions:Action[] = [
                     });
     
                 if (!passageName) {
-                    print('how-to-get-there');
-                    return true;
+                    print(gameDefinition,'how-to-get-there',userLocation,destination);
+                    return;
                 }
                 return passThroughPassage(gameDefinition, passageName, userId );
             }
 
-            return true;
+            print(gameDefinition, 'destination-unknown', destination);
         },
+    },
+    {
+        input: enterRoom,
+        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+            const { variables } = gameDefinition;
+            const destination = findItem(gameDefinition, userId, input.match(enterRoom)?.pop());
+
+            if (destination && (variables[destination] as RoomVariable).type ==='room') {
+                const userLocation = (variables[userId] as PlayerVariable).location;
+                const passageName = Object.keys(variables)
+                    .find(key => {
+                        const passage = variables[key] as PassageVariable;
+                        return (passage.type === 'passage') && 
+                            passage.between.includes(userLocation) &&
+                            passage.between.includes(destination)
+                    });
+                if (!passageName) {
+                    print(gameDefinition,'how-to-get-there',userLocation,destination);
+                    return;
+                }
+                return passThroughPassage(gameDefinition, passageName, userId );
+            }
+
+            print(gameDefinition, 'destination-unknown', destination);
+        }
     },
     {
         input: climbCommands,
@@ -76,12 +94,12 @@ const actions:Action[] = [
 
             let passageName = findByReference(gameDefinition, userId, reference);           
             if (!passageName) { 
-                const { variables, print} = gameDefinition;
+                const { variables } = gameDefinition;
 
                 // sentence might have been 'climb up' without reference. we'll try to guess.
                 if (['stairs', 'ladder'].includes(reference)) {
                     // sentence was very explicit about something that is not in this room
-                    print('no item in here', reference);
+                    print(gameDefinition, 'no item in here', reference);
                     return true;
                 }
                 
@@ -102,22 +120,37 @@ const actions:Action[] = [
     }
 ];
 
+function findItem(gameDefinition:GameDefinition, userId:string, reference?:string):string | undefined {
+    if (!reference) { 
+        print(gameDefinition, 'destination-unknown');    
+        return undefined;
+    }
+
+    const passageName = findByReference(gameDefinition, userId, reference);
+    if (!passageName) {
+        print(gameDefinition, 'destination-unknown');
+        return undefined;
+    }
+
+    return passageName;
+}
+
 function passThroughPassage(gameDefinition:GameDefinition, destination:string, userId:string) {
-    const { variables, print, addAchievement } = gameDefinition;
+    const { variables } = gameDefinition;
     const passage = variables[destination] as PassageVariable;
     const userLocation = (variables[userId] as PlayerVariable).location;
 
     switch (passage.state) {
-        case 'closed': print('the item is closed',destination); break;
-        case 'locked': print('the item is locked',destination); break;
-        case 'hidden': print('the item is hidden',destination); break;
+        case 'closed': print(gameDefinition, 'the item is closed',destination); break;
+        case 'locked': print(gameDefinition, 'the item is locked',destination); break;
+        case 'hidden': print(gameDefinition, 'the item is hidden',destination); break;
         case undefined:
         case 'opened':         
             const user = variables[userId] as PlayerVariable;
             const location = passage.between.find(x => x !== userLocation) || userLocation;
             (variables[userId] as PlayerVariable) = { ...user, location };
-            addAchievement(userId, `entered ${location}`);
-            print('you entered the item',location);
+            addAchievement(gameDefinition, userId, `entered ${location}`);
+            print(gameDefinition, 'you entered the item',location);
             break;
     }
 
@@ -125,48 +158,45 @@ function passThroughPassage(gameDefinition:GameDefinition, destination:string, u
 }
 
 function openPassage(gameDefinition:GameDefinition, passageName:string, userId:string) {
-    const { print, variables, addAchievement } = gameDefinition;
+    const { variables } = gameDefinition;
     const passage = variables[passageName] as PassageVariable;
 
     if (!passage.allowedStates?.includes('opened')) {
-        print('the item is not openable',passageName);
-        return true;
+        print(gameDefinition, 'the item is not openable',passageName);
+        return;
     }
 
     switch (passage.state) {
         case undefined:
-        case 'opened': print('the item is already open',passageName); break;
-        case 'locked': print('the item is locked',passageName); break;
-        case 'hidden': print('the item is hidden',passageName); break;
+        case 'opened': print(gameDefinition, 'the item is already open',passageName); return;
+        case 'locked': print(gameDefinition, 'the item is locked',passageName); return;
+        case 'hidden': print(gameDefinition, 'the item is hidden',passageName); return;
         case 'closed': 
             variables[passageName] = { ...passage, state: 'opened' };
-            addAchievement(userId, `opened ${passageName}`);
-            print('the item is opened',passageName); break;
+            addAchievement(gameDefinition, userId, `opened ${passageName}`);
+            print(gameDefinition,'the item is opened',passageName); return;
     }
-
-    return true;
 }
 
 function closePassage(gameDefinition:GameDefinition, passageName:string, userId:string) {
-    const { print, variables, addAchievement } = gameDefinition;
+    const { variables } = gameDefinition;
     const passage = variables[passageName] as PassageVariable;
 
     if (!passage.allowedStates?.includes('closed')) {
-        print('the item is not closable',passageName);
+        print(gameDefinition, 'the item is not closable',passageName);
+        return;
     }
 
     switch (passage.state) {
         case undefined:
-        case 'closed': print('the item is already closed',passageName); break;
-        case 'locked': print('the item is locked',passageName); break;
-        case 'hidden': print('the item is hidden',passageName); break;
+        case 'closed': print(gameDefinition, 'the item is already closed',passageName); return;
+        case 'locked': print(gameDefinition, 'the item is locked',passageName); return;
+        case 'hidden': print(gameDefinition, 'the item is hidden',passageName); return;
         case 'opened': 
             variables[passageName] = { ...passage, state: 'closed' };
-            addAchievement(userId, `closed ${passageName}`);
-            print('the item is closed',passageName); break;
+            addAchievement(gameDefinition, userId, `closed ${passageName}`);
+            print(gameDefinition, 'the item is closed',passageName); return;
     }
-
-    return true;
 }
 
 
@@ -180,7 +210,7 @@ const strings = {
     'the item is hidden': 'is there a item here?',
     'the item is opened': 'The item is now opened.',
     'you entered the item': 'You entered the item.',
-    'how-to-get-there': `I don't know where you can get there.`,
+    'how-to-get-there': `I don't know how to get from item to location`,
     'no item in here': `No item here!`
 };
 

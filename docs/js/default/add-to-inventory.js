@@ -1,36 +1,54 @@
 import findRoomByItem from "./find-room-by-item.js";
 import isItemAvailable from "./is-item-available.js";
 import isValidAction from "./is-valid-action.js";
+import print from "./print.js";
 export default function addToInventory(gameDefinition, userId, itemName) {
-    const { variables, print } = gameDefinition;
+    const { variables } = gameDefinition;
     // Search for the item in the state.elements
     const item = variables[itemName];
     const itemLocation = findRoomByItem(variables, itemName);
-    if (!isValidAction(gameDefinition, [{ item: userId, property: 'location', value: itemLocation, textId: 'location-fail:user' }])) {
-        return true;
+    if (!itemLocation || !isValidAction(gameDefinition, [{ item: userId, property: 'location', value: itemLocation, textId: 'location-fail:user' }])) {
+        return;
     }
     if (!item || item.type !== 'item') {
-        print('no-item-to-pick-up', itemName);
-        return true;
+        print(gameDefinition, 'no-item-to-pick-up', itemName);
+        return;
     }
     if (!item.canBeHeld) {
-        print('you-cant-pick-up-that');
-        return true;
+        print(gameDefinition, 'you-cant-pick-up-that');
+        return;
     }
     // Check if the item is already with the user
     if (isItemAvailable(variables, userId, itemName)) {
-        print('already-have-item', itemName);
-        return true;
+        print(gameDefinition, 'already-have-item', itemName);
+        return;
     }
-    if (itemFitInContainer(variables, userId, itemName) === undefined) {
-        print('carrying-too-many-things');
-        return true;
+    if (tryToFitItemInContainer(variables, userId, itemName)) {
+        print(gameDefinition, 'you-picked-up-the-item', itemName);
+        return;
     }
-    // Update the item's parent to be with the user
-    variables[itemName] = Object.assign(Object.assign({}, item), { location: userId });
+    else if (item.canContain) { // item doesn't fit in user inventory but it can contain other items
+        if (!isNaN(item.canContain) && (item.canContain > findItemsInLocation(variables, itemName).length)) {
+            // item can contain other items and have free space
+            const currentlyHeldItemName = Object.keys(variables).find(itemName => variables[itemName].location === userId);
+            if (currentlyHeldItemName) {
+                variables[currentlyHeldItemName] = Object.assign(Object.assign({}, variables[currentlyHeldItemName]), { location: itemName });
+                variables[itemName] = Object.assign(Object.assign({}, variables[itemName]), { location: userId });
+                print(gameDefinition, 'you-picked-up-the-item', itemName);
+                return;
+            }
+        }
+        print(gameDefinition, 'carrying-too-many-things');
+    }
     //TODO: 1 pick up into bag if there is one
-    print('you-picked-up-the-item', itemName);
-    return true;
+    return;
+}
+function tryToFitItemInContainer(variables, userId, itemName) {
+    const freeContainer = itemFitInContainer(variables, userId, itemName);
+    if (freeContainer) {
+        variables[itemName] = Object.assign(Object.assign({}, variables[itemName]), { location: freeContainer });
+    }
+    return !!freeContainer;
 }
 function itemFitInContainer(variables, containerName, itemName) {
     const container = variables[containerName];

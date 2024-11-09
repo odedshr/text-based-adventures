@@ -1,9 +1,10 @@
 import { Condition, GameDefinition, Variables, Attributes, ItemVariable } from '../types';
+import print from "./print.js";
 
 //condition = itemId, propertyName, validValue, error message
 export default function isValidAction(gameDefinition:GameDefinition, conditions:Condition[]):boolean {
     try {
-        const { print, variables } = gameDefinition;
+        const { variables } = gameDefinition;
 
         for (const condition in conditions) {
             const { item, property, value, textId } = conditions[condition];
@@ -14,17 +15,20 @@ export default function isValidAction(gameDefinition:GameDefinition, conditions:
                     if (itemVariable.location === value || isInRootLocation(variables, item, value)) {
                         return true;
                     }
+                    break;
                 case 'state':
                     if (itemVariable.state === value) {
                         return true;
                     }
+                    break;
                 default:
                     if ((itemVariable.state as Attributes)[property] === value) {
                         return true;
                     }
+                    break;
             }
 
-            print(textId, item);
+            print(gameDefinition, textId, item);
             return false;
         }
     }

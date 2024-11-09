@@ -1,9 +1,12 @@
 import { GameDefinition, ItemVariable, PassageVariable, PlayerVariable } from "../types";
 
-export default function findByReference(gameDefinition:GameDefinition, userId:string, reference:string):string | undefined {
+export default function findByReference(gameDefinition:GameDefinition, userId:string, reference?:string):string | undefined {
     const { references, variables } = gameDefinition;
+    if (!reference) {
+        return undefined;
+    }
     const candidates = references[reference];
-    
+
     if (!candidates) {
         return undefined;
     } else if (candidates.length === 1) { 

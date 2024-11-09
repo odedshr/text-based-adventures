@@ -1,11 +1,12 @@
 import { GameDefinition,Action } from '../types';
 import addToInventory from "./add-to-inventory";
+import print from "./print.js";
 
 const pickItemOutOfContainer = /\b(?:take|remove|pull|get|grab|retrieve)\s+(\w+)\s+(?:out\s*of|from)\s+(\w+)\b/;  // Regular expression to match "pick up" commands
 const pickGenericItemOutOfContainer:Action = {
     input: pickItemOutOfContainer,
     execute: (input:String, gameDefinition:GameDefinition, userId:string) => {
-        const { print } = gameDefinition
+        const { variables } = gameDefinition
        // Execute the regex on the input string
         const match = input.match(pickItemOutOfContainer);
 
@@ -20,7 +21,7 @@ const pickGenericItemOutOfContainer:Action = {
         // does the container contain the item?
 
         // Return null if no match was found
-        print('not-yet-implemented');;
+        print(gameDefinition, 'not-yet-implemented');;
         return false;
     }
 };

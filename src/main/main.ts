@@ -1,9 +1,13 @@
-import { ConsoleVariable, ItemVariable, ListVariable, NumberVariable, Variable } from './types.js';
+import { ConsoleVariable, ListVariable, NumberVariable, Variable } from './types.js';
 
 import processMethod from './processor.js';
 import log from './log.js';
-import gameDefinition from './scenarios/mansion-escape/game.js';
+import initGame from './game-generator.js';
 import { updateScore, updateTimer } from './header.js';
+
+import { actions, strings, variables } from './scenarios/mansion-escape/index.js';
+
+const gameDefinition = initGame(variables, actions, strings);
 
 // Get the DOM elements
 const outputElement:HTMLOutputElement = document.getElementById('output') as HTMLOutputElement;
@@ -20,7 +24,7 @@ async function handleInput(input:string) {
     const inputs = input.split(/[,;]| and /i).map(command => command.trim()).filter(Boolean)
     for (const input of inputs) {
         appendToPrint(`> ${input}`);
-        appendToPrint(await processMethod(input, gameDefinition, userId));        
+        await processMethod(input, gameDefinition, userId);
     }
 }
 

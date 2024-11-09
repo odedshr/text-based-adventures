@@ -1,5 +1,8 @@
 export default function findByReference(gameDefinition, userId, reference) {
     const { references, variables } = gameDefinition;
+    if (!reference) {
+        return undefined;
+    }
     const candidates = references[reference];
     if (!candidates) {
         return undefined;
