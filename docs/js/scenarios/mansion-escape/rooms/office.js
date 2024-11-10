@@ -59,11 +59,11 @@ const items = {
 const actions = [
     {
         input: /^(pick up|grab|take|collect|retrieve|get|fetch)\s(the\s)?(crumpled\s|old\s|dirty\s|wrinkled\s|)\s?(newspaper|paper|magazine|flyer)$/,
-        conditions: (gameDefinition, userId) => {
+        conditions(gameDefinition, userId) {
             const userLocation = gameDefinition.variables[userId].location;
             return [{ item: 'crumpled newspaper', property: 'location', value: userLocation, textId: 'location-fail:item' }];
         },
-        execute: (_, gameDefinition, userId) => {
+        execute(_, gameDefinition, userId) {
             addToInventory(gameDefinition, userId, 'crumpled newspaper');
             addAchievement(gameDefinition, userId, 'picked up newspaper');
             return true;
@@ -71,7 +71,7 @@ const actions = [
     },
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|scan|study|peruse|glance\s*at)\s*(?:the\s*)?(?:crumpled|old|wrinkled|torn|folded|discarded|rumpled)?\s*(?:newspaper|paper|news\s*sheet)\b/,
-        execute: (_, gameDefinition, userId) => {
+        execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             const userLocation = variables[userId].location;
             if (!isValidAction(gameDefinition, [{ item: 'crumpled newspaper', property: 'location', value: userLocation, textId: 'location-fail:item' }])) {
@@ -84,7 +84,7 @@ const actions = [
     },
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|browse|scan|study|peruse|glance\s*at)\s*(?:the\s*)?(?:diary|journal|notebook|log|memoir)\b/,
-        execute: (_, gameDefinition, userId) => {
+        execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             const userLocation = variables[userId].location;
             if (!isValidAction(gameDefinition, [{ item: 'journal', property: 'location', value: userLocation, textId: 'location-fail:item' }])) {
@@ -97,7 +97,7 @@ const actions = [
     },
     {
         input: /\b(remove|take)\s(the\s)?(portrait|picture|painting)\s(off|from)(\s(the\s)?wall)?\b/,
-        execute: (_, gameDefinition, userId) => {
+        execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             const portrait = variables.portrait;
             if (!isValidAction(gameDefinition, [
@@ -114,7 +114,7 @@ const actions = [
     },
     {
         input: /\b(put|place|hang)\s(the\s)?(portrait|picture|painting)\s(back\s)?((on|onto)\s)?((the\s)?wall)?\b/,
-        execute: (_, gameDefinition, userId) => {
+        execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             const portrait = variables.portrait;
             if (!isValidAction(gameDefinition, [
@@ -131,7 +131,7 @@ const actions = [
     },
     {
         input: /\b(?:steal|take|grab|snatch|retrieve|get|remove|extract|pick\s*up)\s*(?:the\s*)?(?:ledger|record|book|document|log)\s*(?:from\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        conditions: (gameDefinition, userId) => {
+        conditions(gameDefinition, userId) {
             return [
                 { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
                 { item: 'portrait', property: 'placement', value: 'wall', textId: 'the portrait is blocking the safe' },
@@ -139,7 +139,7 @@ const actions = [
                 { item: 'ledger', property: 'location', value: 'safe', textId: 'the ledger is not in the safe' },
             ];
         },
-        execute: (_, gameDefinition, userId) => {
+        execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             addToInventory(gameDefinition, userId, 'ledger');
             addAchievement(gameDefinition, userId, 'stole ledger');
@@ -149,7 +149,7 @@ const actions = [
     },
     {
         input: /\b(?:glue|fix|repair|mend|stick|reassemble|piece\s*together)\s*(?:the\s*)?(?:broken|shattered|cracked|damaged)?\s*(?:vase|pot|ceramic|container)\s*(?:pieces\s*)?(?:back|together|in\s*place)\b/,
-        execute: (input, gameDefinition, userId) => {
+        execute(input, gameDefinition, userId) {
             //6 - glue vase back (find glue?)
             const { variables } = gameDefinition;
             print(gameDefinition, 'not yet implemented');
@@ -158,7 +158,7 @@ const actions = [
     },
     {
         input: /\b(?:put|place|apply|smudge|leave|transfer)\s*(?:Lena's\s*)?(?:fingerprints|prints|finger\s*marks)\s*(?:on\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        execute: (input, gameDefinition, userId) => {
+        execute(input, gameDefinition, userId) {
             //7 - put fingerprints on safe
             const { variables } = gameDefinition;
             print(gameDefinition, 'not-yet-implemented');
@@ -167,7 +167,7 @@ const actions = [
     }
 ];
 const strings = {
-    office: (variables) => {
+    office(variables) {
         const portrait = variables.portrait;
         const portraitIdentity = portrait.state.identity === 'cartwright' ? 'of John Cartwright ' : 'of someone ';
         const portraitPlacement = portrait.state.placement === 'wall' ? 'behind the desk hanging on the wall' : 'on the floor behind the desk';
@@ -179,7 +179,7 @@ const strings = {
     A spiral staircase leads down to what looks like a library.
     On the floor, near the window, a broken vase lies in pieces.`;
     },
-    portrait: (variables) => {
+    portrait(variables) {
         const { identity, placement } = variables.portrait.state;
         if (placement === 'wall') {
             if (identity === 'unknown') {

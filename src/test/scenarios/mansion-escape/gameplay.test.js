@@ -99,6 +99,36 @@ describe('Game-play', () => {
         await processMethod('go to lavish door', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the master bedroom.');
         
+        await processMethod('describe the room', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('A luxurious bedroom with a king-sized bed, ornate wooden furniture, a walk-in closet, and a grand view of the estate grounds.');
+
+        await processMethod('unlock nightstand drawer', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You need a key to unlock the nightstand drawer');
+
+        await processMethod('unlock nightstand drawer using the small key', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You unlocked the nightstand drawer. There's a security badge inside.`);
+        
+        await processMethod('pick up security badge', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You picked up the security badge.`);
+
+        await processMethod('go to hallway', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
+
+        await processMethod('go to foyer', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the foyer.');
+
+        await processMethod('go to dining room', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the dining room.');
+
+        await processMethod('go to kitchen', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the kitchen.');
+
+        await processMethod('go to basement', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the basement.');
+
+        await processMethod('unlock vault door using security badge', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('The vault is unlocked!');
+
         const results = JSON.stringify(gameDefinition.variables.achievements.value);
         const expected = JSON.stringify([
             "player1 picked up newspaper",
@@ -117,7 +147,13 @@ describe('Game-play', () => {
             "player1 took small key out of treasure box",
             "player1 returned treasure box",
             "player1 opened lavish door",
-            "player1 entered master bedroom"]);
+            "player1 entered master bedroom",
+            "player1 unlocked nightstand drawer",
+            "player1 entered foyer",
+            "player1 entered dining room",
+            "player1 entered kitchen",
+            "player1 entered basement",
+            "player1 unlocked vault"]);
         expect(results).toBe(expected);
     });
 })

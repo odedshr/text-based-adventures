@@ -1,8 +1,14 @@
-import { Action, GameDefinition, ItemVariable, RoomVariable } from '../../../types';
+import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
 import print from '../../../default/print.js';
 
-const items:{ [key:string]: ItemVariable|RoomVariable } = {
-    'kitchen': { type: 'room' }
+const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable} = {
+    'kitchen': { type: 'room' },
+    'swinging door': {
+        type: 'passage',
+        between: ['kitchen', 'dining room'],
+        allowedStates: ['opened'],
+        state: 'opened',
+    },
 };
 
 const actions:Action[] = [

@@ -25,12 +25,6 @@ const items:{[key:string]:PassageVariable} = {
         allowedStates: ['opened'],
         state: 'opened',
     },
-    'chef\'s swing': {
-        type: 'passage',
-        between: ['kitchen', 'dining room'],
-        allowedStates: ['opened'],
-        state: 'opened',
-    },
     'larder hatch': {
         type: 'passage',
         between: ['kitchen', 'pantry'],
@@ -39,7 +33,7 @@ const items:{[key:string]:PassageVariable} = {
     },
     'cellar stairs': {
         type: 'passage',
-        between: ['basement', 'pantry'],
+        between: ['basement', 'kitchen'],
         allowedStates: ['opened'],
         state: 'opened',
     },
@@ -72,13 +66,6 @@ const items:{[key:string]:PassageVariable} = {
         between: ['master bedroom', 'ensuite bathroom'],
         allowedStates: ['opened','closed'],
         state: 'closed',
-    },
-    'secret door': {
-        type: 'passage',
-        between: ['master bedroom', 'secret room'],
-        allowedStates: ['opened','hidden'],
-        state: 'hidden',
-        synonyms: ['door']
     },
     'spiralling stairs': {
         type: 'passage',

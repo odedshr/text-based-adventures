@@ -62,11 +62,11 @@ const items:{[key:string]:Variable} = {
 const actions:Action[] = [
     {
         input: /^(pick up|grab|take|collect|retrieve|get|fetch)\s(the\s)?(crumpled\s|old\s|dirty\s|wrinkled\s|)\s?(newspaper|paper|magazine|flyer)$/,
-        conditions: (gameDefinition:GameDefinition, userId:string) => {
+        conditions (gameDefinition:GameDefinition, userId:string) {
             const userLocation = (gameDefinition.variables[userId] as PlayerVariable).location;
             return [{item: 'crumpled newspaper', property: 'location', value: userLocation, textId:'location-fail:item'}];
         },
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute(_:string, gameDefinition:GameDefinition, userId:string) {
             addToInventory(gameDefinition, userId, 'crumpled newspaper');
             addAchievement(gameDefinition, userId, 'picked up newspaper');
             return true;
@@ -74,7 +74,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|scan|study|peruse|glance\s*at)\s*(?:the\s*)?(?:crumpled|old|wrinkled|torn|folded|discarded|rumpled)?\s*(?:newspaper|paper|news\s*sheet)\b/,
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute(_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables} = gameDefinition;
 
             const userLocation = (variables[userId] as PlayerVariable).location;
@@ -90,7 +90,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|browse|scan|study|peruse|glance\s*at)\s*(?:the\s*)?(?:diary|journal|notebook|log|memoir)\b/,
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
 
             const userLocation = (variables[userId] as PlayerVariable).location;
@@ -106,7 +106,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(remove|take)\s(the\s)?(portrait|picture|painting)\s(off|from)(\s(the\s)?wall)?\b/,
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
             const portrait = variables.portrait as ItemVariable;
             
@@ -127,7 +127,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(put|place|hang)\s(the\s)?(portrait|picture|painting)\s(back\s)?((on|onto)\s)?((the\s)?wall)?\b/,
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {           
+        execute (_:string, gameDefinition:GameDefinition, userId:string) {           
             const { variables } = gameDefinition;
             const portrait = variables.portrait as ItemVariable;
             
@@ -147,7 +147,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:steal|take|grab|snatch|retrieve|get|remove|extract|pick\s*up)\s*(?:the\s*)?(?:ledger|record|book|document|log)\s*(?:from\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        conditions: (gameDefinition:GameDefinition, userId:string) => {
+        conditions (gameDefinition:GameDefinition, userId:string) {
             return [
                 {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
                 {item: 'portrait', property: 'placement', value: 'wall' as string, textId:'the portrait is blocking the safe'},
@@ -155,7 +155,7 @@ const actions:Action[] = [
                 {item: 'ledger', property: 'location', value: 'safe', textId:'the ledger is not in the safe'},
             ];
         },
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
 
             addToInventory(gameDefinition, userId, 'ledger');
@@ -167,7 +167,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:glue|fix|repair|mend|stick|reassemble|piece\s*together)\s*(?:the\s*)?(?:broken|shattered|cracked|damaged)?\s*(?:vase|pot|ceramic|container)\s*(?:pieces\s*)?(?:back|together|in\s*place)\b/,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute(input:string, gameDefinition:GameDefinition, userId:string) {
             //6 - glue vase back (find glue?)
             const { variables } = gameDefinition;
             print(gameDefinition, 'not yet implemented');
@@ -176,7 +176,7 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:put|place|apply|smudge|leave|transfer)\s*(?:Lena's\s*)?(?:fingerprints|prints|finger\s*marks)\s*(?:on\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute (input:string, gameDefinition:GameDefinition, userId:string) {
             //7 - put fingerprints on safe
             const { variables } = gameDefinition;
             print(gameDefinition, 'not-yet-implemented');
@@ -186,7 +186,7 @@ const actions:Action[] = [
 ];
 
 const strings = {
-    office: (variables:Variables) => {
+    office (variables:Variables) {
         const portrait = variables.portrait as ItemVariable;
         const portraitIdentity = (portrait.state as Attributes).identity==='cartwright' ? 'of John Cartwright ' : 'of someone '
         const portraitPlacement = (portrait.state as Attributes).placement ==='wall' ? 'behind the desk hanging on the wall': 'on the floor behind the desk';
@@ -198,7 +198,7 @@ const strings = {
     A spiral staircase leads down to what looks like a library.
     On the floor, near the window, a broken vase lies in pieces.`
     },
-    portrait: (variables:Variables) => {
+    portrait (variables:Variables) {
         const { identity, placement } = (variables.portrait as ItemVariable).state as Attributes;
         if (placement === 'wall') {
             if (identity === 'unknown') {

@@ -5,7 +5,7 @@ import print from "./print.js";
 export default function isValidAction(gameDefinition:GameDefinition, conditions:Condition[]):boolean {
     try {
         const { variables } = gameDefinition;
-
+        
         for (const condition in conditions) {
             const { item, property, value, textId } = conditions[condition];
             const itemVariable = (variables[item] as ItemVariable);
@@ -41,11 +41,10 @@ export default function isValidAction(gameDefinition:GameDefinition, conditions:
     return true;
 }
 
-function isInRootLocation(variables:Variables, itemName:string, value:string):boolean {
-
+function isInRootLocation(variables:Variables, itemName:string, container:string):boolean {
     const itemLocation = (variables[itemName] as ItemVariable).location;
     // if itemLocation is undefined then itemName is a room on its own and we reached as high as we can go
 
     return itemLocation !== undefined && 
-            ((variables[itemLocation] as ItemVariable).location === value || isInRootLocation(variables, itemLocation, value));
+            ((variables[itemLocation] as ItemVariable).location === container || isInRootLocation(variables, itemLocation, container));
 }

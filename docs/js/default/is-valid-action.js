@@ -3,29 +3,34 @@ import print from "./print.js";
 export default function isValidAction(gameDefinition, conditions) {
     try {
         const { variables } = gameDefinition;
-        for (const condition in conditions) {
-            const { item, property, value, textId } = conditions[condition];
+        return conditions.every(condition => {
+            const { item, property, value, textId } = condition;
             const itemVariable = variables[item];
-            switch (property) {
-                case 'location':
-                    if (itemVariable.location === value || isInRootLocation(variables, item, value)) {
-                        return true;
-                    }
-                    break;
-                case 'state':
-                    if (itemVariable.state === value) {
-                        return true;
-                    }
-                    break;
-                default:
-                    if (itemVariable.state[property] === value) {
-                        return true;
-                    }
-                    break;
+            if (itemVariable) {
+                switch (property) {
+                    case 'location':
+                        if (itemVariable.location === value || isInRootLocation(variables, item, value)) {
+                            return true;
+                        }
+                        break;
+                    case 'state':
+                        if (itemVariable.state === value) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        if (itemVariable.state[property] === value) {
+                            return true;
+                        }
+                        break;
+                }
+            } else {
+                console.error(`Unknown item: ${item}`);
             }
+
             print(gameDefinition, textId, item);
             return false;
-        }
+        });
     }
     catch (error) {
         console.error(error, conditions);
@@ -33,9 +38,9 @@ export default function isValidAction(gameDefinition, conditions) {
     }
     return true;
 }
-function isInRootLocation(variables, itemName, value) {
+function isInRootLocation(variables, itemName, container) {
     const itemLocation = variables[itemName].location;
     // if itemLocation is undefined then itemName is a room on its own and we reached as high as we can go
     return itemLocation !== undefined &&
-        (variables[itemLocation].location === value || isInRootLocation(variables, itemLocation, value));
+        (variables[itemLocation].location === container || isInRootLocation(variables, itemLocation, container));
 }

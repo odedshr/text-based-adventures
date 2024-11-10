@@ -21,8 +21,10 @@ export default async function processMethod(input:string, gameDefinition:GameDef
     // Loop through each action defined in the state
     for (const action of actions) {
         // Test if the input matches the action's verb (regular expression)
-        if (action.input.test(input) && (!action.conditions || isValid(gameDefinition, userId, action.conditions))) {
-            action.execute(input, gameDefinition, userId);
+        if (action.input.test(input)) {
+            if ((!action.conditions || isValid(gameDefinition, userId, action.conditions))) {
+                action.execute(input, gameDefinition, userId);
+            }
             return;
         }
     }

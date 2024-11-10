@@ -85,20 +85,18 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:open|check|inspect|examine|unlock|look\s*into)\s*(?:the\s*)?(?:treasure\s*box|chest|box)\b/,
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: 'treasure box', property: 'location', value: userId, textId:'location-fail:item'}
+        ],
+        execute (_:string, gameDefinition:GameDefinition, userId:string) { 
             const { variables } = gameDefinition;
             
-            if (!isValidAction(gameDefinition, [
-                {item: 'treasure box', property: 'location', value: userId, textId:'location-fail:item'},
-            ])) {                
-                return true;
-            }
-            
+            // we need to remove the key out of the box before adding it to the inventory
+            const smallKey = variables['small key'] as ItemVariable;
+            variables['small key'] = { ...smallKey, location: 'hobby room' };
             addToInventory(gameDefinition, userId, 'small key');
             addAchievement(gameDefinition, userId, 'took small key out of treasure box');
             print(gameDefinition, 'found small key');
-
-            return true;
         }
     },
     {

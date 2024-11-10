@@ -23,12 +23,6 @@ const items = {
         allowedStates: ['opened'],
         state: 'opened',
     },
-    'chef\'s swing': {
-        type: 'passage',
-        between: ['kitchen', 'dining room'],
-        allowedStates: ['opened'],
-        state: 'opened',
-    },
     'larder hatch': {
         type: 'passage',
         between: ['kitchen', 'pantry'],
@@ -37,7 +31,7 @@ const items = {
     },
     'cellar stairs': {
         type: 'passage',
-        between: ['basement', 'pantry'],
+        between: ['basement', 'kitchen'],
         allowedStates: ['opened'],
         state: 'opened',
     },
@@ -70,13 +64,6 @@ const items = {
         between: ['master bedroom', 'ensuite bathroom'],
         allowedStates: ['opened', 'closed'],
         state: 'closed',
-    },
-    'secret door': {
-        type: 'passage',
-        between: ['master bedroom', 'secret room'],
-        allowedStates: ['opened', 'hidden'],
-        state: 'hidden',
-        synonyms: ['door']
     },
     'spiralling stairs': {
         type: 'passage',
@@ -112,12 +99,6 @@ const items = {
         between: ['garage', 'basement'],
         allowedStates: ['opened'],
         state: 'opened',
-    },
-    'vault door': {
-        type: 'passage',
-        between: ['basement', 'security room'],
-        allowedStates: ['hidden', 'opened'],
-        state: 'hidden',
     },
     'entrance door': {
         state: 'locked',

@@ -1,6 +1,12 @@
 import print from '../../../default/print.js';
 const items = {
-    'kitchen': { type: 'room' }
+    'kitchen': { type: 'room' },
+    'swinging door': {
+        type: 'passage',
+        between: ['kitchen', 'dining room'],
+        allowedStates: ['opened'],
+        state: 'opened',
+    },
 };
 const actions = [
     {
