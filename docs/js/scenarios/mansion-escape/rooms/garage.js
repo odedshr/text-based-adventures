@@ -1,5 +1,17 @@
 const items = {
     'garage': { type: 'room' },
+    'stone path arch': {
+        type: 'passage',
+        between: ['backyard', 'garage'],
+        allowedStates: ['opened'],
+        state: 'opened',
+    },
+    'workshop hatch': {
+        type: 'passage',
+        between: ['garage', 'basement'],
+        allowedStates: ['locked', 'closed', 'opened'],
+        state: 'locked',
+    },
     'house keys': {
         type: 'item',
         location: 'garage',

@@ -4,6 +4,13 @@ import addAchievement from '../../../default/add-achievement.js';
 import print from "../../../default/print.js";
 const items = {
     'office': { type: 'room' },
+    'blue door': {
+        type: 'passage',
+        between: ['hallway', 'office'],
+        allowedStates: ['closed', 'opened'],
+        state: 'closed',
+        synonyms: ['door']
+    },
     portrait: {
         type: 'item',
         state: {
@@ -44,10 +51,11 @@ const items = {
         location: 'office',
         state: 'locked',
         canContain: 'ledger',
+        synonyms: ['vault']
     },
     ledger: {
         type: 'item',
-        location: 'vault',
+        location: 'safe',
         canBeHeld: true,
     },
     journal: {
@@ -97,15 +105,13 @@ const actions = [
     },
     {
         input: /\b(remove|take)\s(the\s)?(portrait|picture|painting)\s(off|from)(\s(the\s)?wall)?\b/,
+        conditions: (_, userId) => [
+            { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
+            { item: 'portrait', property: 'placement', value: 'wall', textId: 'portrait already on floor' },
+        ],
         execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             const portrait = variables.portrait;
-            if (!isValidAction(gameDefinition, [
-                { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
-                { item: 'portrait', property: 'placement', value: 'wall', textId: 'portrait already on floor' },
-            ])) {
-                return true;
-            }
             variables.portrait = Object.assign(Object.assign({}, portrait), { state: Object.assign(Object.assign({}, portrait.state), { placement: 'floor' }) });
             addAchievement(gameDefinition, userId, 'find secret safe');
             print(gameDefinition, 'removed portrait from wall');
@@ -131,7 +137,7 @@ const actions = [
     },
     {
         input: /\b(?:steal|take|grab|snatch|retrieve|get|remove|extract|pick\s*up)\s*(?:the\s*)?(?:ledger|record|book|document|log)\s*(?:from\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        conditions(gameDefinition, userId) {
+        conditions(_, userId) {
             return [
                 { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
                 { item: 'portrait', property: 'placement', value: 'wall', textId: 'the portrait is blocking the safe' },
@@ -164,6 +170,87 @@ const actions = [
             print(gameDefinition, 'not-yet-implemented');
             return false;
         }
+    },
+    {
+        input: /\b(?:use|type)\s+(?:code\s+)?30(?:[.\s/-]?02)(?:[.\s/-]?19)(?:[.\s/-]?85)\s+(?:in\s+keypad\s+)?to\s+(?:unlock|open)\s+(?:safe|vault)\b/,
+        conditions(_, userId) {
+            return [
+                { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
+                { item: 'portrait', property: 'placement', value: 'floor', textId: 'the portrait is blocking the safe' },
+                { item: 'safe', property: 'state', value: 'locked', textId: 'the safe is not closed' },
+            ];
+        },
+        execute(_, gameDefinition, userId) {
+            const { variables } = gameDefinition;
+            variables.safe = Object.assign(Object.assign({}, variables.safe), { state: 'unlocked' });
+            print(gameDefinition, 'safe unlocked');
+            addAchievement(gameDefinition, userId, 'unlocked safe');
+            return false;
+        }
+    },
+    {
+        input: /^(?:use\s+(?:code\s+)?(?:\d{1,2}(?:[.\s/-]?\d{1,2}){3}|code\s+in\s+keypad)|(?:unlock|open))\s+(?:safe|vault)$/,
+        conditions(_, userId) {
+            return [
+                { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
+                { item: 'portrait', property: 'placement', value: 'floor', textId: 'the portrait is blocking the safe' },
+                { item: 'safe', property: 'state', value: 'locked', textId: 'the safe is not closed' },
+            ];
+        },
+        execute(_, gameDefinition, userId) {
+            print(gameDefinition, 'cant unlock safe');
+            return false;
+        },
+    },
+    {
+        input: /\b(?:pick\s+up|steal|take|grab|snatch|retrieve|get)\s+ledger(?:\s+from\s+(?:the\s+)?(?:safe|vault))?\b/,
+        conditions: (_, userId) => [
+            { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
+            { item: 'portrait', property: 'placement', value: 'floor', textId: 'the portrait is blocking the safe' },
+            { item: 'safe', property: 'state', value: 'unlocked', textId: 'the safe is locked' },
+            { item: 'ledger', property: 'location', value: 'safe', textId: 'location-fail:item' },
+        ],
+        execute(_, gameDefinition, userId) {
+            addToInventory(gameDefinition, userId, 'ledger');
+            addAchievement(gameDefinition, userId, 'obtained ledger');
+            print(gameDefinition, 'you pick up the ledger');
+            return false;
+        }
+    },
+    {
+        input: /\b(?:lock|secure|close|shut)\s+(?:the\s+)?(?:safe|vault)\b/,
+        conditions(_, userId) {
+            return [
+                { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
+                { item: 'portrait', property: 'placement', value: 'floor', textId: 'the portrait is blocking the safe' },
+                { item: 'safe', property: 'state', value: 'unlocked', textId: 'safe already locked' },
+            ];
+        },
+        execute(_, gameDefinition, userId) {
+            const { variables } = gameDefinition;
+            variables.safe = Object.assign(Object.assign({}, variables.safe), { state: 'locked' });
+            print(gameDefinition, 'safe locked');
+            addAchievement(gameDefinition, userId, 'locked safe');
+            return false;
+        }
+    },
+    {
+        input: /\b(?:use|apply|place|put|attach|set|stick|utilize)\s+(?:the\s+)?fingerprints\s+on\s+(?:the\s+)?(?:safe|vault)\b/,
+        conditions(_, userId) {
+            return [
+                { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
+                { item: 'portrait', property: 'placement', value: 'floor', textId: 'the portrait is blocking the safe' },
+                { item: 'forensic kit', property: 'state', value: 'with fingerprints', textId: 'no fingerprints in forensic kit' },
+            ];
+        },
+        execute(_, gameDefinition, userId) {
+            const { variables } = gameDefinition;
+            variables.safe = Object.assign(Object.assign({}, variables.safe), { state: 'unlocked' });
+            variables['forensic kit'] = Object.assign(Object.assign({}, variables['forensic kit']), { state: 'no fingerprints' });
+            print(gameDefinition, 'planted fingerprints');
+            addAchievement(gameDefinition, userId, 'planted fingerprints');
+            return false;
+        }
     }
 ];
 const strings = {
@@ -179,6 +266,7 @@ const strings = {
     A spiral staircase leads down to what looks like a library.
     On the floor, near the window, a broken vase lies in pieces.`;
     },
+    'blue door': 'A solid mahogany door with a brass handle, engraved with faint scholarly symbols.',
     portrait(variables) {
         const { identity, placement } = variables.portrait.state;
         if (placement === 'wall') {
@@ -202,5 +290,18 @@ const strings = {
     The photo matches the portrait on the wall. You are in Cartwright's mansion!
     The rest of the newspaper is rather boring. Could it be that you're here to find incriminating evidence?`,
     'read journal': `Well, according to this, the owner of the diary should be back in less than an hour. At least now you know what's the countdown on your watch!`,
+    'the safe is not closed': 'The safe is not closed',
+    'the portrait is blocking the safe': 'The portrait is blocking the safe',
+    'cant unlock safe': `The safe requires a particular key combination to be unlocked.`,
+    'the safe is locked': 'The safe is locked',
+    'safe unlocked'(variables) {
+        const safeContent = variables.ledger.location === 'safe' ? `There's a ledge inside` : `It's empty`;
+        return `The safe is unlocked. ${safeContent}.`;
+    },
+    'safe locked': 'You carefully locked the safe.',
+    'safe already locked': 'The safe is already locked',
+    'you pick up the ledger': 'You pick up the ledger. You got the incriminating evidence you came for.',
+    'no fingerprints in forensic kit': 'There are no fingerprints in the forensic kit',
+    'planted fingerprints': 'You carefully planted the fingerprints on the safe.',
 };
 export { actions, items, strings, };

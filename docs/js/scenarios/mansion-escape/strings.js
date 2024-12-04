@@ -1,4 +1,4 @@
-import strings from '../../default/strings.js';
+import { strings as defaultStrings } from '../../default/index.js';
 import { strings as attic } from './rooms/attic.js';
 import { strings as backyard } from './rooms/backyard.js';
 import { strings as basement } from './rooms/basement.js';
@@ -20,4 +20,4 @@ import { strings as pantry } from './rooms/pantry.js';
 import { strings as secretRoom } from './rooms/secret-room.js';
 import { strings as securityRoom } from './rooms/security-room.js';
 import { strings as toilet } from './rooms/toilet.js';
-export default Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, strings), attic), backyard), basement), bathroom), conservatory), diningRoom), ensuiteBathroom), foyer), garage), guestRoom), hallway), hobbyRoom), kitchen), library), livingRoom), masterBedroom), office), pantry), secretRoom), securityRoom), toilet);
+export default Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, defaultStrings), attic), backyard), basement), bathroom), conservatory), diningRoom), ensuiteBathroom), foyer), garage), guestRoom), hallway), hobbyRoom), kitchen), library), livingRoom), masterBedroom), office), pantry), secretRoom), securityRoom), toilet);

@@ -1,4 +1,4 @@
-import strings from '../../default/strings.js';
+import { strings as defaultStrings } from '../../default/index.js';
 import { strings as attic } from './rooms/attic.js';
 import { strings as backyard } from './rooms/backyard.js';
 import { strings as basement } from './rooms/basement.js';
@@ -22,7 +22,7 @@ import { strings as securityRoom } from './rooms/security-room.js';
 import { strings as toilet } from './rooms/toilet.js';
 
 export default {
-    ...strings,
+    ...defaultStrings,
 
     ...attic,
     ...backyard,

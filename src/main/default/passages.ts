@@ -149,7 +149,7 @@ function passThroughPassage(gameDefinition:GameDefinition, destination:string, u
             const user = variables[userId] as PlayerVariable;
             const location = passage.between.find(x => x !== userLocation) || userLocation;
             (variables[userId] as PlayerVariable) = { ...user, location };
-            addAchievement(gameDefinition, userId, `entered ${location}`);
+            addAchievement(gameDefinition, userId, `entered the ${location}`);
             print(gameDefinition, 'you entered the item',location);
             break;
     }
@@ -212,7 +212,7 @@ const strings = {
     'you entered the item': 'You entered the item.',
     'how-to-get-there': `I don't know how to get from item to location`,
     'no item in here': `No item here!`
-};
+}
 
 export {
     actions,

@@ -11,13 +11,6 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
         state: 'closed',
         synonyms: ['door']
     },
-    'secret door': {
-        type: 'passage',
-        between: ['master bedroom', 'secret room'],
-        allowedStates: ['opened','hidden'],
-        state: 'hidden',
-        synonyms: ['door']
-    },
     'nightstand drawer': {
         type: 'item',
         location: 'master bedroom',
@@ -39,7 +32,7 @@ const actions:Action[] = [
             return [
                 {item: userId, property: 'location', value: 'master bedroom', textId:'location-fail:user'},
                 {item: 'nightstand drawer', property: 'state', value: 'locked', textId:'drawer is not locked'},
-                {item: 'key', property: 'location', value: userId, textId:'location-fail:item'},
+                {item: 'small key', property: 'location', value: userId, textId:'location-fail:item'},
             ];
         },
         execute(_:string, gameDefinition:GameDefinition, userId:string) {
@@ -64,11 +57,11 @@ const actions:Action[] = [
         }
     },
     {
-        input: /\b(?:find|locate|look\s*for|search\s*for|discover)\s*(?:the\s*)?(?:secret\s*(?:room|passage|doorway|entrance|path|way)(?:\s*to\s*(?:the\s*)?room)?)\b/,
+        input: /\b(?:find|locate|look\s*for|search\s*for|discover)\s*(?:the\s*)?(?:secret\s*(?:room|passage|door(way)?|entrance|path|way)(?:\s*to\s*(?:the\s*)?room)?)\b/,
         conditions(_:GameDefinition, userId:string) {
             return [
                 {item: userId, property: 'location', value: 'master bedroom', textId:'location-fail:user'},
-                {item: 'cctv monitor', property: 'state', value: 'watched', textId:'waste of time'},
+                {item: 'cctv', property: 'state', value: 'watched', textId:'waste of time'},
                 {item: 'secret door', property: 'state', value: 'hidden', textId:'you already know where the secret door is'},
             ];
         },

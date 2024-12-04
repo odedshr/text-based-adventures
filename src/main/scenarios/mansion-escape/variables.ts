@@ -1,5 +1,4 @@
 import { Variables } from '../../types.js';
-import { items as passages } from './passages.js';
 
 import { items as attic } from './rooms/attic.js';
 import { items as backyard } from './rooms/backyard.js';
@@ -28,7 +27,6 @@ const variables:Variables = {
     countdown: { type: "number", value: 3600, state: 'decreasing' },
     player1: { type: "player", location: "office", canContain: 1 },
     lives: { type:"number", value: 1 },
-    ...passages,
 
     ...attic,
     ...backyard,

@@ -39,5 +39,6 @@ const actions = [
 ];
 const strings = {
     kitchen: 'A modern kitchen with stainless steel appliances, marble countertops, and a large central island. The room smells of fresh herbs and baking bread.',
+    'swinging door': 'A large, swinging door, padded to reduce noise. It swings silently back and forth, allowing the kitchen staff to easily transport dishes between the kitchen and dining room.',
 };
 export { actions, items, strings, };

@@ -144,7 +144,7 @@ function passThroughPassage(gameDefinition, destination, userId) {
             const user = variables[userId];
             const location = passage.between.find(x => x !== userLocation) || userLocation;
             variables[userId] = Object.assign(Object.assign({}, user), { location });
-            addAchievement(gameDefinition, userId, `entered ${location}`);
+            addAchievement(gameDefinition, userId, `entered the ${location}`);
             print(gameDefinition, 'you entered the item', location);
             break;
     }

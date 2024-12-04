@@ -21,12 +21,7 @@ import { actions as secretRoom } from './rooms/secret-room.js';
 import { actions as securityRoom } from './rooms/security-room.js';
 import { actions as toilet } from './rooms/toilet.js';
 
-import { actions as pickGenericItem } from '../../default/pick-up.js';
-import pickGenericItemOutOfContainer from '../../default/take-out.js';
-import inspectRoomActions from '../../default/inspect-room.js';
-import { actions as passageActions} from '../../default/passages.js';
-import inspectItemActions from '../../default/inspect-item.js';
-import { actions as genericQueries } from '../../default/generic-queries.js';
+import { actions as defaultActions } from '../../default/index.js';
 
 const actions:Action[] = [
     ...attic,
@@ -50,12 +45,8 @@ const actions:Action[] = [
     ...secretRoom,
     ...securityRoom,
     ...toilet,
-    ...pickGenericItem,
-    pickGenericItemOutOfContainer,
-    ...inspectRoomActions,
-    ...passageActions,
-    ...inspectItemActions,
-    ...genericQueries
+
+    ...defaultActions
 ];
 
 export default actions;

@@ -31,6 +31,7 @@ export default function processMethod(input, gameDefinition, userId) {
                 return;
             }
         }
+        console.error('unknown input', input);
         print(gameDefinition, 'what input means', input);
     });
 }

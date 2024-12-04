@@ -4,13 +4,12 @@ import addAchievement from '../../../default/add-achievement';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'basement': { type: 'room' },
-    'vault door': {
+    'cellar stairs': {
         type: 'passage',
-        between: ['basement', 'security room'],
-        allowedStates: ['locked', 'closed', 'opened'],
-        state: 'locked',
+        between: ['basement', 'kitchen'],
+        allowedStates: ['opened'],
+        state: 'opened',
     },
-
 };
 
 const actions:Action[] = [
@@ -43,6 +42,7 @@ const actions:Action[] = [
 
 const strings = {
     basement: 'A dimly lit, musty room filled with old furniture, storage boxes, and tools. The air is cool, and the walls are lined with exposed brick.',
+    'cellar stairs': 'A narrow stone staircase spirals down from the pantry into the cool, dark basement. The walls are lined with shelves, holding jars and preserves.',
     'vault not locked': 'The vault is not locked',
     'vault is unlocked': 'The vault is unlocked!',
 };

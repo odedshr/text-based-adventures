@@ -7,6 +7,12 @@ const items = {
         state: 'dark',
         synonyms: ['bedroom']
     },
+    'bedroom door': {
+        type: 'passage',
+        between: ['hallway', 'guest room'],
+        allowedStates: ['closed', 'opened'],
+        state: 'closed',
+    },
     'light switch': {
         type: 'item',
         location: 'guest room',
@@ -100,6 +106,7 @@ const strings = {
         }
         return `It looks like a guest room. There's a bed, ${tableAndBag}`;
     },
+    'bedroom door': 'A simple yet elegant door with a brass knocker. It gives an inviting air, ushering visitors into the cozy guest room beyond.',
     'light already on': 'The light is already on.',
     'light turned on for the first time': `You managed to find the light switch and turn it on.`,
 };

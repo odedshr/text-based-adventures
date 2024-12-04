@@ -52,7 +52,6 @@ export default function addToInventory(gameDefinition:GameDefinition, userId:str
     }
    
     //TODO: 1 pick up into bag if there is one
-
     return;
 }
 

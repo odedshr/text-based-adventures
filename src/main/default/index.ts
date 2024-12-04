@@ -1,6 +1,21 @@
-import { strings as pickUpItemStrings } from './pick-up.js';
+import { Action } from '../types.js';
+import pickGenericItemOutOfContainer from './take-out.js';
+import inspectRoomActions from './inspect-room.js';
+import inspectItemActions from './inspect-item.js';
+import { actions as genericQueries } from './generic-queries.js';
 
-export default {
+import { actions as pickGenericItem, strings as pickUpItemStrings } from './pick-up.js';
+import { actions as passageActions, strings as passages } from './passages.js';
+
+const actions:Action[] = [
+    ...pickGenericItem,
+    pickGenericItemOutOfContainer,
+    ...inspectRoomActions,
+    ...passageActions,
+    ...inspectItemActions,
+    ...genericQueries
+];
+const strings = {
     exposition: `You wake up lying on the carpeted floor with a massive headache.
     You can't remember anything, not even your name.
     You can't remember how you got here, let alone where is here.
@@ -24,14 +39,11 @@ export default {
     'available doors': 'item.',
     window: `It's very dark outside. You can't see a thing. This place is probably very isolated.`,
     'open-window': 'Alas! the window is bolted shut. You can\'t open it.',
-    'destination-unknown': `I don't know where the item is.`,
-    'the item is already open': 'The item is already open.',
-    'the item is locked': 'The item is locked.',
-    'the item is closed': 'The item is closed.',
-    'the item is hidden': 'is there a item here?',
-    'the item is opened': 'The item is now opened.',
-    'you entered the item': 'You entered the item.',
-    'how-to-get-there': `I don't know where you can get there.`,
-    ...pickUpItemStrings
+    ...pickUpItemStrings,
+    ...passages
 };
-      
+
+export {
+    actions,
+    strings
+};

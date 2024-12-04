@@ -3,6 +3,17 @@ import addToInventory from '../../../default/add-to-inventory.js';
 import print from "../../../default/print.js";
 const items = {
     'library': { type: 'room' },
+    'spiralling stairs': {
+        type: 'passage',
+        between: ['office', 'library'],
+        synonyms: ['stairs']
+    },
+    'lounge arch': {
+        type: 'passage',
+        between: ['living room', 'library'],
+        allowedStates: ['opened'],
+        state: 'opened',
+    },
     'bookshelves': {
         type: 'item',
         location: 'library',
@@ -57,6 +68,8 @@ const actions = [
 ];
 const strings = {
     library: 'A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs. The scent of old books fills the air.',
+    'spiralling stairs': 'A magnificent spiral staircase crafted from polished oak, with ornate wrought-iron railings spiraling upward.',
+    'lounge arch': 'A wide arch framed by elegant wooden beams. Bookshelves line the wall beyond, offering easy access from the cozy living room to the expansive library.',
     'found recipe book': `You find a book about how to make a pupcake. It looks quite straightforward to make despite your lack of experience.`,
     'found forensic guide': `You find a forensic guide. It's pretty cool. You learn how to use forensic kit and copy finger prints from one place to another.`
 };

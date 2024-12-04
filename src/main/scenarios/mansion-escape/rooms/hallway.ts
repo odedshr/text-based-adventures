@@ -1,6 +1,6 @@
-import { ItemVariable, Action, RoomVariable } from '../../../types.js';
+import { ItemVariable, Action, RoomVariable, PassageVariable } from '../../../types.js';
 
-const items:{[key:string]:ItemVariable|RoomVariable} = {
+const items:{[key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'hallway': { type: 'room' }
 };
 

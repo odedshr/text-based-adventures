@@ -1,3 +1,4 @@
+import isInRootLocation from "./is-in-root-location";
 export default function findByReference(gameDefinition, userId, reference) {
     const { references, variables } = gameDefinition;
     if (!reference) {
@@ -14,5 +15,5 @@ export default function findByReference(gameDefinition, userId, reference) {
     const currentLocation = variables[userId].location;
     // TODO: handle scenarios where there are multiple items in the same location
     // TODO: handle "it"
-    return candidates.find(candidate => { var _a; return ((_a = variables[candidate].between) === null || _a === void 0 ? void 0 : _a.includes(currentLocation)) || variables[candidate].location === currentLocation; });
+    return candidates.find(candidate => { var _a; return ((_a = variables[candidate].between) === null || _a === void 0 ? void 0 : _a.includes(currentLocation)) || isInRootLocation(variables, candidate, currentLocation); });
 }

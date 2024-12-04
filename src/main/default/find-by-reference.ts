@@ -1,4 +1,5 @@
 import { GameDefinition, ItemVariable, PassageVariable, PlayerVariable } from "../types";
+import isInRootLocation from "./is-in-root-location";
 
 export default function findByReference(gameDefinition:GameDefinition, userId:string, reference?:string):string | undefined {
     const { references, variables } = gameDefinition;
@@ -18,7 +19,5 @@ export default function findByReference(gameDefinition:GameDefinition, userId:st
     // TODO: handle scenarios where there are multiple items in the same location
     // TODO: handle "it"
     return candidates.find(candidate => 
-        (variables[candidate] as PassageVariable).between?.includes(currentLocation) || (variables[candidate] as ItemVariable).location === currentLocation
-    );
-
+        (variables[candidate] as PassageVariable).between?.includes(currentLocation) || isInRootLocation(variables, candidate, currentLocation));
 }

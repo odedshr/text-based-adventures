@@ -1,7 +1,19 @@
-import { Action, ItemVariable, RoomVariable } from '../../../types';
+import { Action, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
 
-const items:{ [key:string]: ItemVariable|RoomVariable } = {
+const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'garage': { type: 'room' },
+    'stone path arch': {
+        type: 'passage',
+        between: ['backyard', 'garage'],
+        allowedStates: ['opened'],
+        state: 'opened',
+    },
+    'workshop hatch': {
+        type: 'passage',
+        between: ['garage', 'basement'],
+        allowedStates: ['locked', 'closed', 'opened'],
+        state: 'locked',
+    },
     'house keys': {
         type: 'item',
         location: 'garage',

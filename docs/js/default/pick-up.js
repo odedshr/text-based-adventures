@@ -1,13 +1,16 @@
 import addToInventory from "./add-to-inventory.js";
 import findByReference from "./find-by-reference.js";
+import print from "./print";
 const items = {};
 const pickUpItem = /(pick up|take|grab|get|retrieve|can i take|i'll grab|i want to pick up|take that)\s+(.+)/; // Regular expression to match "pick up" commands
 const actions = [{
         input: pickUpItem,
         execute: (input, gameDefinition, userId) => {
-            var _a;
+            var _a, _b;
             const item = findByReference(gameDefinition, userId, (_a = input.match(pickUpItem)) === null || _a === void 0 ? void 0 : _a.pop());
             if (!item) {
+                console.error('pick up item', input, item, '=', (_b = input.match(pickUpItem)) === null || _b === void 0 ? void 0 : _b.pop());
+                print(gameDefinition, 'not sure what is item');
                 return;
             }
             // addToInventory will verify the item can be picked up and that it's in the same room as the user  

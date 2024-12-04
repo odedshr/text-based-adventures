@@ -1,4 +1,4 @@
-import { Condition, ConditionalGenerator, GameDefinition } from './types.js';
+import { Condition, ConditionalGenerator, GameDefinition, ItemVariable } from './types.js';
 
 import normalizeInput from "./normalize-input.js";
 import hasProfanity from "./profanity.js"
@@ -29,10 +29,12 @@ export default async function processMethod(input:string, gameDefinition:GameDef
         }
     }
     
+    console.error('unknown input', input);
     print(gameDefinition, 'what input means', input);
 }
 
 function isValid(gameDefinition: GameDefinition, userId: string , conditions?: Condition[] | ConditionalGenerator):boolean {
+    
     if (!conditions) {
         return true;
     }

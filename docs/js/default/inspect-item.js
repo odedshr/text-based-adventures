@@ -1,3 +1,4 @@
+import findByReference from "./find-by-reference";
 import print from "./print.js";
 const inspectItemRegExp = /(?:what is|describe|tell me about|look at|examine|inspect) (the|a|an)?\s*(\w+)/;
 const inspectLocationRegExp = /where is the (.+?)\?|where are the (.+?)\?|what is in my (.+?)\?|what do I have|can you tell me where the (.+?) is\?|is there a (.+?) here|where can I find the (.+?)/;
@@ -5,27 +6,31 @@ const inspectInventory = /what's in my (.+?)\?|show me my (.+?)|what do I have i
 const inspectItemActions = [
     {
         input: inspectItemRegExp,
-        execute: (input, gameDefinition, _) => {
-            const match = input.match(inspectItemRegExp);
-            if (!match) {
+        execute: (input, gameDefinition, userId) => {
+            var _a, _b, _c;
+            const item = findByReference(gameDefinition, userId, (_a = input.match(inspectItemRegExp)) === null || _a === void 0 ? void 0 : _a.pop());
+            if (!item) {
+                console.error('inspectItemRegExp', input, item, (_b = input.match(inspectItemRegExp)) === null || _b === void 0 ? void 0 : _b.pop(), gameDefinition.references[(_c = input.match(inspectItemRegExp)) === null || _c === void 0 ? void 0 : _c.pop()]);
                 print(gameDefinition, 'not sure what is item', 'item');
                 return;
             }
-            print(gameDefinition, match[2]);
+            print(gameDefinition, item);
         }
     },
     {
         input: inspectLocationRegExp,
-        execute: (input, gameDefinition, _) => {
+        execute: (input, gameDefinition, userId) => {
+            var _a;
             const { variables } = gameDefinition;
-            const match = input.match(inspectLocationRegExp);
-            if (!match) {
+            const itemName = findByReference(gameDefinition, userId, (_a = input.match(inspectLocationRegExp)) === null || _a === void 0 ? void 0 : _a.pop());
+            if (!itemName) {
+                console.error('inspectItemRegExp1', input, itemName, inspectLocationRegExp.test(input));
                 print(gameDefinition, 'not sure what is item', 'item');
                 return;
             }
-            const itemName = match[2];
             const item = variables[itemName];
             if (!item) {
+                console.error('inspectItemRegExp2', input, itemName, inspectLocationRegExp.test(input));
                 print(gameDefinition, 'not sure what is item', itemName);
             }
             else if (item.touched) {
@@ -40,10 +45,13 @@ const inspectItemActions = [
     {
         input: inspectInventory,
         execute: (input, gameDefinition, userId) => {
+            var _a;
             const { variables } = gameDefinition;
-            const match = input.match(inspectInventory);
-            if (!match) {
-                return false;
+            const itemName = findByReference(gameDefinition, userId, (_a = input.match(inspectInventory)) === null || _a === void 0 ? void 0 : _a.pop());
+            if (!itemName) {
+                console.error('inspectItemRegExp', input, itemName, inspectInventory.test(input));
+                print(gameDefinition, 'not sure what is item', 'item');
+                return;
             }
             const items = getEverythingIn(gameDefinition.variables, userId);
             if (items.length > 0) {
@@ -57,30 +65,6 @@ const inspectItemActions = [
     }
 ];
 export default inspectItemActions;
-// export default function inspectItem(input:string, gameDefinition:GameDefinition, userId: string) {
-//     const { variables } = gameDefinition;
-//     let itemName = isSpatialQuestion(input);
-//     if (!!itemName) {
-//         const item = variables[itemName] as ItemVariable;
-//         return item
-//         ? (item.touched ? `The ${itemName} is in ${item.location}.` : `I'm not sure where the ${itemName} is.`) 
-//         : `I'm not sure what the ${itemName} is.`
-//     }
-//     if (isInspectInventoryQuestion(input, variables)) {
-//         return listEverythingIn(variables, userId);
-//     }
-//     itemName = isInspectQuestion(input);
-//     if (!itemName) {
-//         return undefined;
-//     }
-//     const userLocation = (variables[userId] as PlayerVariable).location;
-//     // Check if the object is in the player's inventory
-//     const theItem = variables[itemName] as ItemVariable
-//     if (theItem && isItemAvailable(variables, userLocation, itemName)) {
-//         return getElementDescription(gameDefinition, itemName) || "You see nothing special about it.";
-//     }
-//     return `You don't see any ${itemName} anywhere`;
-// }
 function getEverythingIn(variables, location) {
     const possessions = [];
     const reversedTree = {};

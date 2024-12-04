@@ -1,13 +1,19 @@
 import addAchievement from '../../../default/add-achievement.js';
 import isValidAction from '../../../default/is-valid-action.js';
-import { ItemVariable, Action, GameDefinition, Variables, RoomVariable } from '../../../types.js';
+import { ItemVariable, Action, GameDefinition, Variables, RoomVariable, PassageVariable } from '../../../types.js';
 import print from "../../../default/print.js";
 
-const items:{[key:string]:ItemVariable|RoomVariable} = {
+const items:{[key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'guest room': {
         type: 'room',
         state: 'dark',
         synonyms: ['bedroom']
+    },
+    'bedroom door': {
+        type: 'passage',
+        between: ['hallway', 'guest room'],
+        allowedStates: ['closed', 'opened'],
+        state: 'closed',
     },
     'light switch': {
         type: 'item',
@@ -58,7 +64,7 @@ const actions:Action[] = [
         input: /(?:turn\s?on|switch\s?on|flip(\son)?|activate|power\s?on)\s(?:the\s)?(?:light|lights|light\s?switch)/,
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
         const { variables } = gameDefinition;
-        const lightSwitch = items['light switch'];
+        const lightSwitch = items['light switch'] as ItemVariable;
 
         if (!isValidAction(gameDefinition, [
             {item: userId, property: 'location', value: 'guest room', textId:'location-fail:user'}
@@ -83,7 +89,7 @@ const actions:Action[] = [
         input: /(?:turn\s?off|switch\s?off|flip(\s?off)?|deactivate|power\s?off)\s(?:the\s)?(?:light|lights|light\s?switch)/,
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
         const { variables } = gameDefinition;
-        const lightSwitch = items['light switch'];
+        const lightSwitch = items['light switch'] as ItemVariable;
 
         if (!isValidAction(gameDefinition, [
             {item: userId, property: 'location', value: 'guest room', textId:'location-fail:user'}
@@ -116,6 +122,7 @@ const strings = {
 
         return `It looks like a guest room. There's a bed, ${tableAndBag}`;
     },
+    'bedroom door': 'A simple yet elegant door with a brass knocker. It gives an inviting air, ushering visitors into the cozy guest room beyond.',
     'light already on': 'The light is already on.',
     'light turned on for the first time': `You managed to find the light switch and turn it on.`,
 }
