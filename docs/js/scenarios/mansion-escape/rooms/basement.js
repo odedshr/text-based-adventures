@@ -38,7 +38,7 @@ const actions = [
         ],
         execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
-            variables.valve = { ...variables['valve'],  location: 'pipe' };
+            variables.valve = Object.assign(Object.assign({}, variables['valve']), { location: 'pipe' });
             print(gameDefinition, 'valve screwed to pipe');
             addAchievement(gameDefinition, userId, 'secured valve to pipe');
             return false;
@@ -49,7 +49,7 @@ const actions = [
         execute(input, gameDefinition, userId) {
             //9 - empty pool to get key to secret room
             const { variables } = gameDefinition;
-            variables.pool = { ...variables['pool'],  state: 'drained' };
+            variables.pool = Object.assign(Object.assign({}, variables['pool']), { state: 'drained' });
             print(gameDefinition, 'pool drained');
             addAchievement(gameDefinition, userId, 'drained the pool');
             return false;

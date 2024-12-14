@@ -1,11 +1,9 @@
 import { describe } from "@jest/globals";
 import processMethod from '../../../../../docs/js/processor.js';
 import inspectRoomActions from '../../../../../docs/js/default/inspect-room.js';
-import inspectItemActions from '../../../../../docs/js/default/inspect-item.js';
 import { actions, items, strings } from '../../../../../docs/js/scenarios/mansion-escape/rooms/master-bedroom.js';
-
-import genericStrings from '../../../../../docs/js/default/strings.js';
 import initGame from '../../../../../docs/js/game-generator.js';
+import { strings as defaultStrings } from '../../../../../docs/js/default/index.js';
 
 describe('master bedroom', () => {
     it('should describe the room', async () => {
@@ -60,7 +58,7 @@ describe('master bedroom', () => {
                     }
                 },
                 [...inspectRoomActions, ...actions ],
-                { ...strings,...genericStrings }
+                { ...strings,...defaultStrings }
             );
 
             await processMethod(input, gameDefinition, 'user');

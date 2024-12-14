@@ -2,7 +2,9 @@ import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
 import print from "../../../default/print.js";
 const items = {
-    'attic': { type: 'room' },
+    'attic': {
+        type: 'room'
+    },
     'attic ladder': {
         type: 'passage',
         between: ['hallway', 'attic'],
@@ -44,17 +46,16 @@ const actions = [
             { item: userId, property: 'location', value: 'attic', textId: 'location-fail:user' },
         ],
         execute: (_, gameDefinition, userId) => {
-            const { variables } = gameDefinition;
-            const forensicKit = variables['forensic kit'];
-            print(gameDefinition, forensicKit.location === 'boxes' ? 'boxes:with-kit' : 'boxes:without-kit');
+            print(gameDefinition, 'boxes');
         }
     }
 ];
+const returnIfFlashlightOn = (variables, output) => variables.flashlight && variables.flashlight.state === 'on' ? output : `The room is utter darkness. You can't see anything.`;
 const strings = {
-    attic: 'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.',
+    attic: (variables) => returnIfFlashlightOn(variables, 'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.'),
     'attic ladder': 'A retractable wooden ladder hidden in the ceiling. When pulled down, it creaks ominously, allowing access to the dusty attic above.',
-    'boxes:with-kit': 'There are quite a few dusty boxes here with all sorts of rubbish inside. The only thing that looks interesting is a forensic kit.',
-    'boxes:without-kit': 'There are quite a few dusty boxes here with all sorts of rubbish inside.',
+    boxes: (variables) => returnIfFlashlightOn(variables, `There are quite a few dusty boxes here with all sorts of rubbish inside.${variables['forensic kit'] && variables['forensic kit'].location === 'boxes' ?
+        ' The only thing that looks interesting is a forensic kit.' : ''}`),
     'forensic kit': `It's a kid's version of a forensic kit. Basically it let you copy finger prints from one place to another. It's pretty cool.`,
     'got forensic kit': 'You got forensic kit, surely it can be useful.'
 };

@@ -6,12 +6,12 @@ import { actions, items, strings } from '../../../../../docs/js/scenarios/mansio
 describe('attic', () => {
     it('should describe the room', async () => {
         const gameDefinition = {
-            variables: { ...items, user: { location: 'attic' } },
+            variables: { ...items, user: { location: 'attic' }, flashlight:{state:'on'} },
             actions: [...inspectRoomActions, ...actions ],
             strings
         };
         await processMethod('look around', gameDefinition, 'user');
 
-        expect(gameDefinition.variables.console.value).toBe(gameDefinition.strings.attic);
+        expect(gameDefinition.variables.console.value).toBe(gameDefinition.strings.attic(gameDefinition.variables));
     });
 })

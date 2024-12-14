@@ -7,6 +7,10 @@ import variables from '../../../../docs/js/scenarios/mansion-escape/variables.js
 
 import initGame from '../../../../docs/js/game-generator.js';
 
+async function exec(gameDefinition, userId, action, result) {
+    await processMethod(action, gameDefinition, userId);
+    expect(gameDefinition.variables.console.value).toBe(result);
+}
 describe('Game-play', () => {
     it('should win game', async () => {
         const userId = 'player1';
@@ -77,6 +81,9 @@ describe('Game-play', () => {
 
         await processMethod('describe the room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A room dedicated to various hobby, including shelves of crafting supplies, a large table for working on projects, and musical instruments in one corner.`);
+
+        await processMethod('pick up glue', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You picked up the glue.');
 
         await processMethod('feed the fish', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You empty the fish food tub and put it in the aquarium. After eating they seems to have calmed down.');
@@ -149,6 +156,9 @@ describe('Game-play', () => {
         
         await processMethod('go to office', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the office.');
+
+        await processMethod('glue broken vase', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You carefully glue the broken vase.');
 
         await processMethod('take portrait off the wall', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`You removed the portrait from the wall. There's a safe hidden behind the portrait!`);
@@ -277,6 +287,18 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the attic.');
 
         await processMethod('look around', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`The room is utter darkness. You can't see anything.`);
+
+        await processMethod('turn on flashlight', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You probably need to get batteries for this flashlight to work.`);
+
+        await processMethod('put batteries in flashlight', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You put the batteries in the flashlight, but you're wondering how much juice they actually have in them.`);
+
+        await processMethod('turn on flashlight', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You turn on the flashlight. Let's see how long it would last.`);
+
+        await processMethod('look around', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.');
 
         await processMethod('look in boxes', gameDefinition, userId);
@@ -284,6 +306,9 @@ describe('Game-play', () => {
 
         await processMethod('pick up forensic kit', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the forensic kit.');
+
+        await processMethod('turn off flashlight', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You turn off the flashlight. Smart thinking.`);
 
         await processMethod('go to hallway', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
@@ -315,19 +340,18 @@ describe('Game-play', () => {
         await processMethod('use fingerprints on safe', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You carefully planted the fingerprints on the safe.');
 
-        /*
-        read forensic guide book
-        read dog recipes book
-        prepare dog treat with sleeping pills
-        feed dog
-        open garage
-        put batteries in flashlight
-        turn flashlight
-        get master key
-        turn off flashlight
-        go to office
-        leave mansion
-        */
+        await processMethod('go to hallway', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
+
+        await processMethod('go to foyer', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the foyer.');
+
+        await processMethod('unlock main door using master key', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You unlock the main door.');
+
+        await processMethod('leave mansion', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You left the mansion.');
+
         const results = JSON.stringify(gameDefinition.variables.achievements.value);
         const expected = JSON.stringify([
             "player1 picked up newspaper",
@@ -355,6 +379,7 @@ describe('Game-play', () => {
             "player1 read plaque on statue",
             "player1 entered the library",
             "player1 entered the office",
+            "player1 glued the vase",
             "player1 unlocked safe",
             "player1 obtained ledger",
             "player1 locked safe",
@@ -372,10 +397,18 @@ describe('Game-play', () => {
             "player1 entered the backyard",
             "player1 picked up key",
             "player1 entered the attic",
+            "player1 put batteries in flashlight",
+            "player1 used flashlight",
             "player1 found secret room",
             "player1 entered the secret room",
             "player1 copied fingerprints",
-            "player1 planted fingerprints"]);
+            "player1 planted fingerprints",
+            "player1 unlocked main door",
+            "player1 left the mansion"]);
         expect(results).toBe(expected);
     });
 })
+
+// leave mansion properly
+// feed dog with sleeping pills
+// battery timeout

@@ -10,9 +10,11 @@ export type ListVariable =  { type: "list", value: any[] };
 export type Variable = RoomVariable | PassageVariable | PlayerVariable | ItemVariable | NumberVariable | ListVariable | ConsoleVariable;
 
 export type Variables = {[key:string]:Variable};
-export type VariableModifyUpdate = (variableName:string, value:Variable) => void;
+export type VariableModifyUpdate = (gameDefinition:GameDefinition, variableName: string, variable: Variable) => void;
 
-export type GetStringMethod = (variables:Variables) => string
+export type GetStringMethod = (variables:Variables) => string;
+export type Strings = {[key:string]:string | GetStringMethod};
+
 export type Location = {
     actions: Action[],
     strings: {[key:string]:string | GetStringMethod },
@@ -36,8 +38,7 @@ export type GameDefinition = Location & {
     variables: Variables,
     references: {[key:string]:string[]},
     handlers: VariableModifyUpdate[],
-    handle: (variableName:string, variable:Variable) => void
+    // handle: (variableName:string, variable:Variable) => void
     startTimer: (name:string) => void,
-    stopTimer: (name:string) => void,
-    timeHandlers: {[key:string]:TimerHandler}
+    stopTimer: (name:string) => void
 }

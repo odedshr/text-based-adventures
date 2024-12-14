@@ -1,10 +1,13 @@
 import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
-import { ItemVariable, Action, GameDefinition, RoomVariable, PassageVariable } from '../../../types.js';
+import { ItemVariable, Action, GameDefinition, RoomVariable, PassageVariable, Strings, Variables } from '../../../types.js';
 import print from "../../../default/print.js";
+import variables from '../variables.js';
 
 const items:{[key:string]: ItemVariable|RoomVariable|PassageVariable } = {
-    'attic': { type: 'room' },
+    'attic': {
+        type: 'room'
+    },
     'attic ladder': {
         type: 'passage',
         between: ['hallway', 'attic'],
@@ -50,18 +53,23 @@ const actions:Action[] = [
             {item: userId, property: 'location', value: 'attic', textId:'location-fail:user'},
         ],
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
-            const { variables } = gameDefinition;
-            const forensicKit = variables['forensic kit'] as ItemVariable;
-            print(gameDefinition, forensicKit.location === 'boxes' ? 'boxes:with-kit' : 'boxes:without-kit');
+            print(gameDefinition, 'boxes');
         }
     }
 ];
 
-const strings = {
-    attic: 'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.',
+const returnIfFlashlightOn = (variables:Variables, output:string) =>
+    variables.flashlight && (variables.flashlight as ItemVariable).state === 'on' ? output : `The room is utter darkness. You can't see anything.`
+
+const strings:Strings = {
+    attic: (variables:Variables) => returnIfFlashlightOn(variables, 
+        'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.'),
     'attic ladder': 'A retractable wooden ladder hidden in the ceiling. When pulled down, it creaks ominously, allowing access to the dusty attic above.',
-    'boxes:with-kit': 'There are quite a few dusty boxes here with all sorts of rubbish inside. The only thing that looks interesting is a forensic kit.',
-    'boxes:without-kit': 'There are quite a few dusty boxes here with all sorts of rubbish inside.',
+    boxes: (variables:Variables) => returnIfFlashlightOn(variables,
+        `There are quite a few dusty boxes here with all sorts of rubbish inside.${
+            variables['forensic kit'] && (variables['forensic kit'] as ItemVariable).location === 'boxes' ? 
+            ' The only thing that looks interesting is a forensic kit.' :''}`
+     ),
     'forensic kit': `It's a kid's version of a forensic kit. Basically it let you copy finger prints from one place to another. It's pretty cool.`,
     'got forensic kit': 'You got forensic kit, surely it can be useful.'
 }

@@ -1,4 +1,6 @@
-import { ItemVariable, Action, RoomVariable, PassageVariable } from '../../../types.js';
+import addAchievement from '../../../default/add-achievement.js';
+import print from "../../../default/print.js";
+import { ItemVariable, Action, RoomVariable, PassageVariable, GameDefinition, Variable, Variables } from '../../../types.js';
 
 const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable } = {
     'foyer': { type: 'room' },
@@ -12,17 +14,53 @@ const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable } = {
         state: 'locked',
         allowedStates: ['locked', 'closed', 'opened'],
         type: 'passage',
+        synonyms: ['main door'],
         between: ['foyer door','outside'],
     },
 };
 
-const actions:Action[] = [ 
+const actions:Action[] = [
+    {
+        input: /\bunlock main door using master key\b/,
+        conditions: (_, userId) => [
+            { item: userId, property: 'location', value: 'foyer', textId:'location-fail:user'},
+            { item: 'key', property: 'location', value: userId, textId:'location-fail:item'},
+            { item: 'entrance door', property: 'state', value: 'locked', textId:'door is not locked'},
+        ],
+        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+            const { variables } = gameDefinition;
+            const entranceDoor = variables['entrance door'];
+            variables['entrance door'] = { ...entranceDoor, state: 'opened' } as PassageVariable;
+            addAchievement(gameDefinition, userId, 'unlocked main door');
+            print(gameDefinition, 'unlocked main door');
+        },
+    },
+    {
+        input: /\bleave mansion\b/,
+        conditions: (_, userId) => [
+            { item: userId, property: 'location', value: 'foyer', textId:'location-fail:user'},
+            { item: 'entrance door', property: 'state', value: 'opened', textId:'door is locked'},
+        ],
+        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+            const { variables } = gameDefinition;
+            const entranceDoor = variables['entrance door'];
+            variables['entrance door'] = { ...entranceDoor, state: 'opened' } as PassageVariable;
+            addAchievement(gameDefinition, userId, 'left the mansion');
+            print(gameDefinition, 'left mansion');
+        },
+    } 
 ];
 
 const strings = {
     foyer: 'The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug. A coat stand and an umbrella holder are by the door.',
     'grand archway': 'A wide archway framed with ornate molding, allowing the sound of footsteps to echo faintly between the foyer and hallway. A fine runner rug extends into the corridor, welcoming guests deeper into the mansion.',
     'entrance door': 'A pair of heavy oak doors with intricate carvings of vines and flowers. They swing open easily, revealing the warm and inviting foyer beyond.',
+    'door is locked': 'The door is locked.',
+    'door is not locked': 'The door is not locked.',
+    'unlocked main door': 'You unlock the main door.',
+    'left mansion'(variables:Variables) {
+        return `You left the mansion.`;
+    }
 }
 
 export {

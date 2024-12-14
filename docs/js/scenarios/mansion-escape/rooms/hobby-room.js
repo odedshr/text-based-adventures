@@ -10,6 +10,11 @@ const items = {
         allowedStates: ['closed', 'opened'],
         state: 'closed',
     },
+    glue: {
+        type: 'item',
+        location: 'hobby room',
+        canBeHeld: true
+    },
     aquarium: {
         type: 'item',
         state: 'hungry-fish',

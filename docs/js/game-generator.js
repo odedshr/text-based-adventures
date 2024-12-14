@@ -1,33 +1,32 @@
-import timeHandlers from './scenarios/mansion-escape/timers.js';
 const timers = {};
-const handlers = [];
-function handle(variableName, variable) {
-    handlers.forEach(handle => handle(variableName, variable));
+// const handlers:VariableModifyUpdate[] = [];
+function handle(gameDefinition, variableName, variable) {
+    gameDefinition.handlers.forEach(handle => handle(gameDefinition, variableName, variable));
 }
-function getProxy(variables) {
+function getProxy(gameDefinition, variables) {
     return new Proxy(variables, {
         set: function (target, variableName, variable) {
             target[variableName] = variable;
-            handle(variableName, variable);
+            handle(gameDefinition, variableName, variable);
             return true;
         }
     });
 }
-function initTimers(gameDefinition) {
-    const { variables, handlers } = gameDefinition;
-    handlers.push((variableName, variable) => {
-        if (variable.type === 'number' && variable.state === 'decreasing' && variable.value === 0) {
-            gameDefinition.timeHandlers[variableName](gameDefinition);
-        }
-    });
-    Object.keys(variables).filter(key => variables[key].type === 'number' && variables[key].state === 'decreasing')
-        .forEach(variable => gameDefinition.startTimer(variable));
-}
+// function initTimers (gameDefinition: GameDefinition) {
+//     const { variables, handlers } = gameDefinition;
+//     handlers.push((variableName, variable) => {
+//         if (variable.type === 'number' && variable.state === 'decreasing' && variable.value <= 0) {
+//             gameDefinition.timeHandlers[variableName](gameDefinition);    
+//         }
+//     });
+//     Object.keys(variables).filter(key => variables[key].type === 'number' && variables[key].state === 'decreasing')
+//         .forEach(variable => gameDefinition.startTimer(variable));
+// }
 function startTimer(variables, name) {
     timers[name] = setInterval(() => {
         const value = variables[name].value - 1;
         variables[name] = { type: "number", value };
-        if (value === 0) {
+        if (value <= 0) {
             stopTimer(name);
         }
     }, 1000);
@@ -54,20 +53,19 @@ function getReferences(variables) {
         return dict;
     }, {});
 }
-function initGame(variables, actions, strings) {
-    const variablesProxy = getProxy(variables);
+function initGame(variables, actions, strings, handlers = []) {
     const gameDefinition = {
-        variables: variablesProxy,
-        references: getReferences(variablesProxy),
+        variables, // will be replaced with variablesProxy
+        references: {}, // will be filled later with variablesProxy
         handlers,
         actions,
         strings,
-        timeHandlers,
-        handle,
-        startTimer: (name) => startTimer(variablesProxy, name),
+        startTimer: (name) => { }, // will be filled later with variablesProxy
         stopTimer,
     };
-    initTimers(gameDefinition);
+    gameDefinition.variables = getProxy(gameDefinition, gameDefinition.variables);
+    gameDefinition.references = getReferences(gameDefinition.variables);
+    gameDefinition.startTimer = (name) => startTimer(gameDefinition.variables, name);
     return gameDefinition;
 }
 export default initGame;

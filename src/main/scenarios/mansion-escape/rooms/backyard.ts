@@ -25,7 +25,8 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     key: {
         type: 'item',
         location: 'pool',
-        canBeHeld: true
+        canBeHeld: true,
+        synonyms: ['master key']
     }
 }
 
@@ -50,7 +51,6 @@ const actions:Action[] = [
             addToInventory(gameDefinition, userId, 'key');
             print(gameDefinition, 'you-picked-up-the-item', 'key');
             addAchievement(gameDefinition, userId, 'picked up key');
-            return false;
         }
     }
 ];

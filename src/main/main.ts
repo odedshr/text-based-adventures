@@ -1,13 +1,13 @@
-import { ConsoleVariable, ListVariable, NumberVariable, Variable } from './types.js';
+import { ConsoleVariable, GameDefinition, ListVariable, NumberVariable, Variable } from './types.js';
 
 import processMethod from './processor.js';
 import log from './log.js';
 import initGame from './game-generator.js';
 import { updateScore, updateTimer } from './header.js';
 
-import { actions, strings, variables } from './scenarios/mansion-escape/index.js';
+import { actions, strings, variables, handlers } from './scenarios/mansion-escape/index.js';
 
-const gameDefinition = initGame(variables, actions, strings);
+const gameDefinition = initGame(variables, actions, strings, handlers);
 
 // Get the DOM elements
 const outputElement:HTMLOutputElement = document.getElementById('output') as HTMLOutputElement;
@@ -73,7 +73,7 @@ function init() {
     const inputField = document.getElementById('input') as HTMLInputElement;
     inputField.addEventListener('keydown', onKeyDown);
 
-    gameDefinition.handlers.push((variableName:string, item:Variable) => {
+    gameDefinition.handlers.push((_: GameDefinition, variableName:string, item:Variable) => {
         switch(variableName) {
             case 'achievements': updateScore((item as ListVariable).value.length); break;
             case 'countdown': updateTimer((item as NumberVariable).value); break;
@@ -98,6 +98,7 @@ function init() {
     });
 
     appendToPrint(gameDefinition.strings.exposition as string);
+    gameDefinition.startTimer('countdown');
 }
 
 init();

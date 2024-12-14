@@ -1,5 +1,4 @@
-import { GameDefinition, Variables } from './../types';
-import { GetStringMethod } from "../types";
+import { GameDefinition, GetStringMethod } from "../types";
 
 export default function print(gameDefinition: GameDefinition, textId:string, itemName?:string, locationName?: string) {
     const { strings, variables } = gameDefinition;

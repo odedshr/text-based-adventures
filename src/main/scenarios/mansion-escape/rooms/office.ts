@@ -22,16 +22,16 @@ const items:{[key:string]:Variable} = {
         location: 'office',
         synonyms: ['portrait', 'picture', 'painting', 'paintings']
     },
-    'trash bin': {
+    bin: {
         type: 'item',
         location: 'office',
         canBeHeld: true,
         canContain: 10,
-        synonyms: ['bin', 'trash', 'paper bin']
+        synonyms: ['trash bin', 'trash', 'paper bin']
     },
     'crumpled newspaper': {
         type: 'item',
-        location: 'trash bin',
+        location: 'bin',
         canBeHeld: true,
         synonyms: [
             'newspaper',
@@ -40,12 +40,13 @@ const items:{[key:string]:Variable} = {
             'crumpled paper'
         ]
     },
-    'broken vase pieces': {
+    vase: {
         type: 'item',
         location: 'office',
         canBeHeld: true,
+        state: 'broken',
         synonyms: [
-            'pieces of vase', 'pieces', 'vase', 'vase pieces', 'broken vase', 'shattered vase'
+            'pieces of vase', 'pieces', 'broken vase pieces', 'vase pieces', 'broken vase', 'shattered vase'
         ]
     },
     safe: {
@@ -170,11 +171,19 @@ const actions:Action[] = [
         }
     },
     {
-        input: /\b(?:glue|fix|repair|mend|stick|reassemble|piece\s*together)\s*(?:the\s*)?(?:broken|shattered|cracked|damaged)?\s*(?:vase|pot|ceramic|container)\s*(?:pieces\s*)?(?:back|together|in\s*place)\b/,
+        input: /\b(?:glue|fix|repair|mend|stick|reassemble|piece\s*together)\s*(?:the\s*)?(?:broken|shattered|cracked|damaged)?\s*(?:vase|pot|ceramic|container)\s*(?:pieces\s*)?(?:back|together|in\s*place)?\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: 'glue', property: 'location', value: userId, textId:'location-fail:item'},
+            {item: 'vase', property: 'location', value: 'office', textId:'location-fail:item'},
+            {item: 'vase', property: 'state', value: 'broken', textId:'already glued'},
+        ],
         execute(input:string, gameDefinition:GameDefinition, userId:string) {
-            //6 - glue vase back (find glue?)
             const { variables } = gameDefinition;
-            print(gameDefinition, 'not yet implemented');
+            const vase = variables.vase as ItemVariable;
+            variables.vase = { ...vase, state: 'glued' };
+
+            print(gameDefinition, 'glued vase');
+            addAchievement(gameDefinition, userId, 'glued the vase');
             return false;
         }
     },
@@ -278,10 +287,10 @@ const strings = {
         const portraitIdentity = (portrait.state as Attributes).identity==='cartwright' ? 'of John Cartwright ' : 'of someone '
         const portraitPlacement = (portrait.state as Attributes).placement ==='wall' ? 'behind the desk hanging on the wall': 'on the floor behind the desk';
         const newspaper = (variables['crumpled newspaper'] as ItemVariable).location === 'office' ? ', inside of which is a crumpled newspaper' : '';
-        const trashBin = (variables['trash bin'] as ItemVariable).location === 'office' ? `To the side of the desk is a small bin${newspaper}.` : '';
+        const bin = (variables.bin as ItemVariable).location === 'office' ? `To the side of the desk is a small bin${newspaper}.` : '';
         return `The room looks like a home-office.
     It has a sturdy oak desk at its center, papers neatly stacked on one side, and a leather journal lying open.
-    There's large portrait ${portraitIdentity}${portraitPlacement}. There's a closed blue door on the opposite wall. ${trashBin}
+    There's large portrait ${portraitIdentity}${portraitPlacement}. There's a closed blue door on the opposite wall. ${bin}
     A spiral staircase leads down to what looks like a library.
     On the floor, near the window, a broken vase lies in pieces.`
     },
@@ -321,6 +330,8 @@ const strings = {
     'you pick up the ledger': 'You pick up the ledger. You got the incriminating evidence you came for.',
     'no fingerprints in forensic kit': 'There are no fingerprints in the forensic kit',
     'planted fingerprints': 'You carefully planted the fingerprints on the safe.',
+    'glued vase': 'You carefully glue the broken vase.',
+    'already glued': 'You already glued the vase.'
 };
 
 export {
