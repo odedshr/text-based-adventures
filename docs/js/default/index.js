@@ -1,4 +1,3 @@
-import pickGenericItemOutOfContainer from './take-out.js';
 import inspectRoomActions from './inspect-room.js';
 import inspectItemActions from './inspect-item.js';
 import { actions as genericQueries } from './generic-queries.js';
@@ -6,7 +5,6 @@ import { actions as pickGenericItem, strings as pickUpItemStrings } from './pick
 import { actions as passageActions, strings as passages } from './passages.js';
 const actions = [
     ...pickGenericItem,
-    pickGenericItemOutOfContainer,
     ...inspectRoomActions,
     ...passageActions,
     ...inspectItemActions,

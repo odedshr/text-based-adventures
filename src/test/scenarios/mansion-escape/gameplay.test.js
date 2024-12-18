@@ -257,6 +257,15 @@ describe('Game-play', () => {
         await processMethod('pick up dog bowl', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the dog food bowl.');
 
+        await processMethod('go to kitchen', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the kitchen.');
+
+        await processMethod('prepare pupcake using sleeping pills', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('While carefully adding the sleeping pills, you skillfully follow the recipe and prepare a pupcake that a dog might eat.');
+
+        await processMethod('go to dining room', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You entered the dining room.');
+
         await processMethod('go to foyer', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the foyer.');
 
@@ -268,6 +277,12 @@ describe('Game-play', () => {
 
         await processMethod('go to backyard', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the backyard.');
+
+        await processMethod('fetch key from pool', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('The dog growls at you when you try to approach the pool. You dare not step any further.');
+
+        await processMethod('give pupcake to dog', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('Finally the dogs comes down and heads to sleep in its kennel.');
 
         await processMethod('fetch key from pool', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the key.');
@@ -401,7 +416,11 @@ describe('Game-play', () => {
             "player1 watched cctv",
             "player1 scrubbed cctv",
             "player1 entered the pantry",
+            "player1 prepared pupcakes",
+            "player1 drugged pupcakes",
             "player1 entered the backyard",
+            "player1 fed dog",
+            "player1 drugged dog",
             "player1 picked up key",
             "player1 entered the attic",
             "player1 put batteries in flashlight",
