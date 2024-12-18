@@ -58,7 +58,7 @@ const actions = [
         conditions(_, userId) {
             return [
                 { item: userId, property: 'location', value: 'master bedroom', textId: 'location-fail:user' },
-                { item: 'cctv', property: 'state', value: 'watched', textId: 'waste of time' },
+                { item: 'cctv', property: 'watched', value: 'yes', textId: 'waste of time' },
                 { item: 'secret door', property: 'state', value: 'hidden', textId: 'you already know where the secret door is' },
             ];
         },

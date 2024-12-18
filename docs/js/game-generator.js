@@ -12,16 +12,6 @@ function getProxy(gameDefinition, variables) {
         }
     });
 }
-// function initTimers (gameDefinition: GameDefinition) {
-//     const { variables, handlers } = gameDefinition;
-//     handlers.push((variableName, variable) => {
-//         if (variable.type === 'number' && variable.state === 'decreasing' && variable.value <= 0) {
-//             gameDefinition.timeHandlers[variableName](gameDefinition);    
-//         }
-//     });
-//     Object.keys(variables).filter(key => variables[key].type === 'number' && variables[key].state === 'decreasing')
-//         .forEach(variable => gameDefinition.startTimer(variable));
-// }
 function startTimer(variables, name) {
     timers[name] = setInterval(() => {
         const value = variables[name].value - 1;

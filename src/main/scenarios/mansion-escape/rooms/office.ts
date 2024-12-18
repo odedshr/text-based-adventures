@@ -16,8 +16,8 @@ const items:{[key:string]:Variable} = {
     portrait: {
         type: 'item',
         state: {
-            'placement': 'wall', // wall/floor
-            'identity': 'unknown', // unknown/cartwright
+            placement: 'wall', // wall/floor
+            identity: 'unknown', // unknown/cartwright
         },
         location: 'office',
         synonyms: ['portrait', 'picture', 'painting', 'paintings']
@@ -52,7 +52,10 @@ const items:{[key:string]:Variable} = {
     safe: {
         type: 'item',
         location: 'office',
-        state: 'locked',
+        state: {
+            locked: 'yes',
+            fingerprints: 'no'
+        },
         canContain: 'ledger',
         synonyms: ['vault']
     },
@@ -156,7 +159,7 @@ const actions:Action[] = [
             return [
                 {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
                 {item: 'portrait', property: 'placement', value: 'wall' as string, textId:'the portrait is blocking the safe'},
-                {item: 'safe', property: 'state', value: 'opened', textId:'the item is not opened'},
+                {item: 'safe', property: 'locked', value: 'no', textId:'the item is not opened'},
                 {item: 'ledger', property: 'location', value: 'safe', textId:'the ledger is not in the safe'},
             ];
         },
@@ -188,26 +191,18 @@ const actions:Action[] = [
         }
     },
     {
-        input: /\b(?:put|place|apply|smudge|leave|transfer)\s*(?:Lena's\s*)?(?:fingerprints|prints|finger\s*marks)\s*(?:on\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        execute (input:string, gameDefinition:GameDefinition, userId:string) {
-            //7 - put fingerprints on safe
-            const { variables } = gameDefinition;
-            print(gameDefinition, 'not-yet-implemented');
-            return false;
-        }
-    },
-    {
         input: /\b(?:use|type)\s+(?:code\s+)?30(?:[.\s/-]?02)(?:[.\s/-]?19)(?:[.\s/-]?85)\s+(?:in\s+keypad\s+)?to\s+(?:unlock|open)\s+(?:safe|vault)\b/,
         conditions (_:GameDefinition, userId:string) {
             return [
                 {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
                 {item: 'portrait', property: 'placement', value: 'floor' as string, textId:'the portrait is blocking the safe'},
-                {item: 'safe', property: 'state', value: 'locked', textId:'the safe is not closed'},
+                {item: 'safe', property: 'locked', value: 'yes', textId:'the safe is not closed'},
             ];
         },
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
-            variables.safe = { ...variables.safe as ItemVariable, state: 'unlocked' };
+            const safe = variables.safe as ItemVariable;
+            variables.safe = { ...variables.safe, state: { ... safe.state as Attributes, locked:'no' } } as ItemVariable;
 
             print(gameDefinition, 'safe unlocked');
             addAchievement(gameDefinition, userId, 'unlocked safe');
@@ -220,7 +215,7 @@ const actions:Action[] = [
             return [
                 {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
                 {item: 'portrait', property: 'placement', value: 'floor' as string, textId:'the portrait is blocking the safe'},
-                {item: 'safe', property: 'state', value: 'locked', textId:'the safe is not closed'},
+                {item: 'safe', property: 'locked', value: 'yes', textId:'the safe is not closed'},
             ];
         },
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
@@ -233,7 +228,7 @@ const actions:Action[] = [
         conditions: (_:GameDefinition, userId:string) => [
             {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
             {item: 'portrait', property: 'placement', value: 'floor' as string, textId:'the portrait is blocking the safe'},
-            {item: 'safe', property: 'state', value: 'unlocked', textId:'the safe is locked'},
+            {item: 'safe', property: 'locked', value: 'no', textId:'the safe is locked'},
             {item: 'ledger', property: 'location', value: 'safe', textId:'location-fail:item'},
         ],
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
@@ -249,12 +244,13 @@ const actions:Action[] = [
             return [
                 {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
                 {item: 'portrait', property: 'placement', value: 'floor' as string, textId:'the portrait is blocking the safe'},
-                {item: 'safe', property: 'state', value: 'unlocked', textId:'safe already locked'},
+                {item: 'safe', property: 'locked', value: 'no', textId:'safe already locked'},
             ];
         },
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
-            variables.safe = { ...variables.safe as ItemVariable, state: 'locked' };
+            const safe = variables.safe as ItemVariable;
+            variables.safe = { ...variables.safe, state: { ... safe.state as Attributes, locked:'yes' } } as ItemVariable;
 
             print(gameDefinition, 'safe locked');
             addAchievement(gameDefinition, userId, 'locked safe');
@@ -272,7 +268,9 @@ const actions:Action[] = [
         },
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
-            variables.safe = { ...variables.safe as ItemVariable, state: 'unlocked' };
+            const safe = variables.safe as ItemVariable;
+            variables.safe = { ...variables.safe, state: { ... safe.state as Attributes, fingerprints:'yes' } } as ItemVariable;
+
             variables['forensic kit'] = { ...variables['forensic kit'] as ItemVariable, state: 'no fingerprints' };
             print(gameDefinition, 'planted fingerprints');
             addAchievement(gameDefinition, userId, 'planted fingerprints')

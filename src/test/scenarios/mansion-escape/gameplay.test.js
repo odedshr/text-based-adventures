@@ -1,9 +1,7 @@
 import { describe } from "@jest/globals";
 import processMethod from '../../../../docs/js/processor.js';
 
-import actions from '../../../../docs/js/scenarios/mansion-escape/actions.js';
-import strings from '../../../../docs/js/scenarios/mansion-escape/strings.js';
-import variables from '../../../../docs/js/scenarios/mansion-escape/variables.js';
+import { actions, strings, variables, handlers } from '../../../../docs/js/scenarios/mansion-escape/index.js';
 
 import initGame from '../../../../docs/js/game-generator.js';
 
@@ -14,7 +12,7 @@ async function exec(gameDefinition, userId, action, result) {
 describe('Game-play', () => {
     it('should win game', async () => {
         const userId = 'player1';
-        const gameDefinition = initGame(variables, actions, strings);
+        const gameDefinition = initGame(variables, actions, strings, handlers);
         
         // timer isn't being used and leaving it running will prevent to finish if there's an error
         gameDefinition.stopTimer('countdown');
@@ -226,6 +224,9 @@ describe('Game-play', () => {
         await processMethod('watch cctv recording', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You watch the cctv recording. partner in secret room; hit by the head');
 
+        await processMethod('scrub cctv recording', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe('You delete all evidence of your actions from the cctv recording.');
+
         await processMethod('go to basement', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the basement.');
 
@@ -340,6 +341,9 @@ describe('Game-play', () => {
         await processMethod('use fingerprints on safe', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You carefully planted the fingerprints on the safe.');
 
+        await processMethod('put portrait back on the wall', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You put the portrait back on the wall. The safe is hidden again.`);
+
         await processMethod('go to hallway', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
 
@@ -349,8 +353,10 @@ describe('Game-play', () => {
         await processMethod('unlock main door using master key', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You unlock the main door.');
 
-        await processMethod('leave mansion', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You left the mansion.');
+        await processMethod('walk through main door', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You flee the mansion. After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
+        He checks the safe for fingerprints and find Lola, who is shortly after apprehended.
+        You manage to use the ledger to incriminate Cartwright. Good Job!`);
 
         const results = JSON.stringify(gameDefinition.variables.achievements.value);
         const expected = JSON.stringify([
@@ -393,6 +399,7 @@ describe('Game-play', () => {
             "player1 unlocked vault",
             "player1 entered the security room",
             "player1 watched cctv",
+            "player1 scrubbed cctv",
             "player1 entered the pantry",
             "player1 entered the backyard",
             "player1 picked up key",
@@ -411,4 +418,3 @@ describe('Game-play', () => {
 
 // leave mansion properly
 // feed dog with sleeping pills
-// battery timeout

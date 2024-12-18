@@ -1,4 +1,4 @@
-import { Action, ItemVariable, GameDefinition, RoomVariable, PassageVariable, Variables } from '../../../types';
+import { Action, ItemVariable, GameDefinition, RoomVariable, PassageVariable, Variables, Attributes } from '../../../types';
 import print from '../../../default/print.js';
 import addAchievement from '../../../default/add-achievement';
 
@@ -13,7 +13,11 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     cctv: {
         type: 'item',
         location: 'security room',
-        state: 'idle'
+        state: {
+            watched: 'no',
+            scrubbed: 'no',
+        },
+        synonyms: ['recording', 'surveillance tapes', 'footage', 'video']
     },
     flashlight: {
         type: 'item',
@@ -30,26 +34,33 @@ const actions:Action[] = [
             const watched = (gameDefinition.variables.cctv as ItemVariable).state === 'watched';
             return [
                 {item: userId, property: 'location', value: 'security room', textId:'location-fail:user'},
-                {item: 'cctv', property: 'state', value: watched ? 'watched' : 'idle', textId:'already scrubbed'},
+                {item: 'cctv', property: 'scrubbed', value: 'no', textId:'already scrubbed'},
             ];
         },
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
-            //9 - check video and see partner in the sex dungeon
             const { variables } = gameDefinition;
             const cctv = variables.cctv as ItemVariable;
-            variables.cctv = { ...cctv, state: 'watched' };
+            variables.cctv = { ...cctv, state: { ... cctv.state as Attributes, watched: 'yes' } };
             addAchievement(gameDefinition, userId, 'watched cctv');
             print(gameDefinition, 'watch cctv recording');
-            return false;
         }
     },
     {
-        input: /\b(?:delete|remove|erase|discard|clear|cctv)\s*(?:the\s*)?(?:cctv\s*recording|cctv\s*footage|video\s*recording)\b/,
+        input: /\b(?:delete|remove|erase|discard|clear|scrub)\s*(?:the\s*)?(?:cctv\s*recording|cctv\s*footage|video\s*recording)\b/,
+        conditions: (gameDefinition:GameDefinition, userId:string) => {
+            const watched = (gameDefinition.variables.cctv as ItemVariable).state === 'watched';
+            return [
+                {item: userId, property: 'location', value: 'security room', textId:'location-fail:user'},
+                {item: 'cctv', property: 'scrubbed', value: 'no', textId:'already scrubbed'},
+            ];
+        },
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
-            //0 - delete cctv recording
+            // TODO: DELETE CCTV AS THE LAST THING IN THE HOUSE
             const { variables } = gameDefinition;
-            print(gameDefinition, 'not-yet-implemented');
-            return false;
+            const cctv = variables.cctv as ItemVariable;
+            variables.cctv = { ...cctv, state: { ... cctv.state as Attributes, scrubbed: 'yes' } };
+            addAchievement(gameDefinition, userId, 'scrubbed cctv');
+            print(gameDefinition, 'scrubbed cctv');
         }
     },
     {
@@ -107,6 +118,7 @@ const strings = {
     },
     'vault door': 'The vault door is a large and well-constructed door, filled with security cameras and surveillance equipment. It is a must-see if you want to escape the mansion.',
     'watch cctv recording': 'You watch the cctv recording. partner in secret room; hit by the head',
+    'scrubbed cctv': 'You delete all evidence of your actions from the cctv recording.',
     'already scrubbed': 'You already scrubbed the cctv recording.',
     'need batteries': 'You probably need to get batteries for this flashlight to work.',
     'batteries in flashlight': `You put the batteries in the flashlight, but you're wondering how much juice they actually have in them.`,

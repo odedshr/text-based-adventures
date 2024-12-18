@@ -38,7 +38,6 @@ export type GameDefinition = Location & {
     variables: Variables,
     references: {[key:string]:string[]},
     handlers: VariableModifyUpdate[],
-    // handle: (variableName:string, variable:Variable) => void
     startTimer: (name:string) => void,
     stopTimer: (name:string) => void
 }
