@@ -75,6 +75,9 @@ const actions:Action[] = [
 const strings = {
     library: 'A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs. The scent of old books fills the air.',
     'spiralling stairs': 'A magnificent spiral staircase crafted from polished oak, with ornate wrought-iron railings spiraling upward.',
+    bookshelves: 'Sturdy shelves packed with books, some hiding useful clues.',
+    'pupcake recipes book': 'A collection of recipes for crafting the perfect pupcake treat.',
+    'forensic guide': 'A manual offering insights into crime scene techniques, useful for incriminating evidence. It includes a section on how to copy fingerprints from one place to another.',
     'lounge arch': 'A wide arch framed by elegant wooden beams. Bookshelves line the wall beyond, offering easy access from the cozy living room to the expansive library.',
     'found recipe book': `You find a book about how to make a pupcake. It looks quite straightforward to make despite your lack of experience.`,
     'found forensic guide': `You find a forensic guide. It's pretty cool. You learn how to use forensic kit and copy finger prints from one place to another.`

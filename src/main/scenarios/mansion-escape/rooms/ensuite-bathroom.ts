@@ -29,7 +29,8 @@ const actions:Action[] = [];
 const strings = {
     'ensuite bathroom': 'A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures. Towels hang neatly on heated racks.',
     'bathing nook': 'A sliding door with frosted glass panes, separating the bedroom from the ensuite bathroom. The sound of running water can often be heard behind it.',
-    'cabinet': 'A small cabinet with a closed door.',
+    cabinet: 'A small cabinet with a closed door.',
+    'sleeping pills': `It's small tab with quite a few pills. From the description you can probably knock out a horse with these.`
 };
 
 export {

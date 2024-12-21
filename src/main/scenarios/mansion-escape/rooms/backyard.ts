@@ -1,4 +1,4 @@
-import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
+import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types';
 import print from "../../../default/print.js";
 import addAchievement from '../../../default/add-achievement';
 import addToInventory from '../../../default/add-to-inventory';
@@ -74,7 +74,22 @@ const actions:Action[] = [
 const strings = {
     backyard: 'An open outdoor area with manicured lawns, flowerbeds, and a few benches. A stone path leads to the garden and the back entrance of the mansion.',
     'garden gate': 'A wrought-iron gate adorned with climbing roses. It swings open with a soft creak, leading from the glass-walled conservatory into the open backyard.',
-    'pool is not empty': 'The pool is not empty',
+    pool(variables:Variables) {
+        const isFull = (variables.pool as ItemVariable).state == 'full';
+        const hasKey = (variables.key as ItemVariable).location == 'pool';
+        return `It's a small swimming pool.${
+            isFull ? `The water is freezing cold.` : `It's been emptied of water though.`
+        }${
+            hasKey? ` There's a key at the bottom of the pool.` : ''}`
+    },
+    'pool is not empty': `The water are freezing. It strikes you as an impressively stupid idea to dive in to get the key.`,
+    dog(variables:Variables) {
+        const sleeping = (variables.dog as ItemVariable).state == 'sleeping';
+        return sleeping ?
+        `Now fast asleep, the rottweiler doesn't look very intimidating. Yet you wouldn't dare to go near him.` : 
+        `It's a rottweiler in the size of a small horse. It's growling at you in way that means nothing but death.`
+    },
+    key: `It's a key to door. By the looks of it you can guess it's big heavy old door.`,
     'dog too hostile': 'The dog growls at you when you try to approach the pool. You dare not step any further.',
     'fed dog': `The dog ate the pupcake in a single bite. It doesn't look any less hostile though.`,
     'drugged dog': 'Finally the dogs comes down and heads to sleep in its kennel.'

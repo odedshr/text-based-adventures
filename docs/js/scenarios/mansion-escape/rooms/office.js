@@ -27,12 +27,12 @@ const items = {
         canContain: 10,
         synonyms: ['trash bin', 'trash', 'paper bin']
     },
-    'crumpled newspaper': {
+    newspaper: {
         type: 'item',
         location: 'bin',
         canBeHeld: true,
         synonyms: [
-            'newspaper',
+            'crumpled newspaper',
             'wrinkled newspaper',
             'folded newspaper',
             'crumpled paper'
@@ -73,10 +73,10 @@ const actions = [
         input: /^(pick up|grab|take|collect|retrieve|get|fetch)\s(the\s)?(crumpled\s|old\s|dirty\s|wrinkled\s|)\s?(newspaper|paper|magazine|flyer)$/,
         conditions(gameDefinition, userId) {
             const userLocation = gameDefinition.variables[userId].location;
-            return [{ item: 'crumpled newspaper', property: 'location', value: userLocation, textId: 'location-fail:item' }];
+            return [{ item: 'newspaper', property: 'location', value: userLocation, textId: 'location-fail:item' }];
         },
         execute(_, gameDefinition, userId) {
-            addToInventory(gameDefinition, userId, 'crumpled newspaper');
+            addToInventory(gameDefinition, userId, 'newspaper');
             addAchievement(gameDefinition, userId, 'picked up newspaper');
             return true;
         }
@@ -86,7 +86,7 @@ const actions = [
         execute(_, gameDefinition, userId) {
             const { variables } = gameDefinition;
             const userLocation = variables[userId].location;
-            if (!isValidAction(gameDefinition, [{ item: 'crumpled newspaper', property: 'location', value: userLocation, textId: 'location-fail:item' }])) {
+            if (!isValidAction(gameDefinition, [{ item: 'newspaper', property: 'location', value: userLocation, textId: 'location-fail:item' }])) {
                 return true;
             }
             addAchievement(gameDefinition, userId, 'read newspaper');
@@ -263,7 +263,7 @@ const strings = {
         const portrait = variables.portrait;
         const portraitIdentity = portrait.state.identity === 'cartwright' ? 'of John Cartwright ' : 'of someone ';
         const portraitPlacement = portrait.state.placement === 'wall' ? 'behind the desk hanging on the wall' : 'on the floor behind the desk';
-        const newspaper = variables['crumpled newspaper'].location === 'office' ? ', inside of which is a crumpled newspaper' : '';
+        const newspaper = variables.newspaper.location === 'office' ? ', inside of which is a crumpled newspaper' : '';
         const bin = variables.bin.location === 'office' ? `To the side of the desk is a small bin${newspaper}.` : '';
         return `The room looks like a home-office.
     It has a sturdy oak desk at its center, papers neatly stacked on one side, and a leather journal lying open.
@@ -287,6 +287,12 @@ const strings = {
         }
         return `It's a big painting of John Cartwright, the mansion's owner. It's placed neatly next to the safe it used to hide.`;
     },
+    bin: 'A trash receptacle that might contain overlooked items.',
+    newspaper: 'A discarded paper that could hold a clue or distraction material.',
+    vase: 'A decorative piece that might conceal a hidden object.',
+    safe: 'A secure lockbox requiring cracking to access its contents.',
+    ledger: 'A detailed book containing incriminating information.',
+    journal: 'A personal diary that might reveal secrets or hints.',
     'removed portrait from wall': `You removed the portrait from the wall. There's a safe hidden behind the portrait!`,
     'put portrait back on wall': `You put the portrait back on the wall. The safe is hidden again.`,
     'stole ledger': 'You got the ledger!',

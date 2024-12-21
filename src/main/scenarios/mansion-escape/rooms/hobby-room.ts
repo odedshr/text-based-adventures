@@ -1,7 +1,7 @@
 import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
 import isValidAction from '../../../default/is-valid-action.js';
-import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable } from '../../../types.js';
+import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types.js';
 import print from "../../../default/print.js";
 
 const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable} = {
@@ -122,18 +122,27 @@ const actions:Action[] = [
             return true;
         }
     }
-
-    //3 - take key to drawer from treasure box
-    //4 - get glue for vase
 ];
 
 const strings = {
     'hobby room': 'A room dedicated to various hobby, including shelves of crafting supplies, a large table for working on projects, and musical instruments in one corner.',
+    'craft door': `A door with a sign "Practice in session, Do not disturb" on it`,
+    glue: `10second glue. "Can glue anything", at least that's what the label says`,
+    aquarium(variables:Variables) {
+        const treasureBox = (variables['treasure box'] as ItemVariable).location ==='aquarium';
+        return `You estimate the aquarium to be 200litter in size. There several fished in different colors swimming around.${
+            treasureBox ? `There's a peculiar treasure box in the center of the aquarium, seems to be guarded by the fish`: ''
+        }`;
+    },
+    'fish': `About ten fish in various sizes swimming in the aquarium. It's hard count as they keep moving.`,
+    'fish food': 'A half full tub of flake-looking fish food',
     'those fish are hungry': `As soon as you your finger in the water those nasty fish try to take a bite at you. This doesn't feel safe`,
     'fish already ate': 'You have already fed the fish',
     'fish food empty': 'The fish food tub is empty',
     'fed the fish': 'You empty the fish food tub and put it in the aquarium. After eating they seems to have calmed down.',
+    'treasure box': `A miniature scale of a pirate's treasure box. Quite cute, to be honest.`,
     'got treasure box': 'You carefully put you hand in the water and as the fish leave you alone you reach out and pick the tiny treasure box.',
+    'small key': 'A small flimsy key. It looks like it can open a drawer or something of that sort.',
     'found small key': 'Examining the treasure box you manage to open it and find a small key that you decide to keep for now.',
     'put treasure box back': 'You carefully put the treasure box back where you found it.'
 };

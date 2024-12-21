@@ -33,6 +33,7 @@ const actions = [
 const strings = {
     'secret room': 'A hidden room, accessible only by a secret passage. It contains mysterious artifacts, old documents, and a single desk covered in dust.',
     'secret door': 'A concealed door behind a shelf of wine barrels. It leads to the mansion’s secret room, known only to a select few, hidden deep beneath the house.',
+    'train model': `A miniature train that might serve as a puzzle piece or clue.`,
     'copied fingerprints': 'You carefully copied the fingerprints from the train model.'
 };
 export { actions, items, strings, };

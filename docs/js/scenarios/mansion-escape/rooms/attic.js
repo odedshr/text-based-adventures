@@ -57,6 +57,6 @@ const strings = {
     boxes: (variables) => returnIfFlashlightOn(variables, `There are quite a few dusty boxes here with all sorts of rubbish inside.${variables['forensic kit'] && variables['forensic kit'].location === 'boxes' ?
         ' The only thing that looks interesting is a forensic kit.' : ''}`),
     'forensic kit': `It's a kid's version of a forensic kit. Basically it let you copy finger prints from one place to another. It's pretty cool.`,
-    'got forensic kit': 'You got forensic kit, surely it can be useful.'
+    'got forensic kit': 'You got the forensic kit, surely it can be useful.'
 };
 export { actions, items, strings, };

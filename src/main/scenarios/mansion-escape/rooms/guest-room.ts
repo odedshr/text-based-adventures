@@ -123,8 +123,13 @@ const strings = {
         return `It looks like a guest room. There's a bed, ${tableAndBag}`;
     },
     'bedroom door': 'A simple yet elegant door with a brass knocker. It gives an inviting air, ushering visitors into the cozy guest room beyond.',
+    'light switch'(variables:Variables) {
+        const isOn = items['light switch'].state === 'on';
+        return `It's a standard light switch. It's turned ${isOn ? 'on': 'off'}`;
+    },
     'light already on': 'The light is already on.',
     'light turned on for the first time': `You managed to find the light switch and turn it on.`,
+    bag: 'A sturdy backpack. It can be useful if you want carry stuff around.'
 }
 export {
     actions,

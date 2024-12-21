@@ -12,7 +12,8 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable|NumberVari
     'dog food': {
         type: 'item',
         location: 'pantry',
-        canBeHeld: true
+        canBeHeld: true,
+        synonyms: ['easy-mix pupcake mix', 'pupcake mix']
     },
     'batteries': {
         type: 'item',
@@ -28,9 +29,10 @@ const actions:Action[] = [];
 const strings = {
     pantry: 'A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies.',
     'larder hatch': 'A small, creaky wooden door with iron hinges, leading to the pantry. It’s worn from years of use, often left ajar as fresh ingredients are constantly fetched for the kitchen.',
-    'dog food': 'You see a bag of dog food.',
-    batteries: 'You see a box of normal AA batteries.',
+    'dog food': `Looking carefully, it's actually a easy-mix pupcake mix. You can't simply give it to the dog, you'll need to prepare it first.`,
+    batteries: 'A box of normal AA batteries.',
     'batteries out': 'The batteries ran out of power.',
+    batteryPower: `The battery power is finite, better not waste it.`,
 };
 
 const handlers:VariableModifyUpdate[] = [

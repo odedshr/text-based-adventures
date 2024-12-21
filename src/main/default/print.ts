@@ -1,4 +1,4 @@
-import { GameDefinition, GetStringMethod } from "../types";
+import { ConsoleVariable, GameDefinition, GetStringMethod } from "../types";
 
 export default function print(gameDefinition: GameDefinition, textId:string, itemName?:string, locationName?: string) {
     const { strings, variables } = gameDefinition;
@@ -16,7 +16,10 @@ export default function print(gameDefinition: GameDefinition, textId:string, ite
             value = value.replace(/location/g, locationName);
         }
         
-        variables.console = { type: 'console', value }    
+        if (!variables.console) {
+            variables.console = { type: 'console', value: '' }
+        }
+        variables.console = { ...variables.console, value } as ConsoleVariable;
     } else {
         console.error(`Unknown textId: ${textId} `);
     }

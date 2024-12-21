@@ -52,36 +52,52 @@ const actions:Action[] = [
 ];
 
 const finishedStrings:{[key:string]:string} = {
-    'finished': `Shortly after, Cartwright returns home and, noticing the tempered safe, he checks the surveillance tapes and sees you.
+    'finished': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the tempered safe, he checks the surveillance tapes and sees you.
         You are arrested and sent to prison.`,
-    'finished cctv': `Shortly after, Cartwright returns home and, noticing the tempered safe, raises the alarm.
+    'finished cctv': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the tempered safe, raises the alarm.
         The surveillance tapes are scrubbed off and Cartwright checks the safe for fingerprints and soon after he's on your tail.
         You are arrested and sent to prison.`,
-    'finished safe': `Shortly after, Cartwright returns home and, noticing the broken safe, he checks the surveillance tapes and sees you.
+    'finished safe': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the broken safe, he checks the surveillance tapes and sees you.
         You are arrested and sent to prison.`,
-    'finished cctv safe': `Shortly after, Cartwright returns home and, noticing the broken vase, raises the alarm.
+    'finished cctv safe': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the broken vase, raises the alarm.
         The surveillance tapes are scrubbed off and Cartwright checks the safe for fingerprints and soon after he's on your tail.
         You are arrested and sent to prison.`,
-    'finished ledger cctv': `Shortly after, Cartwright returns home and, noticing the broken vase, he checks the surveillance tapes which were scrubbed of.
+    'finished ledger cctv': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the broken vase, he checks the surveillance tapes which were scrubbed of.
         He checks the safe for fingerprints and soon after he's on your tail.
         He hunts you down and your body is now rests in an unmarked grave. You haven't been able to use the ledger to incriminate Cartwright`,
-    'finished cctv fingerprints safe': `Shortly after, Cartwright returns home and, noticing the broken vase, raises the alarm.
+    'finished cctv fingerprints': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the tempered safe, raises the alarm.
         Soon enough you are apprehended by a police blockade.
         Since the surveillance tapes were scrubbed of, Cartwright checked the safe for fingerprints and soon after Lola is arrested as well.`,
-    'finished cctv fingerprints safe vase': `After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
+    'finished cctv fingerprints safe': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the broken vase, raises the alarm.
+        Soon enough you are apprehended by a police blockade.
+        Since the surveillance tapes were scrubbed of, Cartwright checked the safe for fingerprints and soon after Lola is arrested as well.`,
+    'finished cctv fingerprints safe vase': `You flee the mansion.
+        After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
         He checks the safe for fingerprints and find Lola, who is shortly after apprehended.
         Shame though, you haven't achieved what you came for.`,
-    'finished ledger cctv fingerprints': `Shortly after, Cartwright returns home and, noticing the tempered safe, raises the alarm.
+    'finished ledger cctv fingerprints': `You flee the mansion.
+        Shortly after, Cartwright returns home and, noticing the tempered safe, raises the alarm.
         Soon enough you are apprehended by a police blockade.
         Since the surveillance tapes were scrubbed of, Cartwright checked the safe for fingerprints and soon after Lola is arrested as well.`,
-    'finished ledger cctv safe vase': `After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
+    'finished ledger cctv safe vase': `You flee the mansion.
+        After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
         He checks the safe for fingerprints and soon after he's on your tail.
         He hunts you down and your body is now rests in an unmarked grave. You haven't been able to use the ledger to incriminate Cartwright`,
-    'finished ledger safe vase': `After some time Cartwright notices the missing ledger. He checks the surveillance tapes and sees you.
+    'finished ledger safe vase': `You flee the mansion.
+        After some time Cartwright notices the missing ledger. He checks the surveillance tapes and sees you.
         He hunts you down and your body is now rests in an unmarked grave. You haven't been able to use the ledger to incriminate Cartwright`,
-    'finished cctv safe vase': `Hopefully, Cartwright will never suspect of your intrusion.
+    'finished cctv safe vase': `You flee the mansion.
+        Hopefully, Cartwright will never suspect of your intrusion.
         Shame though, you haven't achieved what you came for.`,
-    'finished ledger cctv fingerprints safe vase': `After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
+    'finished ledger cctv fingerprints safe vase': `You flee the mansion.
+        After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
         He checks the safe for fingerprints and find Lola, who is shortly after apprehended.
         You manage to use the ledger to incriminate Cartwright. Good Job!`,
         
@@ -111,20 +127,21 @@ function getFinaleString(variables:Variables) {
     const fingerprints = cctv && ((variables.safe as ItemVariable).state as Attributes).fingerprints === 'yes';
     const safe = ((variables.portrait as ItemVariable).state as Attributes).placement === 'wall';
     const vase = safe && (variables.vase as ItemVariable).state === 'glued';
-    const ledger = (cctv && fingerprints) || (safe && vase) && '' && isInRootLocation(variables, 'ledger', 'outside');
+    const ledger = (cctv && fingerprints) && (safe && vase) && isInRootLocation(variables, 'ledger', 'outside');
     const sum = `finished${ledger? ' ledger': ''}${cctv? ' cctv': ''}${fingerprints? ' fingerprints': ''}${safe? ' safe': ''}${vase? ' vase': ''}`;
 
-    return `You flee the mansion. ${finishedStrings[sum]}`;
+    return finishedStrings[sum];
 }
 
 const strings = {
-    foyer: 'The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug. A coat stand and an umbrella holder are by the door.',
+    foyer: (variables:Variables) => 'The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug. A coat stand and an umbrella holder are by the door.',
     'grand archway': 'A wide archway framed with ornate molding, allowing the sound of footsteps to echo faintly between the foyer and hallway. A fine runner rug extends into the corridor, welcoming guests deeper into the mansion.',
     'entrance door': 'A pair of heavy oak doors with intricate carvings of vines and flowers. They swing open easily, revealing the warm and inviting foyer beyond.',
     'door is locked': 'The door is locked.',
     'door is not locked': 'The door is not locked.',
     'unlocked main door': 'You unlock the main door.',
     'left mansion': getFinaleString,
+    ...finishedStrings
 }
 
 export {

@@ -21,7 +21,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe(gameDefinition.strings.office(gameDefinition.variables));
         
         await processMethod('pick up newspaper', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You picked up the crumpled newspaper.');
+        expect(gameDefinition.variables.console.value).toBe('You picked up the newspaper.');
 
         await processMethod('read newspaper', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(gameDefinition.strings['read newspaper']);
@@ -183,7 +183,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the toilet.');
 
         await processMethod('look around', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('The toilet room is small and functional. The sink is clean and well-maintained, and the tap is turned off.');
+        expect(gameDefinition.variables.console.value).toBe(`The toilet room is small and functional. It has a sink and cistern, but no mirror. There's a very bright red water valve on the pipe connected to the cistern.`);
 
         await processMethod('unscrew water valve', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You unscrew the red water valve from the pipe and put it in your inventory.');
@@ -213,19 +213,19 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the security room.');
 
         await processMethod('describe the room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('The security room is a large and well-constructed room, filled with security cameras and surveillance equipment. It is a must-see if you want to escape the mansion.');
-
-        await processMethod('look around', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('The security room is a large and well-constructed room, filled with security cameras and surveillance equipment. It is a must-see if you want to escape the mansion.');
+        expect(gameDefinition.variables.console.value).toBe(`The security room has a desk with multiple monitors showings different CCTV footages from every possible corner of the mansion.Dread fills you knowing that there's evidence of you breaking into the mansion. There's a flashlight on the desk.`);
 
         await processMethod('pick up flashlight', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the flashlight.');
 
         await processMethod('watch cctv recording', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You watch the cctv recording. partner in secret room; hit by the head');
+        expect(gameDefinition.variables.console.value).toBe(`Checking out the security recording, you quickly find the recording of you and your partner breaking into the mansion and her knocking the vase on the back of your head.
+    Seeing her face, you now recall her name - Lola. Rewinding the video further, you stumble on a video of Lola and Cartwright playing with a train set model in a room next to the master bedroom.
+    They were a couple, and it seems she double-crossed you. Cartwright was probably growing suspicious of her so she just threw you under the bus to protect herself.`);
 
         await processMethod('scrub cctv recording', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You delete all evidence of your actions from the cctv recording.');
+        expect(gameDefinition.variables.console.value).toBe(`You delete all the video footages of you and Lola breaking into the mansion.
+        Wisely, you find a feature to pause the recording for the next hour as well, allowing you to move freely without creating further evidence.`);
 
         await processMethod('go to basement', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the basement.');
@@ -369,7 +369,8 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You unlock the main door.');
 
         await processMethod('walk through main door', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`You flee the mansion. After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
+        expect(gameDefinition.variables.console.value).toBe(`You flee the mansion.
+        After some time Cartwright notices the missing ledger. He checks the surveillance tapes which were scrubbed of.
         He checks the safe for fingerprints and find Lola, who is shortly after apprehended.
         You manage to use the ledger to incriminate Cartwright. Good Job!`);
 

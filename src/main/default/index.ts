@@ -35,8 +35,12 @@ const strings = {
     'you have no items': `You're kind empty handed right now'`,
     'you have items': 'so far you got item',
     'available doors': 'item.',
-    window: `It's very dark outside. You can't see a thing. This place is probably very isolated.`,
+    window: `There are bars on the windows. It's very dark outside. You can't see a thing. This place is probably very isolated.`,
     'open-window': 'Alas! the window is bolted shut. You can\'t open it.',
+    achievements: `You achieved quite a lot but you're not out of the woods yet.`,
+    countdown: `Time is ticking, better hurry up!`,
+    player1: `That's you! you're still alive, but you better hurry!`,
+    lives: `You got 1 life left, better not waste it.`,
     ...pickUpItemStrings,
     ...passages
 };

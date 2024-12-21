@@ -1,4 +1,4 @@
-import { GameDefinition, NumberVariable, Variable, VariableModifyUpdate } from '../../types.js';
+import { GameDefinition, NumberVariable, PlayerVariable, Variable, VariableModifyUpdate } from '../../types.js';
 import print from "../../default/print.js";
 
 import { handlers as pantryHandlers } from './rooms/pantry.js';

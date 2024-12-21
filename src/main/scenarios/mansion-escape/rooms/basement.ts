@@ -1,3 +1,4 @@
+import { Variables } from './../../../types';
 import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
 import print from "../../../default/print.js";
 import addAchievement from '../../../default/add-achievement';
@@ -65,6 +66,12 @@ const strings = {
     'cellar stairs': 'A narrow stone staircase spirals down from the pantry into the cool, dark basement. The walls are lined with shelves, holding jars and preserves.',
     'vault not locked': 'The vault is not locked',
     'vault is unlocked': 'The vault is unlocked!',
+    pipe(variables:Variables) {
+        const valveAttached = ((variables.valve as ItemVariable).location) === 'pipe';
+        return `It's a 30cm pipe. by the dripping you can infer it's a water pipe.${
+            valveAttached ? ` The big red valve is screwed to it.` : ` It seems like the valve is missing though.`
+        }`
+    },
     'valve screwed to pipe': 'You screw the red valve to the pipe. You can now use it to drain the pool!',
     'pool drained': 'You can hear the water being drain out of the pool'
 };

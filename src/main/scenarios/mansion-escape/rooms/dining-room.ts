@@ -21,6 +21,7 @@ const actions:Action[] = [];
 const strings = {
     'dining room': 'A formal dining room with a long table, elegant chandeliers, and a sideboard for serving. Fine china and silverware are neatly arranged for guests.',
     'dining entrance': 'Tall double doors with brass handles, polished to a shine. The scent of food often drifts from behind them when the dining room is in use, hinting at the feast beyond.',
+    'dog food bowl': 'A standard silver food bowl with the label "Fifi" engraved on its side.'
 };
 
 export {

@@ -110,14 +110,24 @@ const actions = [
 ];
 const strings = {
     'security room'(variables) {
-        return 'The security room is a large and well-constructed room, filled with security cameras and surveillance equipment. It is a must-see if you want to escape the mansion.';
+        const flashlightPresent = variables.flashlight.location === 'security room';
+        const scrubbed = variables.cctv.state.scrubbed === 'yes';
+        return `The security room has a desk with multiple monitors showings different CCTV footages from every possible corner of the mansion.${scrubbed ? 'However, all the monitors shows still images as you paused the recording for a fixed time.' : `Dread fills you knowing that there's evidence of you breaking into the mansion.`}${flashlightPresent ? ` There's a flashlight on the desk.` : ''}`;
     },
     'vault door': 'The vault door is a large and well-constructed door, filled with security cameras and surveillance equipment. It is a must-see if you want to escape the mansion.',
-    'watch cctv recording': 'You watch the cctv recording. partner in secret room; hit by the head',
-    'scrubbed cctv': 'You delete all evidence of your actions from the cctv recording.',
-    'already scrubbed': 'You already scrubbed the cctv recording.',
+    cctv: `4 monitors, showing various camera feeds from through the mansion.`,
+    'watch cctv recording': `Checking out the security recording, you quickly find the recording of you and your partner breaking into the mansion and her knocking the vase on the back of your head.
+    Seeing her face, you now recall her name - Lola. Rewinding the video further, you stumble on a video of Lola and Cartwright playing with a train set model in a room next to the master bedroom.
+    They were a couple, and it seems she double-crossed you. Cartwright was probably growing suspicious of her so she just threw you under the bus to protect herself.`,
+    'scrubbed cctv'(variables) {
+        const partner = variables.cctv.state.watched === 'yes' ? 'Lola' : 'your partner';
+        return `You delete all the video footages of you and ${partner} breaking into the mansion.
+        Wisely, you find a feature to pause the recording for the next hour as well, allowing you to move freely without creating further evidence.`;
+    },
+    'already scrubbed': `You already scrubbed the cctv recording. Not much to see in it now`,
     'need batteries': 'You probably need to get batteries for this flashlight to work.',
     'batteries in flashlight': `You put the batteries in the flashlight, but you're wondering how much juice they actually have in them.`,
+    flashlight: (variables) => `It's a handheld battery powered flashlight, ${variables.batteries.location === 'flashlight' ? 'and it has batteries' : 'but it has no batteries'}.`,
     'flashlight on': `You turn on the flashlight. Let's see how long it would last.`,
     'flashlight off': `You turn off the flashlight. Smart thinking.`,
     'flashlight not on': 'The flashlight is already switched off.',
