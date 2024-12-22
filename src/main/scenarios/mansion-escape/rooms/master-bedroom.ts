@@ -1,6 +1,7 @@
-import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
+import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types';
 import addAchievement from '../../../default/add-achievement.js';
 import print from "../../../default/print.js";
+import variables from '../variables';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'master bedroom': { type: 'room' },
@@ -76,9 +77,10 @@ const actions:Action[] = [
 ];
 
 const strings = {
-    'master bedroom': 'A luxurious bedroom with a king-sized bed, ornate wooden furniture, a walk-in closet, and a grand view of the estate grounds.',
+    'master bedroom': `A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
+    There's a nightstand beside the bed.`,
     'lavish door': 'An ornate door that hints at something valuable behind it.',
-    'nightstand drawer': 'A small compartment hiding personal belongings or secrets.',
+    'nightstand drawer': (variables:Variables) => (variables['nightstand drawer'] as ItemVariable).location === 'locked' ? 'The drawer is locked.' : ((variables['security badge'] as ItemVariable).location === 'master bedroom' ? `There's a security badge inside.` : 'The drawer is empty.'),
     'security badge': 'An ID granting access to restricted areas.',
     'drawer is not locked': 'The drawer is not locked',
     'unlocked nightstand drawer': `You unlocked the nightstand drawer. There's a security badge inside.`,

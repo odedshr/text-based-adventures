@@ -57,8 +57,10 @@ const actions = [
     },
 ];
 const strings = {
-    basement: 'A dimly lit, musty room filled with old furniture, storage boxes, and tools. The air is cool, and the walls are lined with exposed brick.',
-    'cellar stairs': 'A narrow stone staircase spirals down from the pantry into the cool, dark basement. The walls are lined with shelves, holding jars and preserves.',
+    basement: `A dimly room with a low ceiling and bare cement walls. The air is damp and musty.
+    A big pipe runs along the wall, slowly dripping water.
+    There's a heavy metal door with keypad lock on the other side of the room.`,
+    'cellar stairs': 'A narrow stone staircase spirals down from the pantry into the cool, dark basement.',
     'vault not locked': 'The vault is not locked',
     'vault is unlocked': 'The vault is unlocked!',
     pipe(variables) {

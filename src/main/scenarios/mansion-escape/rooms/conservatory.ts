@@ -4,7 +4,7 @@ import addAchievement from '../../../default/add-achievement';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'conservatory': { type: 'room' },
-    'garden view': {
+    'back door': {
         type: 'passage',
         between: ['living room', 'conservatory'],
         allowedStates: ['opened'],
@@ -33,9 +33,10 @@ const actions:Action[] = [
 ];
 
 const strings = {
-    conservatory: 'A sunlit room filled with potted plants and wicker furniture. Glass walls offer a panoramic view of the surrounding garden and yard.',
-    'garden view': 'French doors framed with ivy lead to the conservatory. The sunlight filters through the glass panes, offering a glimpse of the garden beyond.',
-    statue: 'You noticed the weird date on the plaque.'
+    conservatory: `Glass walls offer a panoramic view of the surrounding garden and yard.
+    The room is filled with lush greenery and a big statue in the center.`,
+    'back door': 'French doors framed with ivy lead to the conservatory.',
+    statue: `The statue is of a man, nothing too exciting, however you noticed the weird date on the plaque - 30/02/1985. Surely that can\'t be right? or maybe it has a hidden meaning?`,
 };
 
 export {

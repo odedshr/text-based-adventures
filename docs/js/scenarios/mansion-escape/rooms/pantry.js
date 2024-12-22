@@ -23,8 +23,12 @@ const items = {
 };
 const actions = [];
 const strings = {
-    pantry: 'A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies.',
-    'larder hatch': 'A small, creaky wooden door with iron hinges, leading to the pantry. It’s worn from years of use, often left ajar as fresh ingredients are constantly fetched for the kitchen.',
+    pantry(variables) {
+        const dogFood = variables['dog food'].location === 'pantry';
+        const batteries = variables.batteries.location === 'pantry';
+        return `A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies.${dogFood ? ' A box of dog food is on the floor.' : ''}${batteries ? ' A box of batteries is on the shelf.' : ''}`;
+    },
+    'larder hatch': `A small, creaky wooden door with iron hinges, leading to the pantry. It's worn from years of use, often left ajar as fresh ingredients are constantly fetched for the kitchen.`,
     'dog food': `Looking carefully, it's actually a easy-mix pupcake mix. You can't simply give it to the dog, you'll need to prepare it first.`,
     batteries: 'A box of normal AA batteries.',
     'batteries out': 'The batteries ran out of power.',

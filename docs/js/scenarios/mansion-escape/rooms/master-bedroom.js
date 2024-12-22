@@ -72,9 +72,10 @@ const actions = [
     }
 ];
 const strings = {
-    'master bedroom': 'A luxurious bedroom with a king-sized bed, ornate wooden furniture, a walk-in closet, and a grand view of the estate grounds.',
+    'master bedroom': `A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
+    There's a nightstand beside the bed.`,
     'lavish door': 'An ornate door that hints at something valuable behind it.',
-    'nightstand drawer': 'A small compartment hiding personal belongings or secrets.',
+    'nightstand drawer': (variables) => variables['nightstand drawer'].location === 'locked' ? 'The drawer is locked.' : (variables['security badge'].location === 'master bedroom' ? `There's a security badge inside.` : 'The drawer is empty.'),
     'security badge': 'An ID granting access to restricted areas.',
     'drawer is not locked': 'The drawer is not locked',
     'unlocked nightstand drawer': `You unlocked the nightstand drawer. There's a security badge inside.`,

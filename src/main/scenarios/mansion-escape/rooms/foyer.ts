@@ -134,9 +134,11 @@ function getFinaleString(variables:Variables) {
 }
 
 const strings = {
-    foyer: (variables:Variables) => 'The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug. A coat stand and an umbrella holder are by the door.',
-    'grand archway': 'A wide archway framed with ornate molding, allowing the sound of footsteps to echo faintly between the foyer and hallway. A fine runner rug extends into the corridor, welcoming guests deeper into the mansion.',
-    'entrance door': 'A pair of heavy oak doors with intricate carvings of vines and flowers. They swing open easily, revealing the warm and inviting foyer beyond.',
+    foyer: (variables:Variables) => `The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug.
+     A coat stand and an empty umbrella holder are by the door.`,
+    'grand archway': 'A wide archway framed with ornate molding, allowing the sound of footsteps to echo faintly between the foyer and hallway.',
+    'entrance door': (variables:Variables) =>  `A pair of heavy oak doors with intricate carvings of vines and flowers. 
+    ${ (variables['entrance door'] as ItemVariable).state === 'locked' ? 'Alas, the door is locked.' : 'The door is not locked. Your freedom awaits.' }`,
     'door is locked': 'The door is locked.',
     'door is not locked': 'The door is not locked.',
     'unlocked main door': 'You unlock the main door.',

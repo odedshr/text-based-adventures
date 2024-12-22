@@ -78,7 +78,8 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the hobby room.');
 
         await processMethod('describe the room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`A room dedicated to various hobby, including shelves of crafting supplies, a large table for working on projects, and musical instruments in one corner.`);
+        expect(gameDefinition.variables.console.value).toBe(`A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and a cello in one corner.
+    There's a large aquarium in the center of the room and a glue tube on the table.`);
 
         await processMethod('pick up glue', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the glue.');
@@ -105,7 +106,8 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the master bedroom.');
         
         await processMethod('describe the room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A luxurious bedroom with a king-sized bed, ornate wooden furniture, a walk-in closet, and a grand view of the estate grounds.');
+        expect(gameDefinition.variables.console.value).toBe(`A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
+    There's a nightstand beside the bed.`);
 
         await processMethod('unlock nightstand drawer', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You need a key to unlock the nightstand drawer');
@@ -120,10 +122,11 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the ensuite bathroom.');
 
         await processMethod('describe room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures. Towels hang neatly on heated racks.');
+        expect(gameDefinition.variables.console.value).toBe(`A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures.
+    There's a small cabinet behind the mirror.`);
 
         await processMethod('examine cabinet', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A small cabinet with a closed door.');
+        expect(gameDefinition.variables.console.value).toBe('Peeking inside the cabinet, you see a bottle of sleeping pills');
 
         await processMethod('pick up sleeping pills', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the sleeping pills.');
@@ -143,8 +146,12 @@ describe('Game-play', () => {
         await processMethod('go to conservatory', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the conservatory.');
 
+        await processMethod('look around', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`Glass walls offer a panoramic view of the surrounding garden and yard.
+    The room is filled with lush greenery and a big statue in the center.`);
+
         await processMethod('examine statue', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You noticed the weird date on the plaque.');
+        expect(gameDefinition.variables.console.value).toBe(`The statue is of a man, nothing too exciting, however you noticed the weird date on the plaque - 30/02/1985. Surely that can't be right? or maybe it has a hidden meaning?`);
 
         await processMethod('go to living room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the living room.');
@@ -237,7 +244,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the pantry.');
 
         await processMethod('look around', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies.');
+        expect(gameDefinition.variables.console.value).toBe(`A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies. A box of dog food is on the floor. A box of batteries is on the shelf.`);
 
         await processMethod('pick up dog food', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the dog food.');
@@ -252,7 +259,8 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the dining room.');
 
         await processMethod('look around', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A formal dining room with a long table, elegant chandeliers, and a sideboard for serving. Fine china and silverware are neatly arranged for guests.');
+        expect(gameDefinition.variables.console.value).toBe(`A formal dining room with a long table, elegant chandeliers, and a sideboard for serving.
+    Fine china and silverware are neatly arranged for guests. A dog food bowl sits on the floor.`);
         
         await processMethod('pick up dog bowl', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the dog food bowl.');
@@ -339,7 +347,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the secret room.');
 
         await processMethod('look around', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A hidden room, accessible only by a secret passage. It contains mysterious artifacts, old documents, and a single desk covered in dust.');
+        expect(gameDefinition.variables.console.value).toBe(`Very oddly, there's a massive train model in the middle of the room. You try not to be too judgemental about it.`);
 
         await processMethod('copy fingerprints from the train model', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You carefully copied the fingerprints from the train model.');

@@ -53,22 +53,25 @@ const actions = [
     },
     {
         input: /(?:turn\s?on|switch\s?on|flip(\son)?|activate|power\s?on)\s(?:the\s)?(?:light|lights|light\s?switch)/,
+        conditions(gameDefinition, userId) {
+            const { variables } = gameDefinition;
+            const flashlight = variables.flashlight && variables.flashlight.state === 'on';
+            const lightSwitchState = variables['light switch'].state;
+            const lightSwitchCondition = [];
+            if (lightSwitchState === 'on') {
+                lightSwitchCondition.push({ textId: 'light already on' });
+            }
+            else if (lightSwitchState === 'hidden' && !flashlight) {
+                lightSwitchCondition.push({ textId: 'location-fail:item' });
+            }
+            return [
+                { item: userId, property: 'location', value: 'guest room', textId: 'location-fail:user' },
+                ...lightSwitchCondition,
+            ];
+        },
         execute: (_, gameDefinition, userId) => {
             const { variables } = gameDefinition;
             const lightSwitch = items['light switch'];
-            if (!isValidAction(gameDefinition, [
-                { item: userId, property: 'location', value: 'guest room', textId: 'location-fail:user' }
-            ])) {
-                return true;
-            }
-            if (lightSwitch.state === 'on') {
-                print(gameDefinition, 'light is already on');
-                return true;
-            }
-            if (lightSwitch.state === 'hidden') {
-                print(gameDefinition, 'location-fail:item', 'light switch');
-                return true;
-            }
             variables['light switch'] = Object.assign(Object.assign({}, lightSwitch), { state: 'on' });
             return true;
         }
@@ -99,14 +102,15 @@ const actions = [
 const strings = {
     'guest room': (variables) => {
         const room = variables['guest room'];
-        const lightSwitch = items['light switch'].state;
+        const lightSwitchHidden = items['light switch'].state === 'hidden';
+        const flashlight = variables.flashlight && variables.flashlight.state === 'on';
         const tableAndBag = items['bag'].location === 'guest room' ? `a small table and an empty backpack on the floor` : 'and a small table';
-        if (room.state === 'dark') {
-            return `The room is utter darkness.${lightSwitch === 'hidden' ? ` Maybe there's a light switch somewhere?` : ''}`;
+        if (room.state === 'dark' && !flashlight) {
+            return `The room is utter darkness.${lightSwitchHidden ? ` Maybe there's a light switch somewhere?` : ''}`;
         }
         return `It looks like a guest room. There's a bed, ${tableAndBag}`;
     },
-    'bedroom door': 'A simple yet elegant door with a brass knocker. It gives an inviting air, ushering visitors into the cozy guest room beyond.',
+    'bedroom door': 'A simple yet elegant door with a brass knocker.',
     'light switch'(variables) {
         const isOn = items['light switch'].state === 'on';
         return `It's a standard light switch. It's turned ${isOn ? 'on' : 'off'}`;

@@ -5,10 +5,10 @@ import addToInventory from '../../../default/add-to-inventory';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'backyard': { type: 'room' },
-    'garden gate': {
+    'glass door': {
         type: 'passage',
         between: ['conservatory', 'backyard'],
-        allowedStates: ['opened'],
+        allowedStates: ['opened', 'closed'],
         state: 'opened',
     },
     dog: {
@@ -72,8 +72,14 @@ const actions:Action[] = [
 ];
 
 const strings = {
-    backyard: 'An open outdoor area with manicured lawns, flowerbeds, and a few benches. A stone path leads to the garden and the back entrance of the mansion.',
-    'garden gate': 'A wrought-iron gate adorned with climbing roses. It swings open with a soft creak, leading from the glass-walled conservatory into the open backyard.',
+    backyard(variables:Variables) {
+        const isFull = (variables.pool as ItemVariable).state == 'full';
+        const isSleeping = (variables.dog as ItemVariable).state == 'sleeping';
+        return `An open outdoor area with manicured lawns, flowerbeds, and a few benches.
+        A${ isFull ? '' :'n empty'} private swimming pool is at the center of the yard.
+        ${isSleeping ? 'A rottweiler is sleeping in its kennel.' : 'A rottweiler is standing on alert between you and the pool, growling at you.'}`;
+    },
+    'glass door': 'A glass door leads to the conservatory.',
     pool(variables:Variables) {
         const isFull = (variables.pool as ItemVariable).state == 'full';
         const hasKey = (variables.key as ItemVariable).location == 'pool';

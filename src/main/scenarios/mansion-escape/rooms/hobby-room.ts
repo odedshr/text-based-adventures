@@ -15,7 +15,8 @@ const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable} = {
     glue: {
         type: 'item',
         location: 'hobby room',
-        canBeHeld: true
+        canBeHeld: true,
+        synonyms: ['10second glue','10second glue tube', 'glue tube']
     },
     aquarium: {
         type: 'item',
@@ -46,46 +47,34 @@ const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable} = {
 const actions:Action[] = [
     {
         input: /\b(?:feed|give|offer|provide)\s*(?:the\s*)?(?:fish|fishes)\s*(?:(?:in\s*(?:the\s*)?(?:aquarium|tank|fish\s*tank))?\s*(?:using|with|by\s*using)?\s*(?:the\s*)?(?:fish\s*food|food)?)?\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'hobby room', textId:'location-fail:user'},
+            {item: 'aquarium', property: 'state', value: 'hungry-fish', textId:'fish already ate'},
+            {item: 'fish food', property: 'state', value: 'full', textId:'fish food empty'},
+        ],
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
             const { variables } = gameDefinition;
-            
-            if (!isValidAction(gameDefinition, [
-                {item: userId, property: 'location', value: 'hobby room', textId:'location-fail:user'},
-                {item: 'aquarium', property: 'state', value: 'hungry-fish', textId:'fish already ate'},
-                {item: 'fish food', property: 'state', value: 'full', textId:'fish food empty'},
-            ])) {                
-                return true;
-            }
-            
-            
+                        
             const aquarium = variables.aquarium as ItemVariable;
             const fishFood = variables['fish food'] as ItemVariable;
             variables.aquarium = { ...aquarium, state: 'fish-fed' };
             variables.fishFood = { ...fishFood, state: 'empty' };
             addAchievement(gameDefinition, userId, 'fed the fish');
             print(gameDefinition, 'fed the fish');
-
-            return true;
         }
     },
     {
         input: /\b(?:fish\s*out|retrieve|take\s*out|pull\s*out|remove|grab|get|pick\s*up)\s*(?:the\s*)?(?:treasure\s*box|chest|box)\s*(?:out\s*of\s*(?:the\s*)?(?:aquarium|tank|fish\s*tank|water))\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'hobby room', textId:'location-fail:user'},
+            {item: 'aquarium', property: 'state', value: 'fish-fed', textId:'those fish are hungry'},
+            {item: 'treasure box', property: 'location', value: 'aquarium', textId:'location-fail:item'},
+        ],
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
-            const { variables } = gameDefinition;
-            
-            if (!isValidAction(gameDefinition, [
-                {item: userId, property: 'location', value: 'hobby room', textId:'location-fail:user'},
-                {item: 'aquarium', property: 'state', value: 'fish-fed', textId:'those fish are hungry'},
-                {item: 'treasure box', property: 'location', value: 'aquarium', textId:'location-fail:item'},
-            ])) {                
-                return true;
-            }
-            
             addToInventory(gameDefinition, userId, 'treasure box');
             addAchievement(gameDefinition, userId, 'picked up treasure box');
             print(gameDefinition, 'got treasure box');
 
-            return true;
         }
     },
     {
@@ -106,27 +95,26 @@ const actions:Action[] = [
     },
     {
         input: /\b(?:put|place|return|set|drop)\s*(?:the\s*)?(?:treasure\s*box|chest|box)\s*(?:back\s*)?((?:in|into)\s*(?:the\s*)?(?:aquarium|tank|fish\s*tank|water))?\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'hobby room', textId:'location-fail:user'},
+            {item: 'treasure box', property: 'location', value: userId, textId:'location-fail:item'},
+        ],
         execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
             const { variables } = gameDefinition;
             
-            if (!isValidAction(gameDefinition, [
-                {item: 'treasure box', property: 'location', value: userId, textId:'location-fail:item'},
-            ])) {                
-                return true;
-            }
-
             const treasureBox = variables['treasure box'] as ItemVariable;
             variables['treasure box'] = { ...treasureBox, location: 'aquarium' };
             addAchievement(gameDefinition, userId, 'returned treasure box');
             print(gameDefinition, 'put treasure box back');
-            return true;
         }
     }
 ];
 
 const strings = {
-    'hobby room': 'A room dedicated to various hobby, including shelves of crafting supplies, a large table for working on projects, and musical instruments in one corner.',
+    'hobby room': (variables:Variables) => `A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and a cello in one corner.
+    There's a large aquarium in the center of the room${(variables.glue as ItemVariable).location==='hobby room' ? ' and a glue tube on the table' : ''}.`,
     'craft door': `A door with a sign "Practice in session, Do not disturb" on it`,
+    cello: `It's an expensive looking cello, you rather not touch it.`,
     glue: `10second glue. "Can glue anything", at least that's what the label says`,
     aquarium(variables:Variables) {
         const treasureBox = (variables['treasure box'] as ItemVariable).location ==='aquarium';

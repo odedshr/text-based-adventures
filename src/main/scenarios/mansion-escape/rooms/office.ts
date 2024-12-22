@@ -1,6 +1,5 @@
-import { Action, Attributes, GameDefinition, Variable, ItemVariable, PlayerVariable, Variables } from '../../../types';
+import { Action, Attributes, GameDefinition, Variable, ItemVariable, Variables } from '../../../types';
 import addToInventory from '../../../default/add-to-inventory.js';
-import isValidAction from '../../../default/is-valid-action.js';
 import addAchievement from '../../../default/add-achievement.js';
 import print from "../../../default/print.js";
 
@@ -26,7 +25,7 @@ const items:{[key:string]:Variable} = {
         type: 'item',
         location: 'office',
         canBeHeld: true,
-        canContain: 10,
+        canContain: 3,
         synonyms: ['trash bin', 'trash', 'paper bin']
     },
     newspaper: {
@@ -74,46 +73,34 @@ const items:{[key:string]:Variable} = {
 const actions:Action[] = [
     {
         input: /^(pick up|grab|take|collect|retrieve|get|fetch)\s(the\s)?(crumpled\s|old\s|dirty\s|wrinkled\s|)\s?(newspaper|paper|magazine|flyer)$/,
-        conditions (gameDefinition:GameDefinition, userId:string) {
-            const userLocation = (gameDefinition.variables[userId] as PlayerVariable).location;
-            return [{item: 'newspaper', property: 'location', value: userLocation, textId:'location-fail:item'}];
-        },
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'office', textId:'location-fail:item'},
+            {item: 'newspaper', property: 'location', value: 'office', textId:'location-fail:item'}
+        ],
         execute(_:string, gameDefinition:GameDefinition, userId:string) {
             addToInventory(gameDefinition, userId, 'newspaper');
             addAchievement(gameDefinition, userId, 'picked up newspaper');
-            return true;
         }
     },
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|scan|study|peruse|glance\s*at)\s*(?:the\s*)?(?:crumpled|old|wrinkled|torn|folded|discarded|rumpled)?\s*(?:newspaper|paper|news\s*sheet)\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: 'newspaper', property: 'location', value: userId, textId:'location-fail:item'}
+        ],
         execute(_:string, gameDefinition:GameDefinition, userId:string) {
-            const { variables} = gameDefinition;
-
-            const userLocation = (variables[userId] as PlayerVariable).location;
-            if (!isValidAction(gameDefinition, [{item: 'newspaper', property: 'location', value: userLocation, textId:'location-fail:item'}])) {
-                return true;
-            }
-            
             addAchievement(gameDefinition, userId, 'read newspaper');           
             print(gameDefinition, 'read newspaper');
-
-            return true;
         }
     },
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|browse|scan|study|peruse|glance\s*at)\s*(?:the\s*)?(?:diary|journal|notebook|log|memoir)\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'office', textId:'location-fail:item'},
+            {item: 'journal', property: 'location', value: 'office', textId:'location-fail:item'}
+        ],
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
-            const { variables } = gameDefinition;
-
-            const userLocation = (variables[userId] as PlayerVariable).location;
-            if (!isValidAction(gameDefinition, [{item: 'journal', property: 'location', value: userLocation, textId:'location-fail:item'}])) {
-                return true;
-            }
-
             addAchievement(gameDefinition, userId, 'read journal');           
             print(gameDefinition, 'read journal');
-
-            return true;
         }
     },
     {
@@ -129,48 +116,37 @@ const actions:Action[] = [
             variables.portrait = { ...portrait, state: { ...portrait.state as Attributes, placement: 'floor' } };
             addAchievement(gameDefinition, userId, 'find secret safe');
             print(gameDefinition, 'removed portrait from wall');
-
-            return true;
         }
     },
     {
         input: /\b(put|place|hang)\s(the\s)?(portrait|picture|painting)\s(back\s)?((on|onto)\s)?((the\s)?wall)?\b/,
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
+            {item: 'portrait', property: 'placement', value: 'floor' as string, textId:'portrait already on wall'},
+        ],
         execute (_:string, gameDefinition:GameDefinition, userId:string) {           
             const { variables } = gameDefinition;
             const portrait = variables.portrait as ItemVariable;
             
-            if (!isValidAction(gameDefinition, [
-                {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
-                {item: 'portrait', property: 'placement', value: 'floor' as string, textId:'portrait already on wall'},
-            ])) {                
-                return true;
-            }
-
             variables.portrait = { ...portrait, state: { ...portrait.state as Attributes, placement: 'wall' } };
             addAchievement(gameDefinition, userId, 'hid safe');
             print(gameDefinition, 'put portrait back on wall');
-            
-            return true;
         }
     },
     {
         input: /\b(?:steal|take|grab|snatch|retrieve|get|remove|extract|pick\s*up)\s*(?:the\s*)?(?:ledger|record|book|document|log)\s*(?:from\s*(?:the\s*)?(?:safe|vault|lockbox|strongbox|security\s*box))\b/,
-        conditions (_:GameDefinition, userId:string) {
-            return [
-                {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
-                {item: 'portrait', property: 'placement', value: 'wall' as string, textId:'the portrait is blocking the safe'},
-                {item: 'safe', property: 'locked', value: 'no', textId:'the item is not opened'},
-                {item: 'ledger', property: 'location', value: 'safe', textId:'the ledger is not in the safe'},
-            ];
-        },
+        conditions: (_:GameDefinition, userId:string) => [
+            {item: userId, property: 'location', value: 'office', textId:'location-fail:user'},
+            {item: 'portrait', property: 'placement', value: 'wall' as string, textId:'the portrait is blocking the safe'},
+            {item: 'safe', property: 'locked', value: 'no', textId:'the item is not opened'},
+            {item: 'ledger', property: 'location', value: 'safe', textId:'the ledger is not in the safe'},
+        ],
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
             const { variables } = gameDefinition;
 
             addToInventory(gameDefinition, userId, 'ledger');
             addAchievement(gameDefinition, userId, 'stole ledger');
             print(gameDefinition, 'stole ledger')
-            
-            return true;
         }
     },
     {
@@ -187,7 +163,6 @@ const actions:Action[] = [
 
             print(gameDefinition, 'glued vase');
             addAchievement(gameDefinition, userId, 'glued the vase');
-            return false;
         }
     },
     {
@@ -206,7 +181,6 @@ const actions:Action[] = [
 
             print(gameDefinition, 'safe unlocked');
             addAchievement(gameDefinition, userId, 'unlocked safe');
-            return false;
         }
     },
     {
@@ -220,7 +194,6 @@ const actions:Action[] = [
         },
         execute (_:string, gameDefinition:GameDefinition, userId:string) {
             print(gameDefinition, 'cant unlock safe');
-            return false;
         },
     },
     {
@@ -235,7 +208,6 @@ const actions:Action[] = [
             addToInventory(gameDefinition, userId, 'ledger');
             addAchievement(gameDefinition, userId, 'obtained ledger');
             print(gameDefinition, 'you pick up the ledger');
-            return false;
         }
     },
     {
@@ -254,7 +226,6 @@ const actions:Action[] = [
 
             print(gameDefinition, 'safe locked');
             addAchievement(gameDefinition, userId, 'locked safe');
-            return false;
         }
     },
     {
@@ -274,7 +245,6 @@ const actions:Action[] = [
             variables['forensic kit'] = { ...variables['forensic kit'] as ItemVariable, state: 'no fingerprints' };
             print(gameDefinition, 'planted fingerprints');
             addAchievement(gameDefinition, userId, 'planted fingerprints')
-            return false;
         }
     }
 ];
@@ -307,12 +277,15 @@ const strings = {
 
         return `It's a big painting of John Cartwright, the mansion's owner. It's placed neatly next to the safe it used to hide.`;
     },
-    bin: 'A trash receptacle that might contain overlooked items.',
-    newspaper: 'A discarded paper that could hold a clue or distraction material.',
-    vase: 'A decorative piece that might conceal a hidden object.',
-    safe: 'A secure lockbox requiring cracking to access its contents.',
-    ledger: 'A detailed book containing incriminating information.',
-    journal: 'A personal diary that might reveal secrets or hints.',
+    bin(variables:Variables) { 
+        const items = Object.keys(variables).filter(i => (variables[i] as ItemVariable).location === 'bin') as string[];
+        return `A trash bin. ${ items.length ? `Inside you see ${items.join(', ')}` : `It's empty` }.`;
+    },
+    newspaper: 'A discarded newspaper. the front page photo is of the person from the portrait.',
+    vase: (variables:Variables) => (variables.vase as ItemVariable).state === 'glued' ? 'Broken vase pieces. Hopefully you can glue them back together.' : 'The vase you skillfully glued back together.',
+    safe: 'A secure lockbox that requires a pin code to open.',
+    ledger: 'The incriminating evidence you need to incriminate Cartwright.',
+    journal: `A journal detailing someone's schedule. Probably worth a read.`,
     'removed portrait from wall': `You removed the portrait from the wall. There's a safe hidden behind the portrait!`, 
     'put portrait back on wall': `You put the portrait back on the wall. The safe is hidden again.`,
     'stole ledger': 'You got the ledger!',

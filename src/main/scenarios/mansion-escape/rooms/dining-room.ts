@@ -1,4 +1,4 @@
-import { Action, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
+import { Action, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'dining room': { type: 'room' },
@@ -19,8 +19,9 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
 const actions:Action[] = [];
 
 const strings = {
-    'dining room': 'A formal dining room with a long table, elegant chandeliers, and a sideboard for serving. Fine china and silverware are neatly arranged for guests.',
-    'dining entrance': 'Tall double doors with brass handles, polished to a shine. The scent of food often drifts from behind them when the dining room is in use, hinting at the feast beyond.',
+    'dining room': (variables:Variables) => `A formal dining room with a long table, elegant chandeliers, and a sideboard for serving.
+    Fine china and silverware are neatly arranged for guests.${(variables['dog food bowl'] as ItemVariable).location === 'dining room' ? ' A dog food bowl sits on the floor.' : ''}`,
+    'dining entrance': 'Tall double doors with brass handles, polished to a shine.',
     'dog food bowl': 'A standard silver food bowl with the label "Fifi" engraved on its side.'
 };
 

@@ -73,7 +73,7 @@ const actions:Action[] = [
     }
 ];
 const strings = {
-    library: 'A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs. The scent of old books fills the air.',
+    library: 'A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs.',
     'spiralling stairs': 'A magnificent spiral staircase crafted from polished oak, with ornate wrought-iron railings spiraling upward.',
     bookshelves: 'Sturdy shelves packed with books, some hiding useful clues.',
     'pupcake recipes book': 'A collection of recipes for crafting the perfect pupcake treat.',
