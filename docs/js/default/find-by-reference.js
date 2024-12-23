@@ -1,4 +1,4 @@
-import isInRootLocation from "./is-in-root-location";
+import isInRootLocation from './is-in-root-location.js';
 export default function findByReference(gameDefinition, userId, reference) {
     const { references, variables } = gameDefinition;
     if (!reference) {

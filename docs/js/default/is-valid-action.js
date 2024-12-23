@@ -1,4 +1,4 @@
-import isInRootLocation from './is-in-root-location';
+import isInRootLocation from './is-in-root-location.js';
 import print from "./print.js";
 //condition = itemId, propertyName, validValue, error message
 export default function isValidAction(gameDefinition, conditions) {

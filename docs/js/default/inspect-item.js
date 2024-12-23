@@ -1,4 +1,4 @@
-import findByReference from "./find-by-reference";
+import findByReference from './find-by-reference.js';
 import print from "./print.js";
 const inspectItemRegExp = /(?:what is|describe|tell me about|look at|examine|inspect) (the|a|an)?\s*(\w+)/;
 const inspectLocationRegExp = /where is the (.+?)\?|where are the (.+?)\?|what is in my (.+?)\?|what do I have|can you tell me where the (.+?) is\?|is there a (.+?) here|where can I find the (.+?)/;

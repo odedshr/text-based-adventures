@@ -1,7 +1,7 @@
+import { ItemVariable, Action, RoomVariable, PassageVariable, GameDefinition, Variable, Variables, PlayerVariable, Attributes } from '../../../types.js';
 import addAchievement from '../../../default/add-achievement.js';
 import isInRootLocation from '../../../default/is-in-root-location.js';
-import print from "../../../default/print.js";
-import { ItemVariable, Action, RoomVariable, PassageVariable, GameDefinition, Variable, Variables, PlayerVariable, Attributes } from '../../../types.js';
+import print from '../../../default/print.js';
 
 const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable } = {
     'foyer': { type: 'room' },

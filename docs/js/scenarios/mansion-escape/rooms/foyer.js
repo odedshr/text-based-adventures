@@ -1,6 +1,6 @@
 import addAchievement from '../../../default/add-achievement.js';
 import isInRootLocation from '../../../default/is-in-root-location.js';
-import print from "../../../default/print.js";
+import print from '../../../default/print.js';
 const items = {
     'foyer': { type: 'room' },
     'grand archway': {

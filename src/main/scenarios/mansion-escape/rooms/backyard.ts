@@ -1,7 +1,7 @@
 import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types';
 import print from "../../../default/print.js";
-import addAchievement from '../../../default/add-achievement';
-import addToInventory from '../../../default/add-to-inventory';
+import addAchievement from '../../../default/add-achievement.js';
+import addToInventory from '../../../default/add-to-inventory.js';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'backyard': { type: 'room' },

@@ -1,5 +1,5 @@
-import { Action, GameDefinition, ItemVariable, Variables } from "../types";
-import findByReference from "./find-by-reference";
+import { Action, GameDefinition, ItemVariable, Variables } from '../types';
+import findByReference from './find-by-reference.js';
 
 import print from "./print.js";
 

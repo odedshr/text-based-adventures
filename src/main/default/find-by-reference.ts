@@ -1,5 +1,5 @@
-import { GameDefinition, ItemVariable, PassageVariable, PlayerVariable } from "../types";
-import isInRootLocation from "./is-in-root-location";
+import { GameDefinition, PassageVariable, PlayerVariable } from "../types";
+import isInRootLocation from './is-in-root-location.js';
 
 export default function findByReference(gameDefinition:GameDefinition, userId:string, reference?:string):string | undefined {
     const { references, variables } = gameDefinition;

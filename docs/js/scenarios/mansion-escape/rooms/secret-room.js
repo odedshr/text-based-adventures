@@ -1,4 +1,4 @@
-import addAchievement from '../../../default/add-achievement';
+import addAchievement from '../../../default/add-achievement.js';
 import print from '../../../default/print.js';
 const items = {
     'secret room': { type: 'room' },

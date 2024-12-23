@@ -15,7 +15,7 @@ export default function addToInventory(gameDefinition:GameDefinition, userId:str
     }
 
     if (!item || item.type !== 'item') {
-        print(gameDefinition, 'no-item-to-pick-up', itemName);
+        print(gameDefinition, 'no-item-to-pick-up.js', itemName);
         return;
     }
     

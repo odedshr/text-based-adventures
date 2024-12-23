@@ -1,6 +1,6 @@
 import print from "../../../default/print.js";
-import addAchievement from '../../../default/add-achievement';
-import addToInventory from '../../../default/add-to-inventory';
+import addAchievement from '../../../default/add-achievement.js';
+import addToInventory from '../../../default/add-to-inventory.js';
 const items = {
     'backyard': { type: 'room' },
     'glass door': {

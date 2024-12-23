@@ -11,7 +11,7 @@ export default function addToInventory(gameDefinition, userId, itemName) {
         return;
     }
     if (!item || item.type !== 'item') {
-        print(gameDefinition, 'no-item-to-pick-up', itemName);
+        print(gameDefinition, 'no-item-to-pick-up.js', itemName);
         return;
     }
     if (!item.canBeHeld) {

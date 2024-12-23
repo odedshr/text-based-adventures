@@ -1,6 +1,6 @@
 import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable } from '../../../types';
 import print from "../../../default/print.js";
-import addAchievement from '../../../default/add-achievement';
+import addAchievement from '../../../default/add-achievement.js';
 
 const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
     'conservatory': { type: 'room' },

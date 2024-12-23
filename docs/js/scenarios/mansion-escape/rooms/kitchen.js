@@ -1,5 +1,5 @@
 import print from '../../../default/print.js';
-import addAchievement from '../../../default/add-achievement';
+import addAchievement from '../../../default/add-achievement.js';
 const items = {
     'kitchen': { type: 'room' },
     'swinging door': {
