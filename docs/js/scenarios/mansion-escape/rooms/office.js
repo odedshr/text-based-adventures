@@ -2,7 +2,11 @@ import addToInventory from '../../../default/add-to-inventory.js';
 import addAchievement from '../../../default/add-achievement.js';
 import print from "../../../default/print.js";
 const items = {
-    'office': { type: 'room' },
+    'office': {
+        type: 'room',
+        synonyms: ['room', 'home-office', 'work den'],
+        visited: true
+    },
     'blue door': {
         type: 'passage',
         between: ['hallway', 'office'],
@@ -69,12 +73,24 @@ const items = {
 };
 const actions = [
     {
+        input: /^look in bin$/,
+        conditions(gameDefinition, userId) {
+            const userLocation = gameDefinition.variables[userId].location;
+            return [
+                { item: 'bin', property: 'location', value: userLocation, textId: 'location-fail:item' }
+            ];
+        },
+        execute(gameDefinition, userId, _) {
+            print(gameDefinition, 'bin');
+        }
+    },
+    {
         input: /^(pick up|grab|take|collect|retrieve|get|fetch)\s(the\s)?(crumpled\s|old\s|dirty\s|wrinkled\s|)\s?(newspaper|paper|magazine|flyer)$/,
         conditions: (_, userId) => [
             { item: userId, property: 'location', value: 'office', textId: 'location-fail:item' },
             { item: 'newspaper', property: 'location', value: 'office', textId: 'location-fail:item' }
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             addToInventory(gameDefinition, userId, 'newspaper');
             addAchievement(gameDefinition, userId, 'picked up newspaper');
         }
@@ -84,7 +100,7 @@ const actions = [
         conditions: (_, userId) => [
             { item: 'newspaper', property: 'location', value: userId, textId: 'location-fail:item' }
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             addAchievement(gameDefinition, userId, 'read newspaper');
             print(gameDefinition, 'read newspaper');
         }
@@ -95,7 +111,7 @@ const actions = [
             { item: userId, property: 'location', value: 'office', textId: 'location-fail:item' },
             { item: 'journal', property: 'location', value: 'office', textId: 'location-fail:item' }
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             addAchievement(gameDefinition, userId, 'read journal');
             print(gameDefinition, 'read journal');
         }
@@ -106,7 +122,7 @@ const actions = [
             { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
             { item: 'portrait', property: 'placement', value: 'wall', textId: 'portrait already on floor' },
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const portrait = variables.portrait;
             variables.portrait = Object.assign(Object.assign({}, portrait), { state: Object.assign(Object.assign({}, portrait.state), { placement: 'floor' }) });
@@ -120,12 +136,26 @@ const actions = [
             { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
             { item: 'portrait', property: 'placement', value: 'floor', textId: 'portrait already on wall' },
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const portrait = variables.portrait;
             variables.portrait = Object.assign(Object.assign({}, portrait), { state: Object.assign(Object.assign({}, portrait.state), { placement: 'wall' }) });
             addAchievement(gameDefinition, userId, 'hid safe');
             print(gameDefinition, 'put portrait back on wall');
+        }
+    },
+    {
+        input: /(?:what is|describe|tell me about|look at|examine|inspect) (the|a|an)?\s*ledger/,
+        conditions(gameDefinition, userId) {
+            return (gameDefinition.variables.ledger.location === 'safe') ?
+                [
+                    { item: 'safe', property: 'locked', value: 'no', textId: 'location-fail:item' }
+                ] : [
+                { item: 'ledger', property: 'location', value: userId, textId: 'location-fail:item' }
+            ];
+        },
+        execute(gameDefinition, userId, _) {
+            print(gameDefinition, 'ledger');
         }
     },
     {
@@ -136,7 +166,7 @@ const actions = [
             { item: 'safe', property: 'locked', value: 'no', textId: 'the item is not opened' },
             { item: 'ledger', property: 'location', value: 'safe', textId: 'the ledger is not in the safe' },
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             addToInventory(gameDefinition, userId, 'ledger');
             addAchievement(gameDefinition, userId, 'stole ledger');
@@ -150,7 +180,7 @@ const actions = [
             { item: 'vase', property: 'location', value: 'office', textId: 'location-fail:item' },
             { item: 'vase', property: 'state', value: 'broken', textId: 'already glued' },
         ],
-        execute(input, gameDefinition, userId) {
+        execute(gameDefinition, userId, input) {
             const { variables } = gameDefinition;
             const vase = variables.vase;
             variables.vase = Object.assign(Object.assign({}, vase), { state: 'glued' });
@@ -159,7 +189,8 @@ const actions = [
         }
     },
     {
-        input: /\b(?:use|type)\s+(?:code\s+)?30(?:[.\s/-]?02)(?:[.\s/-]?19)(?:[.\s/-]?85)\s+(?:in\s+keypad\s+)?to\s+(?:unlock|open)\s+(?:safe|vault)\b/,
+        // use the code 30 02 1984 to unlock the safe
+        input: /\b(?:use|type)\s+(the\s+)?(?:code\s+)?30(?:[.\s/-]?02)(?:[.\s/-]?19)(?:[.\s/-]?85)\s+(?:in\s+keypad\s+)?to\s+(?:unlock|open)\s+(the\s+)?(?:safe|vault)\b/,
         conditions(_, userId) {
             return [
                 { item: userId, property: 'location', value: 'office', textId: 'location-fail:user' },
@@ -167,7 +198,7 @@ const actions = [
                 { item: 'safe', property: 'locked', value: 'yes', textId: 'the safe is not closed' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const safe = variables.safe;
             variables.safe = Object.assign(Object.assign({}, variables.safe), { state: Object.assign(Object.assign({}, safe.state), { locked: 'no' }) });
@@ -184,7 +215,7 @@ const actions = [
                 { item: 'safe', property: 'locked', value: 'yes', textId: 'the safe is not closed' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             print(gameDefinition, 'cant unlock safe');
         },
     },
@@ -196,7 +227,7 @@ const actions = [
             { item: 'safe', property: 'locked', value: 'no', textId: 'the safe is locked' },
             { item: 'ledger', property: 'location', value: 'safe', textId: 'location-fail:item' },
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             addToInventory(gameDefinition, userId, 'ledger');
             addAchievement(gameDefinition, userId, 'obtained ledger');
             print(gameDefinition, 'you pick up the ledger');
@@ -211,7 +242,7 @@ const actions = [
                 { item: 'safe', property: 'locked', value: 'no', textId: 'safe already locked' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const safe = variables.safe;
             variables.safe = Object.assign(Object.assign({}, variables.safe), { state: Object.assign(Object.assign({}, safe.state), { locked: 'yes' }) });
@@ -228,7 +259,7 @@ const actions = [
                 { item: 'forensic kit', property: 'state', value: 'with fingerprints', textId: 'no fingerprints in forensic kit' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const safe = variables.safe;
             variables.safe = Object.assign(Object.assign({}, variables.safe), { state: Object.assign(Object.assign({}, safe.state), { fingerprints: 'yes' }) });
@@ -267,6 +298,7 @@ const strings = {
         }
         return `It's a big painting of John Cartwright, the mansion's owner. It's placed neatly next to the safe it used to hide.`;
     },
+    desk: `A sturdy oak desk with a leather chair. Papers are neatly stacked on one side, and a leather journal lies open.`,
     bin(variables) {
         const items = Object.keys(variables).filter(i => variables[i].location === 'bin');
         return `A trash bin. ${items.length ? `Inside you see ${items.join(', ')}` : `It's empty`}.`;
@@ -274,7 +306,7 @@ const strings = {
     newspaper: 'A discarded newspaper. the front page photo is of the person from the portrait.',
     vase: (variables) => variables.vase.state === 'glued' ? 'Broken vase pieces. Hopefully you can glue them back together.' : 'The vase you skillfully glued back together.',
     safe: 'A secure lockbox that requires a pin code to open.',
-    ledger: 'The incriminating evidence you need to incriminate Cartwright.',
+    ledger: `A ledger with Cartwright's incriminating transactions. Exactly the evidence you need to incriminate him!`,
     journal: `A journal detailing someone's schedule. Probably worth a read.`,
     'removed portrait from wall': `You removed the portrait from the wall. There's a safe hidden behind the portrait!`,
     'put portrait back on wall': `You put the portrait back on the wall. The safe is hidden again.`,
@@ -289,7 +321,7 @@ const strings = {
     'cant unlock safe': `The safe requires a particular key combination to be unlocked.`,
     'the safe is locked': 'The safe is locked',
     'safe unlocked'(variables) {
-        const safeContent = variables.ledger.location === 'safe' ? `There's a ledge inside` : `It's empty`;
+        const safeContent = variables.ledger.location === 'safe' ? `There's a ledger inside` : `It's empty`;
         return `The safe is unlocked. ${safeContent}.`;
     },
     'safe locked': 'You carefully locked the safe.',

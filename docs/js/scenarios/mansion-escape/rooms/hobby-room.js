@@ -48,7 +48,7 @@ const actions = [
             { item: 'aquarium', property: 'state', value: 'hungry-fish', textId: 'fish already ate' },
             { item: 'fish food', property: 'state', value: 'full', textId: 'fish food empty' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const aquarium = variables.aquarium;
             const fishFood = variables['fish food'];
@@ -65,7 +65,7 @@ const actions = [
             { item: 'aquarium', property: 'state', value: 'fish-fed', textId: 'those fish are hungry' },
             { item: 'treasure box', property: 'location', value: 'aquarium', textId: 'location-fail:item' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             addToInventory(gameDefinition, userId, 'treasure box');
             addAchievement(gameDefinition, userId, 'picked up treasure box');
             print(gameDefinition, 'got treasure box');
@@ -76,7 +76,7 @@ const actions = [
         conditions: (_, userId) => [
             { item: 'treasure box', property: 'location', value: userId, textId: 'location-fail:item' }
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             // we need to remove the key out of the box before adding it to the inventory
             const smallKey = variables['small key'];
@@ -92,7 +92,7 @@ const actions = [
             { item: userId, property: 'location', value: 'hobby room', textId: 'location-fail:user' },
             { item: 'treasure box', property: 'location', value: userId, textId: 'location-fail:item' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const treasureBox = variables['treasure box'];
             variables['treasure box'] = Object.assign(Object.assign({}, treasureBox), { location: 'aquarium' });

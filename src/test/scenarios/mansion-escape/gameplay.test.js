@@ -42,27 +42,18 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('The blue door is now opened.');
 
         await processMethod('walk through door', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
-
-        await processMethod('where am I?', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('A long corridor lined with portraits and elegant sconces. The soft carpet muffles footsteps, and several doors lead off into other rooms.');
 
         await processMethod('describe doors', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('a attic ladder leading to the attic, a grand archway leading to the foyer, a bedroom door, a craft door, a lavish door and a blue door leading to the office.');
+        expect(gameDefinition.variables.console.value).toBe('a attic ladder leading to the attic, a bedroom door, a grand archway leading to the foyer, a craft door, a lavish door and a blue door leading to the office.');
 
         await processMethod('open bedroom door', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('The bedroom door is now opened.');
 
         await processMethod('enter bedroom', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the guest room.');
-
-        await processMethod('describe the room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`The room is utter darkness. Maybe there's a light switch somewhere?`);
 
         await processMethod('look for light switch', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`You managed to find the light switch and turn it on.`);
-
-        await processMethod('describe the room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`It looks like a guest room. There's a bed, a small table and an empty backpack on the floor`);
 
         await processMethod('pick up backpack', gameDefinition, userId);
@@ -75,9 +66,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('The craft door is now opened.');
 
         await processMethod('walk through craft door', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the hobby room.');
-
-        await processMethod('describe the room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and a cello in one corner.
     There's a large aquarium in the center of the room and a glue tube on the table.`);
 
@@ -103,9 +91,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('The lavish door is now opened.');
         
         await processMethod('go to lavish door', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the master bedroom.');
-        
-        await processMethod('describe the room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
     There's a nightstand beside the bed.`);
 
@@ -119,9 +104,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe(`You picked up the security badge.`);
 
         await processMethod('go to ensuite bathroom', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the ensuite bathroom.');
-
-        await processMethod('describe room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures.
     There's a small cabinet behind the mirror.`);
 
@@ -138,15 +120,13 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
 
         await processMethod('go to foyer', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the foyer.');
+        expect(gameDefinition.variables.console.value).toBe(`The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug.
+    A coat stand and an empty umbrella holder are by the door.`);
 
         await processMethod('go to living room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the living room.');
+        expect(gameDefinition.variables.console.value).toBe('A spacious room with plush sofas, a fireplace, and a large window offering a view of the garden. Family portraits decorate the walls.');
         
         await processMethod('go to conservatory', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the conservatory.');
-
-        await processMethod('look around', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`Glass walls offer a panoramic view of the surrounding garden and yard.
     The room is filled with lush greenery and a big statue in the center.`);
 
@@ -157,7 +137,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the living room.');
 
         await processMethod('go to library', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the library.');
+        expect(gameDefinition.variables.console.value).toBe('A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs.');
         
         await processMethod('go to office', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the office.');
@@ -172,7 +152,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe(`The safe requires a particular key combination to be unlocked.`);
 
         await processMethod('use code 30 02 1985 to unlock safe', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`The safe is unlocked. There's a ledge inside.`);
+        expect(gameDefinition.variables.console.value).toBe(`The safe is unlocked. There's a ledger inside.`);
 
         await processMethod('pick up ledger', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You pick up the ledger. You got the incriminating evidence you came for.');
@@ -187,9 +167,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the foyer.');
 
         await processMethod('go to toilet', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the toilet.');
-
-        await processMethod('look around', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`The toilet room is small and functional. It has a sink and cistern, but no mirror. There's a very bright red water valve on the pipe connected to the cistern.`);
 
         await processMethod('unscrew water valve', gameDefinition, userId);
@@ -199,13 +176,16 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the foyer.');
 
         await processMethod('go to dining room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the dining room.');
+        expect(gameDefinition.variables.console.value).toBe(`A formal dining room with a long table, elegant chandeliers, and a sideboard for serving.
+    Fine china and silverware are neatly arranged for guests. A dog food bowl sits on the floor.`);
 
         await processMethod('go to kitchen', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the kitchen.');
+        expect(gameDefinition.variables.console.value).toBe('A modern kitchen with stainless steel appliances, marble countertops, and a large central island. The room smells of fresh herbs and baking bread.');
 
         await processMethod('go to basement', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the basement.');
+        expect(gameDefinition.variables.console.value).toBe(`A dimly room with a low ceiling and bare cement walls. The air is damp and musty.
+    A big pipe runs along the wall, slowly dripping water.
+    There's a heavy metal door with keypad lock on the other side of the room.`);
 
         await processMethod('use valve on pipe', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You screw the red valve to the pipe. You can now use it to drain the pool!');
@@ -217,9 +197,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('The vault is unlocked!');
 
         await processMethod('walk through vault door', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the security room.');
-
-        await processMethod('describe the room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`The security room has a desk with multiple monitors showings different CCTV footages from every possible corner of the mansion.Dread fills you knowing that there's evidence of you breaking into the mansion. There's a flashlight on the desk.`);
 
         await processMethod('pick up flashlight', gameDefinition, userId);
@@ -241,9 +218,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the kitchen.');
 
         await processMethod('go to pantry', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the pantry.');
-
-        await processMethod('look around', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A small room adjacent to the kitchen, lined with shelves stocked with dry goods, canned food, and kitchen supplies. A box of dog food is on the floor. A box of batteries is on the shelf.`);
 
         await processMethod('pick up dog food', gameDefinition, userId);
@@ -257,10 +231,6 @@ describe('Game-play', () => {
 
         await processMethod('go to dining room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the dining room.');
-
-        await processMethod('look around', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`A formal dining room with a long table, elegant chandeliers, and a sideboard for serving.
-    Fine china and silverware are neatly arranged for guests. A dog food bowl sits on the floor.`);
         
         await processMethod('pick up dog bowl', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the dog food bowl.');
@@ -284,7 +254,9 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the conservatory.');
 
         await processMethod('go to backyard', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the backyard.');
+        expect(gameDefinition.variables.console.value).toBe(`An open outdoor area with manicured lawns, flowerbeds, and a few benches.
+        An empty private swimming pool is at the center of the yard.
+        A rottweiler is standing on alert between you and the pool, growling at you.`);
 
         await processMethod('fetch key from pool', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('The dog growls at you when you try to approach the pool. You dare not step any further.');
@@ -308,10 +280,10 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
 
         await processMethod('go to attic', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the attic.');
-
-        await processMethod('look around', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`The room is utter darkness. You can't see anything.`);
+
+        await processMethod('look for light switch', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You scramble around in the dark, but you can't find the light switch.`);
 
         await processMethod('turn on flashlight', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`You probably need to get batteries for this flashlight to work.`);
@@ -344,9 +316,6 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You found the secret room!');
 
         await processMethod('enter secret room', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('You entered the secret room.');
-
-        await processMethod('look around', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`Very oddly, there's a massive train model in the middle of the room. You try not to be too judgemental about it.`);
 
         await processMethod('copy fingerprints from the train model', gameDefinition, userId);
@@ -390,52 +359,33 @@ describe('Game-play', () => {
             "player1 find secret safe",
             "player1 hid safe",
             "player1 opened blue door",
-            "player1 entered the hallway",
             "player1 opened bedroom door",
-            "player1 entered the guest room",
             "player1 found light switch",
             "player1 opened craft door",
-            "player1 entered the hobby room",
             "player1 fed the fish",
             "player1 took small key out of treasure box",
             "player1 returned treasure box",
             "player1 opened lavish door",
-            "player1 entered the master bedroom",
             "player1 unlocked nightstand drawer",
-            "player1 entered the ensuite bathroom",
-            "player1 entered the foyer",
-            "player1 entered the living room",
-            "player1 entered the conservatory",
             "player1 read plaque on statue",
-            "player1 entered the library",
-            "player1 entered the office",
             "player1 glued the vase",
             "player1 unlocked safe",
             "player1 obtained ledger",
             "player1 locked safe",
-            "player1 entered the toilet",
             "player1 picked up water valve",
-            "player1 entered the dining room",
-            "player1 entered the kitchen",
-            "player1 entered the basement",
             "player1 secured valve to pipe",
             "player1 drained the pool",
             "player1 unlocked vault",
-            "player1 entered the security room",
             "player1 watched cctv",
             "player1 scrubbed cctv",
-            "player1 entered the pantry",
             "player1 prepared pupcakes",
             "player1 drugged pupcakes",
-            "player1 entered the backyard",
             "player1 fed dog",
             "player1 drugged dog",
             "player1 picked up key",
-            "player1 entered the attic",
             "player1 put batteries in flashlight",
             "player1 used flashlight",
             "player1 found secret room",
-            "player1 entered the secret room",
             "player1 copied fingerprints",
             "player1 planted fingerprints",
             "player1 unlocked main door",

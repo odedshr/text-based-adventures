@@ -32,14 +32,14 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
 
 const actions:Action[] = [
     {
-        input: /\b(?:feed|give|offer)\s*(?:the\s*)?(?:pupcake|cake|treat)\s*(?:to\s*(?:the\s*)?(?:dog|puppy)|with\s*(?:the\s*)?(?:dog|puppy))\b/,
+        input: /\b(?:feed|give|offer)\s*(?:the\s*)?(((?:pupcake|cake|treat)\s*(?:to\s*(?:the\s*)?(?:dog|puppy))|((?:dog|puppy)\s+with\s*(?:the\s*)?(?:pupcake|cake|treat))))\b/,
         conditions: (_:GameDefinition, userId:string) => [
             { item: userId, property: 'location', value: 'backyard', textId:'location-fail:user' },
             { item: 'dog', property: 'state', value: 'hostile', textId: 'dog already sleeping' },
             { item: 'pupcake', property: 'location', value: 'dog food bowl', textId:'location-fail:item' },
             { item: 'dog food bowl', property: 'location', value: userId, textId:'location-fail:item' }
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             const dogFoodBowl = variables['dog food bowl'];
             const pupcake = variables.pupcake as ItemVariable;
@@ -63,7 +63,7 @@ const actions:Action[] = [
             { item: 'key', property: 'location', value: 'pool', textId:'location-fail:item' },
             { item: 'pool', property: 'state', value: 'drained', textId:'pool is not empty' }
         ],
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             addToInventory(gameDefinition, userId, 'key');
             print(gameDefinition, 'you-picked-up-the-item', 'key');
             addAchievement(gameDefinition, userId, 'picked up key');

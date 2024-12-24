@@ -32,12 +32,12 @@ const actions = [
                 { item: 'small key', property: 'location', value: userId, textId: 'location-fail:item' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             print(gameDefinition, 'how to unlock the nightstand drawer');
         }
     },
     {
-        input: /\b(?:unlock|open|unfasten|access)\s*(?:the\s*)?(?:nightstand|bedside)?\s*(?:drawer|compartment)\s*(?:using|with|by\s*using)?\s*(?:the\s*)?(?:small|tiny|little)\s*key\b/,
+        input: /\b(((use( the)?( small)? key to (?:unlock|open|unfasten|access)\s*(?:the\s*)?(?:nightstand|bedside)?\s*(?:drawer|compartment)))|((?:unlock|open|unfasten|access)\s*(?:the\s*)?(?:nightstand|bedside)?\s*(?:drawer|compartment)\s*(?:using|with|by\s*using)?\s*(?:the\s*)?(?:small|tiny|little)\s*key))\b/,
         conditions(_, userId) {
             return [
                 { item: userId, property: 'location', value: 'master bedroom', textId: 'location-fail:user' },
@@ -45,7 +45,7 @@ const actions = [
                 { item: 'small key', property: 'location', value: userId, textId: 'location-fail:item' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const drawer = variables['nightstand drawer'];
             variables['nightstand drawer'] = Object.assign(Object.assign({}, drawer), { state: 'opened' });
@@ -62,7 +62,7 @@ const actions = [
                 { item: 'secret door', property: 'state', value: 'hidden', textId: 'you already know where the secret door is' },
             ];
         },
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const door = variables['secret door'];
             variables['secret door'] = Object.assign(Object.assign({}, door), { state: 'opened' });
@@ -75,6 +75,7 @@ const strings = {
     'master bedroom': `A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
     There's a nightstand beside the bed.`,
     'lavish door': 'An ornate door that hints at something valuable behind it.',
+    nightstand: `A fancy looking small table beside the bed with a single drawer that has a lock.`,
     'nightstand drawer': (variables) => variables['nightstand drawer'].location === 'locked' ? 'The drawer is locked.' : (variables['security badge'].location === 'master bedroom' ? `There's a security badge inside.` : 'The drawer is empty.'),
     'security badge': 'An ID granting access to restricted areas.',
     'drawer is not locked': 'The drawer is not locked',

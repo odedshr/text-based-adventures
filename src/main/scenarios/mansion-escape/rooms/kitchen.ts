@@ -20,14 +20,14 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable} = {
 
 const actions:Action[] = [
     {
-        input: /\b(?:make|prepare|bake|create)\s*(?:a\s*)?(?:pupcake|dog\s*cake|treat)\s*(?:using|with|by\s*using|containing)\s*(?:sleeping\s*pills?|sleep\s*medication|pills?)\b/,
+        input: /\b(?:make|prepare|bake|create)\s*(?:a\s*)?(?:pupcakes?|dog\s*cakes?|treat|dog food)\s*(?:using|with|by\s*using|containing)\s*(?:sleeping\s*pills?|sleep\s*medication|pills?)\b/,
         conditions: (_:GameDefinition, userId:string) => [
             {item: userId, property: 'location', value: 'kitchen', textId:'missing kitchen appliances'},
             {item: 'dog food', property: 'location', value: userId, textId:'location-fail:item'},
             {item: 'sleeping pills', property: 'location', value: userId, textId:'location-fail:item'},
             {item: 'dog food bowl', property: 'location', value: userId, textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             const pupcake = variables.pupcake;
             variables.pupcake = { ...pupcake, location: 'dog food bowl', state: 'drugged'} as ItemVariable;
@@ -37,27 +37,27 @@ const actions:Action[] = [
         }
     },
     {
-        input: /\b(?:make|prepare|bake|create)\s*(?:a\s*)?(?:pupcake|dog\s*cake|treat)\b/,
+        input: /\b(?:make|prepare|bake|create)\s*(?:a\s*)?(?:pupcakes?|dog\s*cakes?|treat|dog food)\b/,
         conditions: (_:GameDefinition, userId:string) => [
             {item: userId, property: 'location', value: 'kitchen', textId:'missing kitchen appliances'},
             {item: 'dog food', property: 'location', value: userId, textId:'location-fail:item'},
             {item: 'dog food bowl', property: 'location', value: userId, textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             const pupcake = variables.pupcake;
-            variables.pupcake = { ...pupcake, location: userId} as ItemVariable;
+            variables.pupcake = { ...pupcake, location: 'dog food bowl' } as ItemVariable;
             addAchievement(gameDefinition, userId, 'prepared pupcakes');
             print(gameDefinition, 'prepared pupcakes');
         }
     },
     {
-        input: /\b(?:add|put|mix|insert|include)\s*(?:a\s*)?(?:sleeping\s*pill|sleep\s*medication|pill|sleeping\s*pills)\s*(?:into|to|in|with)\s*(?:the\s*)?(?:pupcake|dog\s*cake|treat)\b/,
+        input: /\b(?:add|put|mix|insert|include)\s*(?:a\s*)?(?:sleeping\s*pill|sleep\s*medication|pill|sleeping\s*pills)\s*(?:into|to|in|with)\s*(?:the\s*)?(?:pupcakes?|dog\s*cakes?|treat|dog food)\b/,
         conditions: (_:GameDefinition, userId:string) => [
             {item: 'pupcake', property: 'location', value: 'dog food bowl', textId:'location-fail:item'},
             {item: 'sleeping pills', property: 'location', value: userId, textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             const pupcake = variables.pupcake;
             variables.pupcake = { ...pupcake, location: userId, state: 'drugged'} as ItemVariable;

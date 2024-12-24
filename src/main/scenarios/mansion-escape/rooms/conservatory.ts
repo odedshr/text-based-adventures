@@ -21,7 +21,7 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable } = {
 const actions:Action[] = [
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|study|view|scan|peruse)\s*(?:the\s*)?(?:statue|statue\s*plaque|plaque\s*on\s*the\s*statue|statue\s*inscription|plaque)\b/,
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition
             const statue = variables.statue as ItemVariable;
             variables.statue = { ...statue, state: 'read' };

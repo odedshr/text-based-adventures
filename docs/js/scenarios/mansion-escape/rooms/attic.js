@@ -30,7 +30,7 @@ const actions = [
             { item: userId, property: 'location', value: 'attic', textId: 'location-fail:user' },
             { item: 'forensic kit', property: 'location', value: 'boxes', textId: 'location-fail:item' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const boxes = variables['boxes'];
             variables.boxes = Object.assign(Object.assign({}, boxes), { state: 'without-kit' });
@@ -45,7 +45,7 @@ const actions = [
         conditions: (_, userId) => [
             { item: userId, property: 'location', value: 'attic', textId: 'location-fail:user' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             print(gameDefinition, 'boxes');
         }
     }

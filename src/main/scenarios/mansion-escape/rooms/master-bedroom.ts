@@ -36,12 +36,12 @@ const actions:Action[] = [
                 {item: 'small key', property: 'location', value: userId, textId:'location-fail:item'},
             ];
         },
-        execute(_:string, gameDefinition:GameDefinition, userId:string) {
+        execute(gameDefinition:GameDefinition, userId:string,_:string) {
             print(gameDefinition, 'how to unlock the nightstand drawer');
         }
     },
     {
-        input: /\b(?:unlock|open|unfasten|access)\s*(?:the\s*)?(?:nightstand|bedside)?\s*(?:drawer|compartment)\s*(?:using|with|by\s*using)?\s*(?:the\s*)?(?:small|tiny|little)\s*key\b/,
+        input: /\b(((use( the)?( small)? key to (?:unlock|open|unfasten|access)\s*(?:the\s*)?(?:nightstand|bedside)?\s*(?:drawer|compartment)))|((?:unlock|open|unfasten|access)\s*(?:the\s*)?(?:nightstand|bedside)?\s*(?:drawer|compartment)\s*(?:using|with|by\s*using)?\s*(?:the\s*)?(?:small|tiny|little)\s*key))\b/,
         conditions(_:GameDefinition, userId:string) {
             return [
                 {item: userId, property: 'location', value: 'master bedroom', textId:'location-fail:user'},
@@ -49,7 +49,7 @@ const actions:Action[] = [
                 {item: 'small key', property: 'location', value: userId, textId:'location-fail:item'},
             ];
         },
-        execute(_:string, gameDefinition:GameDefinition, userId:string) {
+        execute(gameDefinition:GameDefinition, userId:string,_:string) {
             const { variables } = gameDefinition;
             const drawer = variables['nightstand drawer'] as ItemVariable;
             variables['nightstand drawer'] = { ...drawer, state: 'opened' };
@@ -66,7 +66,7 @@ const actions:Action[] = [
                 {item: 'secret door', property: 'state', value: 'hidden', textId:'you already know where the secret door is'},
             ];
         },
-        execute(_:string, gameDefinition:GameDefinition, userId:string) {
+        execute(gameDefinition:GameDefinition, userId:string,_:string) {
             const { variables } = gameDefinition;
             const door = variables['secret door'] as PassageVariable;
             variables['secret door'] = { ...door, state: 'opened' };
@@ -80,6 +80,7 @@ const strings = {
     'master bedroom': `A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
     There's a nightstand beside the bed.`,
     'lavish door': 'An ornate door that hints at something valuable behind it.',
+    nightstand: `A fancy looking small table beside the bed with a single drawer that has a lock.`,
     'nightstand drawer': (variables:Variables) => (variables['nightstand drawer'] as ItemVariable).location === 'locked' ? 'The drawer is locked.' : ((variables['security badge'] as ItemVariable).location === 'master bedroom' ? `There's a security badge inside.` : 'The drawer is empty.'),
     'security badge': 'An ID granting access to restricted areas.',
     'drawer is not locked': 'The drawer is not locked',

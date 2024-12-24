@@ -22,8 +22,8 @@ export default async function processMethod(input:string, gameDefinition:GameDef
     for (const action of actions) {
         // Test if the input matches the action's verb (regular expression)
         if (action.input.test(input)) {
-            if ((!action.conditions || isValid(gameDefinition, userId, action.conditions))) {
-                action.execute(input, gameDefinition, userId);
+            if ((!action.conditions || isValid(gameDefinition, userId, input, action.conditions))) {
+                action.execute(gameDefinition, userId, input);
             }
             return;
         }
@@ -33,13 +33,13 @@ export default async function processMethod(input:string, gameDefinition:GameDef
     print(gameDefinition, 'what input means', input);
 }
 
-function isValid(gameDefinition: GameDefinition, userId: string , conditions?: Condition[] | ConditionalGenerator):boolean {
+function isValid(gameDefinition: GameDefinition, userId: string, input: string, conditions?: Condition[] | ConditionalGenerator):boolean {
     
     if (!conditions) {
         return true;
     }
     if (typeof conditions === 'function') {
-        return isValidAction(gameDefinition, conditions(gameDefinition, userId));
+        return isValidAction(gameDefinition, conditions(gameDefinition, userId, input));
     }
     if (Array.isArray(conditions)) {
         return isValidAction(gameDefinition, conditions);

@@ -18,7 +18,7 @@ const items = {
 const actions = [
     {
         input: /\b(?:read|examine|inspect|check|look\s*at|study|view|scan|peruse)\s*(?:the\s*)?(?:statue|statue\s*plaque|plaque\s*on\s*the\s*statue|statue\s*inscription|plaque)\b/,
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const statue = variables.statue;
             variables.statue = Object.assign(Object.assign({}, statue), { state: 'read' });

@@ -21,7 +21,7 @@ const actions = [
             { item: 'security badge', property: 'location', value: userId, textId: 'location-fail:item' },
             { item: 'vault door', property: 'state', value: 'locked', textId: 'vault not locked' }
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             const door = variables['vault door'];
             variables['vault door'] = Object.assign(Object.assign({}, door), { state: 'opened' });
@@ -36,7 +36,7 @@ const actions = [
             { item: userId, property: 'location', value: 'basement', textId: 'location-fail:user' },
             { item: 'valve', property: 'location', value: userId, textId: 'location-fail:item' },
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             variables.valve = Object.assign(Object.assign({}, variables['valve']), { location: 'pipe' });
             print(gameDefinition, 'valve screwed to pipe');
@@ -45,8 +45,8 @@ const actions = [
         }
     },
     {
-        input: /\b(?:use|turn|activate|open|operate|adjust)\s*(?:the\s*)?(?:water\s*valve|valve)\s*(?:to\s*)?(?:empty|drain|release\s*water\s*from)\s*(?:the\s*)?(?:pool|swimming\s*pool|water)\b/,
-        execute(input, gameDefinition, userId) {
+        input: /\b(?:use|turn( on)?|activate|open|operate|adjust)\s*(?:the\s*)?(?:water\s*valve|valve)\s*(?:to\s*)?(?:empty|drain|release\s*water\s*from)\s*(?:the\s*)?(?:pool|swimming\s*pool|water)\b/,
+        execute(gameDefinition, userId, input) {
             //9 - empty pool to get key to secret room
             const { variables } = gameDefinition;
             variables.pool = Object.assign(Object.assign({}, variables['pool']), { state: 'drained' });

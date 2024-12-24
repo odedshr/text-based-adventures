@@ -1,5 +1,5 @@
 export type Attributes = { [key: string]: string };
-export type RoomVariable =  { type: "room", state?: string | Attributes, synonyms?: string[] };
+export type RoomVariable =  { type: "room", state?: string | Attributes, synonyms?: string[], visited?: boolean };
 export type PassageState = "locked" | "hidden" | "opened" | "closed";
 export type PassageVariable =  { type: "passage", between: string[], state?:PassageState, allowedStates?:PassageState[], passed?: boolean, synonyms?: string[] };
 export type PlayerVariable =  { type: "player", location: string, canContain?: number | string };
@@ -19,13 +19,13 @@ export type Location = {
     actions: Action[],
     strings: {[key:string]:string | GetStringMethod },
 }
-export type ConditionalGenerator = (gameDefinition:GameDefinition, userId:string) => Condition[]
+export type ConditionalGenerator = (gameDefinition:GameDefinition, userId:string, input:string) => Condition[]
 
 export type Action = {
     input: RegExp,
     conditions?:Condition[] | ConditionalGenerator,
     // returns true if no need for additional actions
-    execute: (input:string, gameDefinition:GameDefinition, userId:string) => void
+    execute: (gameDefinition:GameDefinition, userId:string, input:string) => void
 }
 
 type Attribute = string;

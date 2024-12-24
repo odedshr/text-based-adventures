@@ -42,7 +42,7 @@ const actions = [
             { item: userId, property: 'location', value: 'library', textId: 'location-fail:user' },
             { item: 'pupcake recipes book', property: 'location', value: 'bookshelves', textId: 'location-fail:item' },
         ],
-        execute: (input, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, input) => {
             //2 - find dog dishes recipe book
             const { variables } = gameDefinition;
             const book = variables['pupcake recipes book'];
@@ -55,7 +55,7 @@ const actions = [
     },
     {
         input: /\b(?:find|locate|search\s*for|look\s*for|get)\s*(?:the\s*)?(forensic(\s*kit)?\s*guide\s*(book)?|(?:book\s*(?:titled\s*)?(?:'how\s*to\s*use\s*forensic\s*kit'|on\s*how\s*to\s*use\s*a?\s*forensic\s*kit|about\s*using\s*a?\s*forensic\s*kit|how\s*to\s*use\s*a?\s*forensic\s*kit)))\b/,
-        execute: (input, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, input) => {
             const { variables } = gameDefinition;
             const forensicGuide = variables['forensic guide'];
             variables['forensic guide'] = Object.assign(Object.assign({}, forensicGuide), { state: 'read' });

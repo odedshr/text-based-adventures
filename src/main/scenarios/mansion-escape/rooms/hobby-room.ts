@@ -1,7 +1,6 @@
+import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types.js';
 import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
-import isValidAction from '../../../default/is-valid-action.js';
-import { Action, GameDefinition, ItemVariable, PassageVariable, RoomVariable, Variables } from '../../../types.js';
 import print from "../../../default/print.js";
 
 const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable} = {
@@ -52,7 +51,7 @@ const actions:Action[] = [
             {item: 'aquarium', property: 'state', value: 'hungry-fish', textId:'fish already ate'},
             {item: 'fish food', property: 'state', value: 'full', textId:'fish food empty'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
                         
             const aquarium = variables.aquarium as ItemVariable;
@@ -70,7 +69,7 @@ const actions:Action[] = [
             {item: 'aquarium', property: 'state', value: 'fish-fed', textId:'those fish are hungry'},
             {item: 'treasure box', property: 'location', value: 'aquarium', textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             addToInventory(gameDefinition, userId, 'treasure box');
             addAchievement(gameDefinition, userId, 'picked up treasure box');
             print(gameDefinition, 'got treasure box');
@@ -82,7 +81,7 @@ const actions:Action[] = [
         conditions: (_:GameDefinition, userId:string) => [
             {item: 'treasure box', property: 'location', value: userId, textId:'location-fail:item'}
         ],
-        execute (_:string, gameDefinition:GameDefinition, userId:string) { 
+        execute (gameDefinition:GameDefinition, userId:string,_:string) { 
             const { variables } = gameDefinition;
             
             // we need to remove the key out of the box before adding it to the inventory
@@ -99,7 +98,7 @@ const actions:Action[] = [
             {item: userId, property: 'location', value: 'hobby room', textId:'location-fail:user'},
             {item: 'treasure box', property: 'location', value: userId, textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             
             const treasureBox = variables['treasure box'] as ItemVariable;

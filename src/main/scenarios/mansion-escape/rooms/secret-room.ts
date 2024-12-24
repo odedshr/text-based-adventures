@@ -25,7 +25,7 @@ const actions:Action[] = [
             { item: userId, property: 'location', value: 'secret room', textId:'location-fail:user' },
             { item: 'forensic kit', property: 'location', value: userId, textId:'location-fail:item' },    
         ],
-        execute(_:string, gameDefinition:GameDefinition, userId:string) {
+        execute(gameDefinition:GameDefinition, userId:string,_:string) {
             const { variables } = gameDefinition;
             variables['forensic kit'] = { ...variables['forensic kit'], state: 'with fingerprints' } as ItemVariable;
             print(gameDefinition, 'copied fingerprints');

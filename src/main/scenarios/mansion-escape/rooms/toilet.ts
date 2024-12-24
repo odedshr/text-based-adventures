@@ -36,12 +36,12 @@ const items:{[key:string]:ItemVariable|RoomVariable|PassageVariable } = {
 
 const actions:Action[] = [
     {
-        input: /\b(?:unscrew|pick\s+(?:up)?)\s+(?:red\s+)?(?:water\s+)?valve\b/,
+        input: /\b(?:unscrew|pick\s+(?:up)?|take)\s+(?:red\s+)?(?:water\s+)?valve\b/,
         conditions: (_:GameDefinition, userId:string) => [
             {item: userId, property: 'location', value: 'toilet', textId:'location-fail:user'},
             {item: 'valve', property: 'location', value: 'toilet' as string, textId:'location-fail:item'},
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             addToInventory (gameDefinition, userId, 'valve');
             print(gameDefinition, 'got water valve');
             addAchievement(gameDefinition, userId, 'picked up water valve');
@@ -52,7 +52,7 @@ const actions:Action[] = [
         conditions: (_:GameDefinition, userId:string) => [
             {item: userId, property: 'location', value: 'toilet', textId:'location-fail:user'},
         ],
-        execute: (_, gameDefinition, userId) => print(gameDefinition, 'check cistern')
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => print(gameDefinition, 'check cistern')
     }
 ];
 

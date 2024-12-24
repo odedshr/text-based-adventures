@@ -34,7 +34,7 @@ const actions:Action[] = [
             {item: userId, property: 'location', value: 'attic', textId:'location-fail:user'},
             {item: 'forensic kit', property: 'location', value: 'boxes', textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             
             const boxes = variables['boxes'] as ItemVariable;
@@ -52,7 +52,7 @@ const actions:Action[] = [
         conditions: (_:GameDefinition, userId:string) => [
             {item: userId, property: 'location', value: 'attic', textId:'location-fail:user'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             print(gameDefinition, 'boxes');
         }
     }

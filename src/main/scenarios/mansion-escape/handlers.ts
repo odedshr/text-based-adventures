@@ -19,7 +19,6 @@ const handlers:VariableModifyUpdate[] = [
     (gameDefinition: GameDefinition, variableName:string, variable:Variable) => {
         if (variable.type==='player' && variable.location === 'outside') {
             addAchievement(gameDefinition, variableName, 'left the mansion');
-            print(gameDefinition, 'left mansion');
             gameDefinition.variables.lives = {...gameDefinition.variables.lives, value: 0 } as NumberVariable;
         }
     }

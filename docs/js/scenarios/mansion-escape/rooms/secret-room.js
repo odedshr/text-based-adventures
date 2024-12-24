@@ -22,7 +22,7 @@ const actions = [
             { item: userId, property: 'location', value: 'secret room', textId: 'location-fail:user' },
             { item: 'forensic kit', property: 'location', value: userId, textId: 'location-fail:item' },
         ],
-        execute(_, gameDefinition, userId) {
+        execute(gameDefinition, userId, _) {
             const { variables } = gameDefinition;
             variables['forensic kit'] = Object.assign(Object.assign({}, variables['forensic kit']), { state: 'with fingerprints' });
             print(gameDefinition, 'copied fingerprints');

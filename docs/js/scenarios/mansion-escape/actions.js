@@ -15,6 +15,7 @@ import { actions as library } from './rooms/library.js';
 import { actions as livingRoom } from './rooms/living-room.js';
 import { actions as masterBedroom } from './rooms/master-bedroom.js';
 import { actions as office } from './rooms/office.js';
+import { actions as outside } from './rooms/outside.js';
 import { actions as pantry } from './rooms/pantry.js';
 import { actions as secretRoom } from './rooms/secret-room.js';
 import { actions as securityRoom } from './rooms/security-room.js';
@@ -38,6 +39,7 @@ const actions = [
     ...livingRoom,
     ...masterBedroom,
     ...office,
+    ...outside,
     ...pantry,
     ...secretRoom,
     ...securityRoom,

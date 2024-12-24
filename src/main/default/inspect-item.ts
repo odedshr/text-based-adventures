@@ -1,34 +1,62 @@
-import { Action, GameDefinition, ItemVariable, Variables } from '../types';
+import { Action, GameDefinition, ItemVariable, PlayerVariable, Variables } from '../types';
 import findByReference from './find-by-reference.js';
+import isInRootLocation from './is-in-root-location.js';
 
 import print from "./print.js";
 
-const inspectItemRegExp = /(?:what is|describe|tell me about|look at|examine|inspect) (the|a|an)?\s*(\w+)/;
+const inspectItemRegExp = /(?:what is|describe|tell me about|look at|examine|inspect)(\s+the)?\s*(\w+)/;
 const inspectLocationRegExp = /where is the (.+?)\?|where are the (.+?)\?|what is in my (.+?)\?|what do I have|can you tell me where the (.+?) is\?|is there a (.+?) here|where can I find the (.+?)/ 
 const inspectInventory = /what's in my (.+?)\?|show me my (.+?)|what do I have in my (.+?)|what's in my inventory\?|can you show me my (.+?)\?|check my (.+?)/;
 
-const inspectItemActions:Action[] = [
+const actions:Action[] = [
     {
         input: inspectItemRegExp,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
-            const item = findByReference(gameDefinition, userId, input.match(inspectItemRegExp)?.pop());
-            if (!item) { 
-                console.error('inspectItemRegExp', input, item, input.match(inspectItemRegExp)?.pop(), gameDefinition.references[input.match(inspectItemRegExp)?.pop() as string]);
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            const { variables, strings, references } = gameDefinition;
+            const itemName = input.match(inspectItemRegExp)?.pop() as string;
+            console.log('inspectItemRegExp', input, itemName);
+            if (!itemName) {
+                console.error('inspectItemRegExp: failed to extract item name', input);
+                print(gameDefinition, 'unreadable', input);    
+                return;
+            }
+
+            let item = findByReference(gameDefinition, userId, itemName);
+            if (!!item) { // it's a variable, make sure it's in the same location as the user
+                if (!isInRootLocation(variables,item, (variables[userId] as PlayerVariable).location)) {
+                    print(gameDefinition, 'not sure where is item', itemName);
+                    return;
+                }
+            }
+
+            if (!item && strings[itemName]) {
+                // not a variable, but still has a description
+                item = itemName;
+            }
+
+            if (!item) {
+                console.error('inspectItemRegExp', input, item, itemName, references[itemName]);
                 print(gameDefinition, 'not sure what is item', 'item');    
                 return;
             }
+            
 
             print(gameDefinition, item);
         }
     },
     {
         input: inspectLocationRegExp,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const { variables } = gameDefinition
             const itemName = findByReference(gameDefinition, userId, input.match(inspectLocationRegExp)?.pop());
-            
+            if (!itemName) {
+                console.error('inspectItemRegExp: failed to extract item name', input);
+                print(gameDefinition, 'unreadable', input);    
+                return;
+            }
+
             if (!itemName) { 
-                console.error('inspectItemRegExp1', input, itemName, inspectLocationRegExp.test(input));
+                console.error('inspectLocationRegExp', input, itemName, inspectLocationRegExp.test(input));
                 print(gameDefinition, 'not sure what is item', 'item');    
                 return;
             }
@@ -36,7 +64,7 @@ const inspectItemActions:Action[] = [
             const item = variables[itemName] as ItemVariable;
 
             if (!item) {
-                console.error('inspectItemRegExp2', input, itemName, inspectLocationRegExp.test(input));
+                console.error('inspectLocationRegExp', input, itemName, inspectLocationRegExp.test(input));
                 print(gameDefinition, 'not sure what is item', itemName);
             } else if (item.touched) {
                 print(gameDefinition,'the item is in the location', itemName, (item as ItemVariable).location);
@@ -49,7 +77,7 @@ const inspectItemActions:Action[] = [
     },
     {
         input: inspectInventory,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const { variables } = gameDefinition
             const itemName = findByReference(gameDefinition, userId, input.match(inspectInventory)?.pop());
             
@@ -70,8 +98,14 @@ const inspectItemActions:Action[] = [
         }
     }  
  ];
+ const strings = {
+     unreadable: `I'm not sure what you mean by 'item'.`,
+}
 
- export default inspectItemActions;
+export { 
+    actions, 
+    strings
+};
 
 function getEverythingIn(variables:Variables, location: string) {
     const possessions:string[] = [];

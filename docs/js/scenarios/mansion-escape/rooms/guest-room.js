@@ -29,26 +29,30 @@ const items = {
 const actions = [
     {
         input: /\b(?:look\s*for|search\s*for|find|locate|check\s*for|seek\s*out)\s*(?:the\s*)?(?:light\s*switch|switch|light\s*control|lighting\s*switch)\b/,
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const lightSwitch = variables['light switch'];
             const guestRoom = variables['guest room'];
-            if (!isValidAction(gameDefinition, [
+            if (variables[userId].location === 'attic') {
+                print(gameDefinition, 'cant find light switch');
+                return;
+            }
+            else if (!isValidAction(gameDefinition, [
                 { item: userId, property: 'location', value: 'guest room', textId: 'location-fail:user' },
             ])) {
-                return true;
+                return;
             }
-            if (lightSwitch.state === 'on') {
+            else if (lightSwitch.state === 'on') {
                 print(gameDefinition, 'light is already on');
-                return true;
+                return;
             }
             if (lightSwitch.state === 'hidden') {
-                variables['light switch'] = Object.assign(Object.assign({}, lightSwitch), { state: 'on' });
-                variables['guest room'] = Object.assign(Object.assign({}, guestRoom), { state: 'light' });
                 addAchievement(gameDefinition, userId, 'found light switch');
+                print(gameDefinition, 'light turned on for the first time');
             }
-            print(gameDefinition, 'light turned on for the first time');
-            return true;
+            variables['light switch'] = Object.assign(Object.assign({}, lightSwitch), { state: 'on' });
+            variables['guest room'] = Object.assign(Object.assign({}, guestRoom), { state: 'light' });
+            print(gameDefinition, 'guest room');
         }
     },
     {
@@ -69,33 +73,24 @@ const actions = [
                 ...lightSwitchCondition,
             ];
         },
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
-            const lightSwitch = items['light switch'];
-            variables['light switch'] = Object.assign(Object.assign({}, lightSwitch), { state: 'on' });
-            return true;
+            variables['light switch'] = Object.assign(Object.assign({}, variables['light switch']), { state: 'on' });
+            variables['guest room'] = Object.assign(Object.assign({}, variables['guest room']), { state: 'light' });
         }
     },
     {
         input: /(?:turn\s?off|switch\s?off|flip(\s?off)?|deactivate|power\s?off)\s(?:the\s)?(?:light|lights|light\s?switch)/,
-        execute: (_, gameDefinition, userId) => {
+        conditions: (gameDefinition, userId) => [
+            { item: userId, property: 'location', value: 'guest room', textId: 'location-fail:user' },
+            { item: 'light switch', property: 'state', value: 'on',
+                textId: gameDefinition.variables['light switch'].state === 'hidden' ? 'location-fail:item' : 'light is already off'
+            },
+        ],
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
-            const lightSwitch = items['light switch'];
-            if (!isValidAction(gameDefinition, [
-                { item: userId, property: 'location', value: 'guest room', textId: 'location-fail:user' }
-            ])) {
-                return true;
-            }
-            if (lightSwitch.state === 'off') {
-                print(gameDefinition, 'light is already off');
-                return true;
-            }
-            if (lightSwitch.state === 'hidden') {
-                print(gameDefinition, 'location-fail:item', 'light switch');
-                return true;
-            }
-            variables['light switch'] = Object.assign(Object.assign({}, lightSwitch), { state: 'off' });
-            return true;
+            variables['light switch'] = Object.assign(Object.assign({}, variables['light switch']), { state: 'off' });
+            variables['guest room'] = Object.assign(Object.assign({}, variables['guest room']), { state: 'dark' });
         }
     }
 ];
@@ -115,6 +110,7 @@ const strings = {
         const isOn = items['light switch'].state === 'on';
         return `It's a standard light switch. It's turned ${isOn ? 'on' : 'off'}`;
     },
+    'cant find light switch': `You scramble around in the dark, but you can't find the light switch.`,
     'light already on': 'The light is already on.',
     'light turned on for the first time': `You managed to find the light switch and turn it on.`,
     bag: 'A sturdy backpack. It can be useful if you want carry stuff around.'

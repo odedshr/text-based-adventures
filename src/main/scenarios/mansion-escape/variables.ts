@@ -17,6 +17,7 @@ import { items as library } from './rooms/library.js';
 import { items as livingRoom } from './rooms/living-room.js';
 import { items as masterBedroom} from './rooms/master-bedroom.js';
 import { items as office} from './rooms/office.js';
+import { items as outside} from './rooms/outside.js';
 import { items as pantry } from './rooms/pantry.js';
 import { items as secretRoom } from './rooms/secret-room.js';
 import { items as securityRoom } from './rooms/security-room.js';
@@ -45,6 +46,7 @@ const variables:Variables = {
     ...livingRoom,
     ...masterBedroom,
     ...office,
+    ...outside,
     ...pantry,
     ...secretRoom,
     ...securityRoom,

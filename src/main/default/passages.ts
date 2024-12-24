@@ -9,10 +9,34 @@ const enterRoom = /enter (the\s+)?(.*)/;
 const goCommands = /(climb|go|walk|move|enter|step|pass|proceed)\s+(through|into|to|toward|towards|in)\s+(the\s)?(.*)/;
 const climbCommands = /climb\s(?:up\s|down\s)?(?:the\s)?(.*)/;
 
+const exitRoomDoor:{[key:string]:string} = {
+    attic: 'attic ladder',
+    basement: 'cellar stairs',
+    backyard: 'glass door',
+    bathroom: 'washroom entry',
+    conservatory: 'back door',
+    'dining room': 'fdining entranceyer',
+    'ensuite bathroom': 'bathing nook',
+    foyer: 'entrance door',
+    garage: 'wooden door',
+    'guest bedroom': 'bedroom door',
+    hallway: 'grand archway',
+    'hobby room': 'craft door',
+    kitchen: 'swinging door',
+    library: 'lounge arch',
+    'living room': 'parlor door',
+    'master bedroom': 'lavish door',
+    office: 'blue door',
+    pantry: 'larder hatch',
+    'secret room': 'secret door',
+    'security room': 'vault door',
+    'toilet': 'toilet door',
+};
+
 const actions:Action[] = [
     {
         input: openDoorCommands,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const passageName = findItem(gameDefinition, userId, input.match(openDoorCommands)?.pop());
 
             if (passageName) {
@@ -22,7 +46,7 @@ const actions:Action[] = [
     },
     {
         input: closeDoorCommands,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const passageName = findItem(gameDefinition, userId, input.match(closeDoorCommands)?.pop());
 
             if (passageName) {
@@ -33,7 +57,7 @@ const actions:Action[] = [
     {
         input: goCommands,
 
-        execute(input, gameDefinition, userId) {
+        execute(gameDefinition:GameDefinition, userId:string, input:string) {
             const destination = findItem(gameDefinition, userId, input.match(goCommands)?.pop());
             const { variables } = gameDefinition;
 
@@ -63,7 +87,7 @@ const actions:Action[] = [
     },
     {
         input: enterRoom,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const { variables } = gameDefinition;
             const destination = findItem(gameDefinition, userId, input.match(enterRoom)?.pop());
 
@@ -88,7 +112,7 @@ const actions:Action[] = [
     },
     {
         input: climbCommands,
-        execute: (input:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const reference = input.match(climbCommands)?.pop()
             if (!reference) { return false; }
 
@@ -117,6 +141,14 @@ const actions:Action[] = [
 
             return passThroughPassage(gameDefinition, passageName, userId );
         }
+    },
+    {
+        input: /(exit|leave|walk out of|get out( of)?|step outside( of)?)((\s+the)?\s+(room|mansion))?/,
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            const { variables } = gameDefinition;
+            const userLocation = (variables[userId] as PlayerVariable).location;
+            passThroughPassage(gameDefinition, exitRoomDoor[userLocation], userId);
+        }
     }
 ];
 
@@ -135,23 +167,31 @@ function findItem(gameDefinition:GameDefinition, userId:string, reference?:strin
     return passageName;
 }
 
-function passThroughPassage(gameDefinition:GameDefinition, destination:string, userId:string) {
+function passThroughPassage(gameDefinition:GameDefinition, passageName:string, userId:string) {
     const { variables } = gameDefinition;
-    const passage = variables[destination] as PassageVariable;
+    const passage = variables[passageName] as PassageVariable;
     const userLocation = (variables[userId] as PlayerVariable).location;
 
     switch (passage.state) {
-        case 'closed': print(gameDefinition, 'the item is closed',destination); break;
-        case 'locked': print(gameDefinition, 'the item is locked',destination); break;
-        case 'hidden': print(gameDefinition, 'the item is hidden',destination); break;
+        case 'closed': print(gameDefinition, 'the item is closed',passageName); break;
+        case 'locked': print(gameDefinition, 'the item is locked',passageName); break;
+        case 'hidden': print(gameDefinition, 'the item is hidden',passageName); break;
         case undefined:
         case 'opened':         
             const user = variables[userId] as PlayerVariable;
-            const location = passage.between.find(x => x !== userLocation) || userLocation;
-            (variables[userId] as PlayerVariable) = { ...user, location };
-            if (location !== 'outside') {
-                addAchievement(gameDefinition, userId, `entered the ${location}`);
-                print(gameDefinition, 'you entered the item',location);
+            const destination = passage.between.find(x => x !== userLocation) || userLocation;
+            const location = variables[destination] as RoomVariable;
+
+            (variables[userId] as PlayerVariable) = { ...user, location: destination };
+            if (destination !== 'outside') {
+                print(gameDefinition, 'you entered the item',destination);
+            }
+            console.log('>>>>', destination, location);
+            if (location && !location.visited) {
+                variables[destination] = { ...location, visited: true };
+                print(gameDefinition, destination);
+            } else {
+                console.error(destination, variables[destination]);
             }
             break;
     }
@@ -213,7 +253,9 @@ const strings = {
     'the item is opened': 'The item is now opened.',
     'you entered the item': 'You entered the item.',
     'how-to-get-there': `I don't know how to get from item to location`,
-    'no item in here': `No item here!`
+    'no item in here': `No item here!`,
+    'door is locked': 'The door is locked.',
+    'door is not locked': 'The door is not locked.'
 }
 
 export {

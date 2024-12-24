@@ -16,6 +16,7 @@ import { strings as library } from './rooms/library.js';
 import { strings as livingRoom } from './rooms/living-room.js';
 import { strings as masterBedroom} from './rooms/master-bedroom.js';
 import { strings as office} from './rooms/office.js';
+import { strings as outside} from './rooms/outside.js';
 import { strings as pantry } from './rooms/pantry.js';
 import { strings as secretRoom } from './rooms/secret-room.js';
 import { strings as securityRoom } from './rooms/security-room.js';
@@ -41,6 +42,7 @@ export default {
     ...livingRoom,
     ...masterBedroom,
     ...office,
+    ...outside,
     ...pantry,
     ...secretRoom,
     ...securityRoom,

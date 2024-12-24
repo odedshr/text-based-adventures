@@ -1,6 +1,6 @@
 import { Action } from '../types.js';
 import inspectRoomActions from './inspect-room.js';
-import inspectItemActions from './inspect-item.js';
+import { actions as inspectItemActions, strings as inspectItemStrings } from './inspect-item.js';
 import { actions as genericQueries } from './generic-queries.js';
 
 import { actions as pickGenericItem, strings as pickUpItemStrings } from './pick-up.js';
@@ -42,7 +42,8 @@ const strings = {
     player1: `That's you! you're still alive, but you better hurry!`,
     lives: `You got 1 life left, better not waste it.`,
     ...pickUpItemStrings,
-    ...passages
+    ...inspectItemStrings,
+    ...passages,
 };
 
 export {

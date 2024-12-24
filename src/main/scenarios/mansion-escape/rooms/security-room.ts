@@ -37,7 +37,7 @@ const actions:Action[] = [
                 {item: 'cctv', property: 'scrubbed', value: 'no', textId:'already scrubbed'},
             ];
         },
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             const cctv = variables.cctv as ItemVariable;
             variables.cctv = { ...cctv, state: { ... cctv.state as Attributes, watched: 'yes' } };
@@ -54,7 +54,7 @@ const actions:Action[] = [
                 {item: 'cctv', property: 'scrubbed', value: 'no', textId:'already scrubbed'},
             ];
         },
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             // TODO: DELETE CCTV AS THE LAST THING IN THE HOUSE
             const { variables } = gameDefinition;
             const cctv = variables.cctv as ItemVariable;
@@ -69,7 +69,7 @@ const actions:Action[] = [
             {item: 'flashlight', property: 'location', value: userId, textId:'location-fail:item'},
             {item: 'batteries', property: 'location', value: userId, textId:'location-fail:item'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables } = gameDefinition;
             const batteries = variables.batteries;
             variables.batteries = { ...batteries, location: 'flashlight'} as ItemVariable;
@@ -85,7 +85,7 @@ const actions:Action[] = [
             {item: 'batteries', property: 'location', value: 'flashlight', textId:'need batteries'},
             {item: 'batteries', property: 'state', value: 'full', textId:'batteries empty'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables, startTimer } = gameDefinition;
             const flashlight = variables.flashlight;
             variables.flashlight = { ...flashlight, state: 'on'} as ItemVariable;
@@ -101,7 +101,7 @@ const actions:Action[] = [
             {item: 'flashlight', property: 'state', value: 'on', textId:'flashlight not on'},
             {item: 'batteries', property: 'location', value: 'flashlight', textId:'need batteries'},
         ],
-        execute: (_:string, gameDefinition:GameDefinition, userId:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string,_:string) => {
             const { variables, stopTimer } = gameDefinition;
             const flashlight = variables.flashlight;
             variables.flashlight = { ...flashlight, state: 'off'} as ItemVariable;

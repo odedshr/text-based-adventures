@@ -29,14 +29,14 @@ const items = {
 };
 const actions = [
     {
-        input: /\b(?:feed|give|offer)\s*(?:the\s*)?(?:pupcake|cake|treat)\s*(?:to\s*(?:the\s*)?(?:dog|puppy)|with\s*(?:the\s*)?(?:dog|puppy))\b/,
+        input: /\b(?:feed|give|offer)\s*(?:the\s*)?(((?:pupcake|cake|treat)\s*(?:to\s*(?:the\s*)?(?:dog|puppy))|((?:dog|puppy)\s+with\s*(?:the\s*)?(?:pupcake|cake|treat))))\b/,
         conditions: (_, userId) => [
             { item: userId, property: 'location', value: 'backyard', textId: 'location-fail:user' },
             { item: 'dog', property: 'state', value: 'hostile', textId: 'dog already sleeping' },
             { item: 'pupcake', property: 'location', value: 'dog food bowl', textId: 'location-fail:item' },
             { item: 'dog food bowl', property: 'location', value: userId, textId: 'location-fail:item' }
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const dogFoodBowl = variables['dog food bowl'];
             const pupcake = variables.pupcake;
@@ -61,7 +61,7 @@ const actions = [
             { item: 'key', property: 'location', value: 'pool', textId: 'location-fail:item' },
             { item: 'pool', property: 'state', value: 'drained', textId: 'pool is not empty' }
         ],
-        execute: (input, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, input) => {
             addToInventory(gameDefinition, userId, 'key');
             print(gameDefinition, 'you-picked-up-the-item', 'key');
             addAchievement(gameDefinition, userId, 'picked up key');

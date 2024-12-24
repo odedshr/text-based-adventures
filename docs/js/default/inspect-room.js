@@ -2,8 +2,8 @@ import print from "./print.js";
 const inspectRoomActions = [
     {
         // inspect current room
-        input: /(what is here\??|look around|where am i\??|what is (in )?this place\??|describe( the)? room|what is around me|show me the room|what do i see|tell me about my location|give me a description of the room)/,
-        execute: (_, gameDefinition, userId) => {
+        input: /(what is here\??|look around|where am i\??|what is (in )?this place\??|(describe|examine)(\s+the)? room|what is around me|show me the room|what do i see|tell me about my location|give me a description of the room)/,
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const currentRoomName = variables[userId].location;
             print(gameDefinition, currentRoomName);
@@ -13,7 +13,7 @@ const inspectRoomActions = [
     {
         // look for door
         input: /(describe |are there any)\s*(doors|exists|passages)( in (here|(the|this) room))?\??|(what doors are (there|available)\?)|(look|search|check|find|where|is\s+there|how)\s+(for\s+)?(a\s+)?(door|exit|way\s+out|escape|path|entrance|way)/,
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const currentRoomName = variables[userId].location;
             print(gameDefinition, 'available doors', listRoomPassages(gameDefinition, currentRoomName));

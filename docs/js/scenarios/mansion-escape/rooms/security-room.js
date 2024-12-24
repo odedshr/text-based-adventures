@@ -34,7 +34,7 @@ const actions = [
                 { item: 'cctv', property: 'scrubbed', value: 'no', textId: 'already scrubbed' },
             ];
         },
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const cctv = variables.cctv;
             variables.cctv = Object.assign(Object.assign({}, cctv), { state: Object.assign(Object.assign({}, cctv.state), { watched: 'yes' }) });
@@ -51,7 +51,7 @@ const actions = [
                 { item: 'cctv', property: 'scrubbed', value: 'no', textId: 'already scrubbed' },
             ];
         },
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             // TODO: DELETE CCTV AS THE LAST THING IN THE HOUSE
             const { variables } = gameDefinition;
             const cctv = variables.cctv;
@@ -66,7 +66,7 @@ const actions = [
             { item: 'flashlight', property: 'location', value: userId, textId: 'location-fail:item' },
             { item: 'batteries', property: 'location', value: userId, textId: 'location-fail:item' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const batteries = variables.batteries;
             variables.batteries = Object.assign(Object.assign({}, batteries), { location: 'flashlight' });
@@ -82,7 +82,7 @@ const actions = [
             { item: 'batteries', property: 'location', value: 'flashlight', textId: 'need batteries' },
             { item: 'batteries', property: 'state', value: 'full', textId: 'batteries empty' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables, startTimer } = gameDefinition;
             const flashlight = variables.flashlight;
             variables.flashlight = Object.assign(Object.assign({}, flashlight), { state: 'on' });
@@ -98,7 +98,7 @@ const actions = [
             { item: 'flashlight', property: 'state', value: 'on', textId: 'flashlight not on' },
             { item: 'batteries', property: 'location', value: 'flashlight', textId: 'need batteries' },
         ],
-        execute: (_, gameDefinition, userId) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables, stopTimer } = gameDefinition;
             const flashlight = variables.flashlight;
             variables.flashlight = Object.assign(Object.assign({}, flashlight), { state: 'off' });
