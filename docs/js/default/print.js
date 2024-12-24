@@ -1,3 +1,4 @@
+import { logError } from './error-logging.js';
 export default function print(gameDefinition, textId, itemName, locationName) {
     const { strings, variables } = gameDefinition;
     //@ts-ignore
@@ -18,6 +19,6 @@ export default function print(gameDefinition, textId, itemName, locationName) {
         variables.console = Object.assign(Object.assign({}, variables.console), { value });
     }
     else {
-        console.error(`Unknown textId: ${textId} `);
+        logError(gameDefinition, `Unknown textId: ${textId} `);
     }
 }

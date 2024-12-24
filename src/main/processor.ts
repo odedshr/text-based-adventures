@@ -24,7 +24,12 @@ export default async function processMethod(input:string, gameDefinition:GameDef
         // Test if the input matches the action's verb (regular expression)
         if (action.input.test(input)) {
             if ((!action.conditions || isValid(gameDefinition, userId, input, action.conditions))) {
-                action.execute(gameDefinition, userId, input);
+                try {
+                    action.execute(gameDefinition, userId, input);
+                }
+                catch (error) {
+                    logError(gameDefinition, `Error executing action: ${error}`);
+                }
             }
             return;
         }

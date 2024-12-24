@@ -14,11 +14,9 @@ function getProxy(gameDefinition, variables) {
 }
 function startTimer(variables, name) {
     timers[name] = setInterval(() => {
-        const value = variables[name].value - 1;
-        variables[name] = { type: "number", value };
-        if (value <= 0) {
-            stopTimer(name);
-        }
+        const variable = variables[name];
+        const value = variable.state === 'decreasing' ? variable.value - 1 : variable.value + 1;
+        variables[name] = Object.assign(Object.assign({}, variable), { value });
     }, 1000);
 }
 function stopTimer(name) {

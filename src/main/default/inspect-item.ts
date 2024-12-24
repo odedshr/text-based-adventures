@@ -1,6 +1,7 @@
 import { Action, GameDefinition, ItemVariable, PlayerVariable, Variables } from '../types';
 import findByReference from './find-by-reference.js';
 import isInRootLocation from './is-in-root-location.js';
+import { logError } from './error-logging.js';
 
 import print from "./print.js";
 
@@ -14,9 +15,9 @@ const actions:Action[] = [
         execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const { variables, strings, references } = gameDefinition;
             const itemName = input.match(inspectItemRegExp)?.pop() as string;
-            console.log('inspectItemRegExp', input, itemName);
+
             if (!itemName) {
-                console.error('inspectItemRegExp: failed to extract item name', input);
+                logError(gameDefinition, input);
                 print(gameDefinition, 'unreadable', input);    
                 return;
             }
@@ -35,11 +36,10 @@ const actions:Action[] = [
             }
 
             if (!item) {
-                console.error('inspectItemRegExp', input, item, itemName, references[itemName]);
+                logError(gameDefinition, input);
                 print(gameDefinition, 'not sure what is item', 'item');    
                 return;
             }
-            
 
             print(gameDefinition, item);
         }
@@ -50,13 +50,13 @@ const actions:Action[] = [
             const { variables } = gameDefinition
             const itemName = findByReference(gameDefinition, userId, input.match(inspectLocationRegExp)?.pop());
             if (!itemName) {
-                console.error('inspectItemRegExp: failed to extract item name', input);
+                logError(gameDefinition, input);
                 print(gameDefinition, 'unreadable', input);    
                 return;
             }
 
             if (!itemName) { 
-                console.error('inspectLocationRegExp', input, itemName, inspectLocationRegExp.test(input));
+                logError(gameDefinition, input);
                 print(gameDefinition, 'not sure what is item', 'item');    
                 return;
             }
@@ -64,15 +64,13 @@ const actions:Action[] = [
             const item = variables[itemName] as ItemVariable;
 
             if (!item) {
-                console.error('inspectLocationRegExp', input, itemName, inspectLocationRegExp.test(input));
+                logError(gameDefinition, input);
                 print(gameDefinition, 'not sure what is item', itemName);
             } else if (item.touched) {
                 print(gameDefinition,'the item is in the location', itemName, (item as ItemVariable).location);
             } else {
                 print(gameDefinition, 'not sure where is item', itemName);
             }
-
-            return true;
         }
     },
     {
@@ -82,7 +80,7 @@ const actions:Action[] = [
             const itemName = findByReference(gameDefinition, userId, input.match(inspectInventory)?.pop());
             
             if (!itemName) { 
-                console.error('inspectItemRegExp', input, itemName, inspectInventory.test(input));
+                logError(gameDefinition, input);
                 print(gameDefinition, 'not sure what is item', 'item');    
                 return;
             }
@@ -93,12 +91,11 @@ const actions:Action[] = [
             } else {
                 print(gameDefinition, 'you have no items');
             }
-
-            return true;
         }
     }  
  ];
- const strings = {
+
+const strings = {
      unreadable: `I'm not sure what you mean by 'item'.`,
 }
 

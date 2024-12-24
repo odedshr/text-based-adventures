@@ -19,11 +19,9 @@ function getProxy(gameDefinition: GameDefinition, variables: Variables) {
 
 function startTimer(variables:Variables, name:string) {
     timers[name] = setInterval(() => {
-        const value = (variables[name] as NumberVariable).value - 1;
-        variables[name] = { type:"number",value  };
-        if (value <= 0) {
-            stopTimer(name);
-        }
+        const variable = (variables[name] as NumberVariable);
+        const value = variable.state === 'decreasing' ? variable.value - 1 : variable.value + 1;
+        variables[name] = { ... variable ,value } as NumberVariable
     }, 1000) as unknown as number;
 }
 
@@ -67,7 +65,7 @@ function initGame(
         handlers,
         actions,
         strings,
-        startTimer: (name) => {}, // will be filled later with variablesProxy
+        startTimer: (name:string) => {}, // will be filled later with variablesProxy
         stopTimer,
     };
     gameDefinition.variables = getProxy(gameDefinition, gameDefinition.variables);

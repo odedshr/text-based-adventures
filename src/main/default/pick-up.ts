@@ -1,5 +1,6 @@
 import { GameDefinition, Action, ItemVariable } from '../types';
 import addToInventory from './add-to-inventory.js';
+import { logError } from './error-logging';
 import findByReference from './find-by-reference.js';
 import print from './print.js';
 
@@ -12,7 +13,7 @@ const actions:Action[] = [
     execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
         const item = findByReference(gameDefinition, userId, input.match(pickUpItem)?.pop());
         if (!item) {
-            console.error('pick up item', input, item, '=', input.match(pickUpItem)?.pop());
+            logError(gameDefinition, input);
             print(gameDefinition, 'not sure what is item');
             return;
         }

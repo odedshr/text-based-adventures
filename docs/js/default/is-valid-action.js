@@ -1,3 +1,4 @@
+import { logError } from './error-logging.js';
 import isInRootLocation from './is-in-root-location.js';
 import print from "./print.js";
 //condition = itemId, propertyName, validValue, error message
@@ -7,7 +8,7 @@ export default function isValidAction(gameDefinition, conditions) {
         const conditionFail = conditions.find((condition) => {
             const { item, property, value } = condition;
             if (!variables[item]) {
-                console.error(`Item ${item} does not exist`);
+                logError(gameDefinition, `condition failed because ${item} is not a valid item`);
                 return false;
             }
             const itemVariable = variables[item];
@@ -27,8 +28,7 @@ export default function isValidAction(gameDefinition, conditions) {
         return !conditionFail;
     }
     catch (error) {
-        console.error(error, conditions);
+        logError(gameDefinition, `isValidAction failed (${error}): ${JSON.stringify(conditions)}`);
         return false;
     }
-    return true;
 }

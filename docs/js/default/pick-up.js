@@ -1,4 +1,5 @@
 import addToInventory from './add-to-inventory.js';
+import { logError } from './error-logging';
 import findByReference from './find-by-reference.js';
 import print from './print.js';
 const items = {};
@@ -7,10 +8,10 @@ const actions = [
     {
         input: pickUpItem,
         execute: (gameDefinition, userId, input) => {
-            var _a, _b;
+            var _a;
             const item = findByReference(gameDefinition, userId, (_a = input.match(pickUpItem)) === null || _a === void 0 ? void 0 : _a.pop());
             if (!item) {
-                console.error('pick up item', input, item, '=', (_b = input.match(pickUpItem)) === null || _b === void 0 ? void 0 : _b.pop());
+                logError(gameDefinition, input);
                 print(gameDefinition, 'not sure what is item');
                 return;
             }

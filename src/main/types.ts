@@ -15,10 +15,6 @@ export type VariableModifyUpdate = (gameDefinition:GameDefinition, variableName:
 export type GetStringMethod = (variables:Variables) => string;
 export type Strings = {[key:string]:string | GetStringMethod};
 
-export type Location = {
-    actions: Action[],
-    strings: {[key:string]:string | GetStringMethod },
-}
 export type ConditionalGenerator = (gameDefinition:GameDefinition, userId:string, input:string) => Condition[]
 
 export type Action = {
@@ -34,9 +30,11 @@ export type Condition = { item:string, property: 'location' | 'state' | Attribut
 
 export type TimerHandler = (gameDefinition:GameDefinition) => void;
 
-export type GameDefinition = Location & {
+export type GameDefinition = {
+    actions: Action[],
+    strings: { [key:string]: string | GetStringMethod },
     variables: Variables,
-    references: {[key:string]:string[]},
+    references: { [key:string]:string[] },
     handlers: VariableModifyUpdate[],
     startTimer: (name:string) => void,
     stopTimer: (name:string) => void

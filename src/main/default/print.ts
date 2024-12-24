@@ -1,4 +1,5 @@
 import { ConsoleVariable, GameDefinition, GetStringMethod } from "../types";
+import { logError } from './error-logging.js';
 
 export default function print(gameDefinition: GameDefinition, textId:string, itemName?:string, locationName?: string) {
     const { strings, variables } = gameDefinition;
@@ -21,6 +22,6 @@ export default function print(gameDefinition: GameDefinition, textId:string, ite
         }
         variables.console = { ...variables.console, value } as ConsoleVariable;
     } else {
-        console.error(`Unknown textId: ${textId} `);
+        logError(gameDefinition, `Unknown textId: ${textId} `);
     }
 }
