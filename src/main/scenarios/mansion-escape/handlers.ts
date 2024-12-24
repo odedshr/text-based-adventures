@@ -2,24 +2,26 @@ import { GameDefinition, NumberVariable, PlayerVariable, Variable, VariableModif
 import print from "../../default/print.js";
 
 import { handlers as pantryHandlers } from './rooms/pantry.js';
-import addAchievement from '../../default/add-achievement.js';
+import { listErrors } from '../../default/error-logging.js';
+
+function finishGame(gameDefinition: GameDefinition) {
+    const { stopTimer } = gameDefinition;
+    gameDefinition.variables.lives = {...gameDefinition.variables.lives, value: 0 } as NumberVariable;
+    listErrors(gameDefinition);
+    stopTimer('countdown');
+}
 
 const handlers:VariableModifyUpdate[] = [
     ...pantryHandlers,
     (gameDefinition: GameDefinition, variableName:string, variable:Variable) => {
-        if (variableName==='countdown') {
-            const { stopTimer } = gameDefinition;
-            if ((variable as NumberVariable).value <= 0 ) {
-                print(gameDefinition, 'time\'s up');
-                gameDefinition.variables.lives = {...gameDefinition.variables.lives, value: 0 } as NumberVariable;
-                stopTimer('countdown');
-            }   
+        if (variableName==='countdown' && (variable as NumberVariable).value <= 0) {
+            print(gameDefinition, 'time\'s up');
+            finishGame(gameDefinition);
         }
     },
-    (gameDefinition: GameDefinition, variableName:string, variable:Variable) => {
+    (gameDefinition: GameDefinition, _:string, variable:Variable) => {
         if (variable.type==='player' && variable.location === 'outside') {
-            addAchievement(gameDefinition, variableName, 'left the mansion');
-            gameDefinition.variables.lives = {...gameDefinition.variables.lives, value: 0 } as NumberVariable;
+            finishGame(gameDefinition);
         }
     }
 ];

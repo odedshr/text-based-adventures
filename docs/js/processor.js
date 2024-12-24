@@ -11,6 +11,7 @@ import normalizeInput from "./normalize-input.js";
 import hasProfanity from "./profanity.js";
 import isValidAction from './default/is-valid-action.js';
 import print from './default/print.js';
+import { logError } from './default/error-logging.js';
 export default function processMethod(input, gameDefinition, userId) {
     return __awaiter(this, void 0, void 0, function* () {
         const { actions } = gameDefinition;
@@ -31,7 +32,7 @@ export default function processMethod(input, gameDefinition, userId) {
                 return;
             }
         }
-        console.error('unknown input', input);
+        logError(gameDefinition, input);
         print(gameDefinition, 'what input means', input);
     });
 }

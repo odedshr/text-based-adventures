@@ -5,13 +5,15 @@ import { actions as genericQueries } from './generic-queries.js';
 
 import { actions as pickGenericItem, strings as pickUpItemStrings } from './pick-up.js';
 import { actions as passageActions, strings as passages } from './passages.js';
+import { actions as errorLoggingActions } from './error-logging.js';
 
 const actions:Action[] = [
     ...pickGenericItem,
     ...inspectRoomActions,
     ...passageActions,
     ...inspectItemActions,
-    ...genericQueries
+    ...genericQueries,
+    ...errorLoggingActions
 ];
 const strings = {
     exposition: `You wake up lying on the carpeted floor with a massive headache.
@@ -43,7 +45,7 @@ const strings = {
     lives: `You got 1 life left, better not waste it.`,
     ...pickUpItemStrings,
     ...inspectItemStrings,
-    ...passages,
+    ...passages
 };
 
 export {

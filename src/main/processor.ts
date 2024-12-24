@@ -1,9 +1,10 @@
-import { Condition, ConditionalGenerator, GameDefinition, ItemVariable } from './types.js';
+import { Condition, ConditionalGenerator, GameDefinition } from './types.js';
 
 import normalizeInput from "./normalize-input.js";
 import hasProfanity from "./profanity.js"
 import isValidAction from './default/is-valid-action.js';
 import print from './default/print.js';
+import { logError } from './default/error-logging.js';
 
 export default async function processMethod(input:string, gameDefinition:GameDefinition, userId: string):Promise<void> {
     const { actions } = gameDefinition;
@@ -29,12 +30,11 @@ export default async function processMethod(input:string, gameDefinition:GameDef
         }
     }
     
-    console.error('unknown input', input);
+    logError(gameDefinition, input);
     print(gameDefinition, 'what input means', input);
 }
 
 function isValid(gameDefinition: GameDefinition, userId: string, input: string, conditions?: Condition[] | ConditionalGenerator):boolean {
-    
     if (!conditions) {
         return true;
     }

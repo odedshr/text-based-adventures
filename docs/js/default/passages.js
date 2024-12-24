@@ -179,11 +179,14 @@ function passThroughPassage(gameDefinition, passageName, userId) {
             if (destination !== 'outside') {
                 print(gameDefinition, 'you entered the item', destination);
             }
+            else {
+                addAchievement(gameDefinition, userId, 'left the mansion');
+            }
             if (location && !location.visited) {
                 variables[destination] = Object.assign(Object.assign({}, location), { visited: true });
                 print(gameDefinition, destination);
             }
-            else if (!location){
+            else {
                 console.error(destination, variables[destination]);
             }
             break;

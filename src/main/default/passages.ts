@@ -185,8 +185,10 @@ function passThroughPassage(gameDefinition:GameDefinition, passageName:string, u
             (variables[userId] as PlayerVariable) = { ...user, location: destination };
             if (destination !== 'outside') {
                 print(gameDefinition, 'you entered the item',destination);
+            } else {
+                addAchievement(gameDefinition, userId, 'left the mansion');
             }
-            console.log('>>>>', destination, location);
+
             if (location && !location.visited) {
                 variables[destination] = { ...location, visited: true };
                 print(gameDefinition, destination);

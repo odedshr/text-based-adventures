@@ -3,12 +3,14 @@ import { actions as inspectItemActions, strings as inspectItemStrings } from './
 import { actions as genericQueries } from './generic-queries.js';
 import { actions as pickGenericItem, strings as pickUpItemStrings } from './pick-up.js';
 import { actions as passageActions, strings as passages } from './passages.js';
+import { actions as errorLoggingActions } from './error-logging.js';
 const actions = [
     ...pickGenericItem,
     ...inspectRoomActions,
     ...passageActions,
     ...inspectItemActions,
-    ...genericQueries
+    ...genericQueries,
+    ...errorLoggingActions
 ];
 const strings = Object.assign(Object.assign(Object.assign({ exposition: `You wake up lying on the carpeted floor with a massive headache.
     You can't remember anything, not even your name.
