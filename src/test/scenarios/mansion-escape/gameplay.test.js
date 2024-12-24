@@ -42,7 +42,10 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('The blue door is now opened.');
 
         await processMethod('walk through door', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe('A long corridor lined with portraits and elegant sconces. The soft carpet muffles footsteps, and several doors lead off into other rooms.');
+        expect(gameDefinition.variables.console.value).toBe(`A long corridor lined with portraits and elegant sconces.
+    On one side of the hallway, a grand archway leads to the foyer.
+    On the other side, a ladder that leads to the attic.
+    There are 5 doors here, all of which are closed.`);
 
         await processMethod('describe doors', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('a attic ladder leading to the attic, a bedroom door, a grand archway leading to the foyer, a craft door, a lavish door and a blue door leading to the office.');
@@ -120,8 +123,10 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
 
         await processMethod('go to foyer', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`The grand entrance to the mansion with a sweeping staircase, a chandelier, and a large rug.
-    A coat stand and an empty umbrella holder are by the door.`);
+        expect(gameDefinition.variables.console.value).toBe(`The grand entrance to the mansion with a grand archway to the hallway, a fireplace, a chandelier, and a large rug.
+    A coat stand and an empty umbrella holder are by the door. The entrance door is what stands between you and freedom.
+    There is another door that leads to the dining room and a parlor door that leads to the living room.
+    A small door on the side leads to the toilet.`);
 
         await processMethod('go to living room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('A spacious room with plush sofas, a fireplace, and a large window offering a view of the garden. Family portraits decorate the walls.');

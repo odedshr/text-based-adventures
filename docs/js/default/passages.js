@@ -182,12 +182,9 @@ function passThroughPassage(gameDefinition, passageName, userId) {
             else {
                 addAchievement(gameDefinition, userId, 'left the mansion');
             }
-            if (location && !location.visited) {
+            if (!location.visited) {
                 variables[destination] = Object.assign(Object.assign({}, location), { visited: true });
                 print(gameDefinition, destination);
-            }
-            else {
-                console.error(destination, variables[destination]);
             }
             break;
     }

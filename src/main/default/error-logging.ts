@@ -9,8 +9,9 @@ function logError(gameDefinition: GameDefinition, error: string) {
 
 function listErrors(gameDefinition: GameDefinition) {
     const { variables } = gameDefinition;
-    const errors = (variables.errors as ListVariable) || { type: "list", value: [] };
-    console.debug(errors.value);
+    if (variables.errors) {
+        console.log((variables.errors as ListVariable).value);
+    }
 }
 
 const actions:Action[] = [
