@@ -123,7 +123,7 @@ describe('Game-play', () => {
         expect(gameDefinition.variables.console.value).toBe('You entered the hallway.');
 
         await processMethod('go to foyer', gameDefinition, userId);
-        expect(gameDefinition.variables.console.value).toBe(`The grand entrance to the mansion with a grand archway to the hallway, a fireplace, a chandelier, and a large rug.
+        expect(gameDefinition.variables.console.value).toBe(`The grand entrance to the mansion with a grand archway to the hallway, a chandelier, and a large rug.
     A coat stand and an empty umbrella holder are by the door. The entrance door is what stands between you and freedom.
     There is another door that leads to the dining room and a parlor door that leads to the living room.
     A small door on the side leads to the toilet.`);
