@@ -1,11 +1,5 @@
-import { ItemVariable, Action, RoomVariable, PassageVariable, Variables, Attributes } from '../../../types.js';
+import { ItemVariable, Variables, Attributes, PuzzlePiece } from '../../../types.js';
 import isInRootLocation from '../../../default/is-in-root-location.js';
-
-const items:{[key:string]: ItemVariable|RoomVariable|PassageVariable } = {
-    'outside': { type: 'room' },
-};
-
-const actions:Action[] = [];
 
 const finishedStrings:{[key:string]:string} = {
     'finished': `You flee the mansion.
@@ -16,7 +10,7 @@ const finishedStrings:{[key:string]:string} = {
         The surveillance tapes are scrubbed off and Cartwright checks the safe for fingerprints and soon after he's on your tail.
         You are arrested and sent to prison.`,
     'finished safe': `You flee the mansion.
-        Shortly after, Cartwright returns home and, noticing the broken safe, he checks the surveillance tapes and sees you.
+        Shortly after, Cartwright returns home and, noticing the broken vase, he checks the surveillance tapes and sees you.
         You are arrested and sent to prison.`,
     'finished cctv safe': `You flee the mansion.
         Shortly after, Cartwright returns home and, noticing the broken vase, raises the alarm.
@@ -89,13 +83,15 @@ function getFinaleString(variables:Variables) {
     return finishedStrings[sum];
 }
 
-const strings = {
-    'outside': getFinaleString,
-    ...finishedStrings
+const outside:PuzzlePiece = {
+    actions: [],
+    variables: {
+        'outside': { type: 'room' },
+    },
+    strings: {
+        'outside': getFinaleString,
+        ...finishedStrings
+    }
 }
 
-export {
-    actions,
-    items,
-    strings,
-}
+export default outside;

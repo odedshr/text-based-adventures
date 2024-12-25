@@ -1,8 +1,4 @@
 import isInRootLocation from '../../../default/is-in-root-location.js';
-const items = {
-    'outside': { type: 'room' },
-};
-const actions = [];
 const finishedStrings = {
     'finished': `You flee the mansion.
         Shortly after, Cartwright returns home and, noticing the tempered safe, he checks the surveillance tapes and sees you.
@@ -12,7 +8,7 @@ const finishedStrings = {
         The surveillance tapes are scrubbed off and Cartwright checks the safe for fingerprints and soon after he's on your tail.
         You are arrested and sent to prison.`,
     'finished safe': `You flee the mansion.
-        Shortly after, Cartwright returns home and, noticing the broken safe, he checks the surveillance tapes and sees you.
+        Shortly after, Cartwright returns home and, noticing the broken vase, he checks the surveillance tapes and sees you.
         You are arrested and sent to prison.`,
     'finished cctv safe': `You flee the mansion.
         Shortly after, Cartwright returns home and, noticing the broken vase, raises the alarm.
@@ -81,5 +77,11 @@ function getFinaleString(variables) {
     const sum = `finished${ledger ? ' ledger' : ''}${cctv ? ' cctv' : ''}${fingerprints ? ' fingerprints' : ''}${safe ? ' safe' : ''}${vase ? ' vase' : ''}`;
     return finishedStrings[sum];
 }
-const strings = Object.assign({ 'outside': getFinaleString }, finishedStrings);
-export { actions, items, strings, };
+const outside = {
+    actions: [],
+    variables: {
+        'outside': { type: 'room' },
+    },
+    strings: Object.assign({ 'outside': getFinaleString }, finishedStrings)
+};
+export default outside;

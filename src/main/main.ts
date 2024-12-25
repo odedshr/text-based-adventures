@@ -5,9 +5,9 @@ import log from './log.js';
 import initGame from './game-generator.js';
 import { updateScore, updateClock } from './header.js';
 
-import { actions, strings, variables, handlers } from './scenarios/mansion-escape/index.js';
+import puzzle from './scenarios/mansion-escape/index.js';
 
-const gameDefinition = initGame(variables, actions, strings, handlers);
+const gameDefinition = initGame(puzzle);
 
 // Get the DOM elements
 const outputElement:HTMLOutputElement = document.getElementById('output') as HTMLOutputElement;
@@ -73,7 +73,7 @@ function init() {
     const inputField = document.getElementById('input') as HTMLInputElement;
     inputField.addEventListener('keydown', onKeyDown);
 
-    gameDefinition.handlers.push((_: GameDefinition, variableName:string, item:Variable) => {
+    gameDefinition.handlers?.push((_: GameDefinition, variableName:string, item:Variable) => {
         switch(variableName) {
             case 'achievements': updateScore(((item as DataVariable).value as string[]).length); break;
             case 'countdown': updateClock(+(item as DataVariable).value); break;

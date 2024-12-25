@@ -1,7 +1,8 @@
 const timers = {};
 // const handlers:VariableModifyUpdate[] = [];
 function handle(gameDefinition, variableName, variable) {
-    gameDefinition.handlers.forEach(handle => handle(gameDefinition, variableName, variable));
+    var _a;
+    (_a = gameDefinition.handlers) === null || _a === void 0 ? void 0 : _a.forEach(handle => handle(gameDefinition, variableName, variable));
 }
 function getProxy(gameDefinition, variables) {
     return new Proxy(variables, {
@@ -51,16 +52,9 @@ function getReferences(variables) {
         return dict;
     }, {});
 }
-function initGame(variables, actions, strings, handlers = []) {
-    const gameDefinition = {
-        variables, // will be replaced with variablesProxy
-        references: {}, // will be filled later with variablesProxy
-        handlers,
-        actions,
-        strings,
-        startTimer: (name) => { }, // will be filled later with variablesProxy
-        stopTimer,
-    };
+function initGame(puzzle) {
+    const gameDefinition = Object.assign(Object.assign({}, puzzle), { references: {}, startTimer: (name) => { }, // will be filled later with variablesProxy
+        stopTimer });
     gameDefinition.variables = getProxy(gameDefinition, gameDefinition.variables);
     gameDefinition.references = getReferences(gameDefinition.variables);
     gameDefinition.startTimer = (name) => startTimer(gameDefinition.variables, name);

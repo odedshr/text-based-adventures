@@ -1,8 +1,8 @@
 import { GameDefinition, Action, ItemVariable } from '../types';
 import addToInventory from './add-to-inventory.js';
-import { logError } from './error-logging';
 import findByReference from './find-by-reference.js';
 import print from './print.js';
+import { logError } from './error-logging.js';
 
 const items:{[key:string]: ItemVariable } = {};
 

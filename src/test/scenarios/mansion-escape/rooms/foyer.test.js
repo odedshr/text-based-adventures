@@ -1,8 +1,5 @@
 import { describe } from "@jest/globals";
 import processMethod from '../../../../../docs/js/processor.js';
-import inspectRoomActions from '../../../../../docs/js/default/inspect-room.js';
-import { actions, strings, variables, handlers } from '../../../../../docs/js/scenarios/mansion-escape/index.js';
-import { items } from '../../../../../docs/js/scenarios/mansion-escape/rooms/foyer.js';
 import initGame from '../../../../../docs/js/game-generator.js';
 
 const finaleTextId = {
@@ -43,11 +40,10 @@ const finaleTextId = {
 
 describe('foyer', () => {
     it('should describe the room', async () => {
-        const gameDefinition = {
-            variables: { ...items, user: { location: 'foyer' } },
-            actions: [...inspectRoomActions, ...actions ],
-            strings
-        };
+        const puzzle = await import('../../../../../docs/js/scenarios/mansion-escape/index.js');
+        const gameDefinition = puzzle.default;
+
+        gameDefinition.variables.user = { location: 'foyer' };
 
         await processMethod('look around', gameDefinition, 'user');
         expect(gameDefinition.variables.console.value).toBe(gameDefinition.strings.foyer(gameDefinition.variables));
@@ -60,20 +56,10 @@ describe('foyer', () => {
             ['yes','no'].forEach(fingerprints=>
                 ['floor','wall'].forEach(placement=>
                     ['yes','no'].forEach(glued=>
-                        ['user','safe'].forEach(location => {
-                            const gameDefinition = initGame(
-                                { ...variables,
-                                    user: { type: 'player', location: 'foyer'},
-                                    cctv: { state: { scrubbed}},
-                                    safe: { state: { fingerprints }},
-                                    portrait: { state: { placement} },
-                                    vase: { state: glued },
-                                    ledger: { location }
-                                },
-                                [...inspectRoomActions, ...actions ],
-                                strings,
-                                handlers
-                            );
+                        ['user','safe'].forEach(async location => {
+                            const puzzle = await import('../../../../../docs/js/scenarios/mansion-escape/index.js');
+                            const gameDefinition = initGame(puzzle.default);
+                            gameDefinition.variables['user'] = { location: 'foyer' };
                     
                             // timer isn't being used and leaving it running will prevent to finish if there's an error
                             gameDefinition.stopTimer('countdown');
@@ -98,6 +84,7 @@ describe('foyer', () => {
             if (!strings[expectedTextId]) {
                 console.log(expectedTextId);
             }
+
             await processMethod('leave mansion', gameDefinition, 'user');
             expect(gameDefinition.variables.console.value).toBe(strings[expectedTextId]);
         });

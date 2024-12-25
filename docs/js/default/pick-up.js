@@ -1,7 +1,7 @@
 import addToInventory from './add-to-inventory.js';
-import { logError } from './error-logging';
 import findByReference from './find-by-reference.js';
 import print from './print.js';
+import { logError } from './error-logging.js';
 const items = {};
 const pickUpItem = /(pick up|take|grab|get|take|retrieve|can i take|i'll grab|i want to pick up|take that)\s+(.+)/; // Regular expression to match 'pick up' commands
 const actions = [

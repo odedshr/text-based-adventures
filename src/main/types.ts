@@ -26,12 +26,16 @@ export type Action = {
 type Attribute = string;
 export type Condition = { item:string, property: 'location' | 'state' | Attribute, value:string, textId:string }
 
-export type GameDefinition = {
+export type PuzzlePiece = {
     actions: Action[],
     strings: { [key:string]: string | GetStringMethod },
     variables: Variables,
+    handlers?: VariableModifyUpdate[],
+}
+
+export type GameDefinition = PuzzlePiece & {
     references: { [key:string]:string[] },
-    handlers: VariableModifyUpdate[],
+    
     startTimer: (name:string) => void,
     stopTimer: (name:string) => void
 }

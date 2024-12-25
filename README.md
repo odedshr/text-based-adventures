@@ -5,7 +5,7 @@ An engine for text based adventures. Easily modifiable to create your own text-b
 ## Mansion Escape demo
 
 See it running on [gitpages](https://odedshr.github.io/text-based-adventures/).
-The goal of the game of to escape the mansion but of courses it's never as simple as that. Good luck.
+The goal of the game of to escape the mansion but of course it's never as simple as that. Good luck.
 
 ## What this is all about
 

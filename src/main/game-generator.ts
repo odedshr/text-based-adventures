@@ -1,10 +1,10 @@
-import { GameDefinition, Variables, VariableModifyUpdate, ItemVariable, Variable, GetStringMethod, Action, DataVariable } from './types.js';
+import { GameDefinition, Variables, VariableModifyUpdate, ItemVariable, Variable, GetStringMethod, Action, DataVariable, PuzzlePiece } from './types.js';
 
 const timers:{[key:string]:number} = {};
 // const handlers:VariableModifyUpdate[] = [];
 
 function handle(gameDefinition: GameDefinition, variableName: string, variable: Variable) {
-    gameDefinition.handlers.forEach(handle => handle(gameDefinition, variableName, variable));
+    gameDefinition.handlers?.forEach(handle => handle(gameDefinition, variableName, variable));
 }
 
 function getProxy(gameDefinition: GameDefinition, variables: Variables) {
@@ -60,18 +60,11 @@ function getReferences(variables: Variables):{[key:string]:string[]} {
     }, {} as {[key:string]:string[]})
 }
 
-function initGame(
-        variables:Variables,
-        actions: Action[],
-        strings: {[key:string]:string | GetStringMethod },
-        handlers: VariableModifyUpdate[] = []):GameDefinition {
+function initGame(puzzle:PuzzlePiece):GameDefinition {
 
     const gameDefinition:GameDefinition = {
-        variables, // will be replaced with variablesProxy
+        ...puzzle,
         references: {}, // will be filled later with variablesProxy
-        handlers,
-        actions,
-        strings,
         startTimer: (name:string) => {}, // will be filled later with variablesProxy
         stopTimer,
     };

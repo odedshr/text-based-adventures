@@ -1,7 +1,7 @@
 import { describe } from "@jest/globals";
 import processMethod from '../../../../docs/js/processor.js';
 
-import { actions, strings, variables, handlers } from '../../../../docs/js/scenarios/mansion-escape/index.js';
+import puzzle from '../../../../docs/js/scenarios/mansion-escape/index.js';
 
 import initGame from '../../../../docs/js/game-generator.js';
 
@@ -9,10 +9,11 @@ async function exec(gameDefinition, userId, action, result) {
     await processMethod(action, gameDefinition, userId);
     expect(gameDefinition.variables.console.value).toBe(result);
 }
+
 describe('Game-play', () => {
     it('should win game', async () => {
         const userId = 'player1';
-        const gameDefinition = initGame(variables, actions, strings, handlers);
+        const gameDefinition = initGame(puzzle);
         
         // timer isn't being used and leaving it running will prevent to finish if there's an error
         gameDefinition.stopTimer('countdown');
@@ -43,9 +44,9 @@ describe('Game-play', () => {
 
         await processMethod('walk through door', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A long corridor lined with portraits and elegant sconces.
-    On one side of the hallway, a grand archway leads to the foyer.
-    On the other side, a ladder that leads to the attic.
-    There are 5 doors here, all of which are closed.`);
+        On one side of the hallway, a grand archway leads to the foyer.
+        On the other side, a ladder that leads to the attic.
+        There are 5 doors here, all of which are closed.`);
 
         await processMethod('describe doors', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('a attic ladder leading to the attic, a bedroom door, a grand archway leading to the foyer, a craft door, a lavish door and a blue door leading to the office.');
@@ -70,7 +71,7 @@ describe('Game-play', () => {
 
         await processMethod('walk through craft door', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and a cello in one corner.
-    There's a large aquarium in the center of the room and a glue tube on the table.`);
+        There's a large aquarium in the center of the room and a glue tube on the table.`);
 
         await processMethod('pick up glue', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You picked up the glue.');
@@ -95,7 +96,7 @@ describe('Game-play', () => {
         
         await processMethod('go to lavish door', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
-    There's a nightstand beside the bed.`);
+        There's a nightstand beside the bed.`);
 
         await processMethod('unlock nightstand drawer', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You need a key to unlock the nightstand drawer');
@@ -108,7 +109,7 @@ describe('Game-play', () => {
 
         await processMethod('go to ensuite bathroom', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures.
-    There's a small cabinet behind the mirror.`);
+        There's a small cabinet behind the mirror.`);
 
         await processMethod('examine cabinet', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('Peeking inside the cabinet, you see a bottle of sleeping pills');
@@ -124,16 +125,16 @@ describe('Game-play', () => {
 
         await processMethod('go to foyer', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`The grand entrance to the mansion with a grand archway to the hallway, a chandelier, and a large rug.
-    A coat stand and an empty umbrella holder are by the door. The entrance door is what stands between you and freedom.
-    There is another door that leads to the dining room and a parlor door that leads to the living room.
-    A small door on the side leads to the toilet.`);
+        A coat stand and an empty umbrella holder are by the door. The entrance door is what stands between you and freedom.
+        There is another door that leads to the dining room and a parlor door that leads to the living room.
+        A small door on the side leads to the toilet.`);
 
         await processMethod('go to living room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('A spacious room with plush sofas, a fireplace, and a large window offering a view of the garden. Family portraits decorate the walls.');
         
         await processMethod('go to conservatory', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`Glass walls offer a panoramic view of the surrounding garden and yard.
-    The room is filled with lush greenery and a big statue in the center.`);
+        The room is filled with lush greenery and a big statue in the center.`);
 
         await processMethod('examine statue', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`The statue is of a man, nothing too exciting, however you noticed the weird date on the plaque - 30/02/1985. Surely that can't be right? or maybe it has a hidden meaning?`);
@@ -182,15 +183,15 @@ describe('Game-play', () => {
 
         await processMethod('go to dining room', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A formal dining room with a long table, elegant chandeliers, and a sideboard for serving.
-    Fine china and silverware are neatly arranged for guests. A dog food bowl sits on the floor.`);
+        Fine china and silverware are neatly arranged for guests. A dog food bowl sits on the floor.`);
 
         await processMethod('go to kitchen', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('A modern kitchen with stainless steel appliances, marble countertops, and a large central island. The room smells of fresh herbs and baking bread.');
 
         await processMethod('go to basement', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`A dimly room with a low ceiling and bare cement walls. The air is damp and musty.
-    A big pipe runs along the wall, slowly dripping water.
-    There's a heavy metal door with keypad lock on the other side of the room.`);
+        A big pipe runs along the wall, slowly dripping water.
+        There's a heavy metal door with keypad lock on the other side of the room.`);
 
         await processMethod('use valve on pipe', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You screw the red valve to the pipe. You can now use it to drain the pool!');
@@ -209,12 +210,12 @@ describe('Game-play', () => {
 
         await processMethod('watch cctv recording', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`Checking out the security recording, you quickly find the recording of you and your partner breaking into the mansion and her knocking the vase on the back of your head.
-    Seeing her face, you now recall her name - Lola. Rewinding the video further, you stumble on a video of Lola and Cartwright playing with a train set model in a room next to the master bedroom.
-    They were a couple, and it seems she double-crossed you. Cartwright was probably growing suspicious of her so she just threw you under the bus to protect herself.`);
+        Seeing her face, you now recall her name - Lola. Rewinding the video further, you stumble on a video of Lola and Cartwright playing with a train set model in a room next to the master bedroom.
+        They were a couple, and it seems she double-crossed you. Cartwright was probably growing suspicious of her so she just threw you under the bus to protect herself.`);
 
         await processMethod('scrub cctv recording', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`You delete all the video footages of you and Lola breaking into the mansion.
-        Wisely, you find a feature to pause the recording for the next hour as well, allowing you to move freely without creating further evidence.`);
+            Wisely, you find a feature to pause the recording for the next hour as well, allowing you to move freely without creating further evidence.`);
 
         await processMethod('go to basement', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the basement.');
@@ -260,8 +261,8 @@ describe('Game-play', () => {
 
         await processMethod('go to backyard', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe(`An open outdoor area with manicured lawns, flowerbeds, and a few benches.
-        An empty private swimming pool is at the center of the yard.
-        A rottweiler is standing on alert between you and the pool, growling at you.`);
+            An empty private swimming pool is at the center of the yard.
+            A rottweiler is standing on alert between you and the pool, growling at you.`);
 
         await processMethod('fetch key from pool', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('The dog growls at you when you try to approach the pool. You dare not step any further.');

@@ -1,17 +1,16 @@
 import { describe, it } from "@jest/globals";
 import processMethod from '../../../../../docs/js/processor.js';
-import inspectRoomActions from '../../../../../docs/js/default/inspect-room.js';
-import { actions as defaultActions, strings as defaultStrings } from '../../../../../docs/js/default/index.js';
-import { actions, items, strings } from '../../../../../docs/js/scenarios/mansion-escape/rooms/security-room.js';
-import { actions as pantryActions, items as pantryItems, strings as pantryStrings, handlers as pantryHandlers } from '../../../../../docs/js/scenarios/mansion-escape/rooms/pantry.js';
+import generic from '../../../../../docs/js/default/index.js';
+import securityRoom from '../../../../../docs/js/scenarios/mansion-escape/rooms/security-room.js';
+import pantry from '../../../../../docs/js/scenarios/mansion-escape/rooms/pantry.js';
 import initGame from '../../../../../docs/js/game-generator.js';
 
 describe('security room', () => {
     it('should describe the room', async () => {
         const gameDefinition = {
-            variables: { ...items, user: { location: 'security room' }, flashlight:{state:'on'} },
-            actions: [...inspectRoomActions,, ...actions ],
-            strings
+            variables: { ...generic.variables, ...securityRoom.variables, ...pantry.variables, user: { location: 'security room' }, flashlight:{state:'on'} },
+            actions: [ ...generic.actions, ...securityRoom.actions, ...pantry.actions ],
+            strings: { ...generic.strings, ...securityRoom.strings, ...pantry.strings }
         };
         await processMethod('look around', gameDefinition, 'user');
 
@@ -19,12 +18,12 @@ describe('security room', () => {
     });
 
     it('should use the flashlight', async () => {
-        const gameDefinition = initGame(
-            { ...items, user: { location: 'security room' }, ...pantryItems },
-            [...defaultActions, ...actions, ...pantryActions ],
-            {...strings, ...defaultStrings, ...pantryStrings},
-            pantryHandlers
-        );
+        const gameDefinition = initGame({
+            variables: { ...generic.variables, ...securityRoom.variables, ...pantry.variables, user: { location: 'security room' } },
+            actions: [ ...generic.actions, ...securityRoom.actions, ...pantry.actions ],
+            strings: { ...generic.strings, ...securityRoom.strings, ...pantry.strings },
+            handlers: pantry.handlers
+        });
 
         gameDefinition.variables.flashlight.location = 'user';
         gameDefinition.variables.batteries.location = 'user';
