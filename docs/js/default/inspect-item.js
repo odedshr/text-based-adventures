@@ -7,6 +7,18 @@ const inspectLocationRegExp = /where is the (.+?)\?|where are the (.+?)\?|what i
 const inspectInventory = /what's in my (.+?)\?|show me my (.+?)|what do I have in my (.+?)|what's in my inventory\?|can you show me my (.+?)\?|check my (.+?)/;
 const actions = [
     {
+        input: /^read$/,
+        execute: (gameDefinition, userId, input) => {
+            print(gameDefinition, 'future support for it', input);
+        }
+    },
+    {
+        input: /\b(break|fire)\b/,
+        execute: (gameDefinition, userId, input) => {
+            print(gameDefinition, 'action not safe', input);
+        }
+    },
+    {
         input: inspectItemRegExp,
         execute: (gameDefinition, userId, input) => {
             var _a;
@@ -88,6 +100,8 @@ const actions = [
 ];
 const strings = {
     unreadable: `I'm not sure what you mean by 'item'.`,
+    'future support for it': `Future version will support referring to the last item you picked up. For now, you need to specify the item.`,
+    'action not safe': `It's probably not a good idea to do that.`,
 };
 export { actions, strings };
 function getEverythingIn(variables, location) {

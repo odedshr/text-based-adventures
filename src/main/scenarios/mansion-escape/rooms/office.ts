@@ -6,7 +6,7 @@ import print from "../../../default/print.js";
 const office:PuzzlePiece = {
     actions: [
         {
-            input: /^look in bin$/,
+            input: /^look in (?:(trash|recycle|paper) )?bin$/,
             conditions(gameDefinition:GameDefinition, userId:string) {
                 const userLocation = (gameDefinition.variables[userId] as PlayerVariable).location;
                 return [
@@ -15,6 +15,12 @@ const office:PuzzlePiece = {
             },
             execute(gameDefinition:GameDefinition, userId:string,_:string) {
                 print(gameDefinition, 'bin');
+            }
+        },
+        {
+            input: /^(?:clear|empty)( out)? (?:(trash|recycle|paper) )?bin$/,
+            execute(gameDefinition:GameDefinition, userId:string,_:string) {
+                print(gameDefinition, 'no mess');
             }
         },
         {

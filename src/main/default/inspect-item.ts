@@ -11,6 +11,18 @@ const inspectInventory = /what's in my (.+?)\?|show me my (.+?)|what do I have i
 
 const actions:Action[] = [
     {
+        input: /^read$/,
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            print(gameDefinition, 'future support for it', input);      
+        }
+    },
+    {
+        input: /\b(break|fire)\b/,
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            print(gameDefinition, 'action not safe', input);      
+        }
+    },
+    {
         input: inspectItemRegExp,
         execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const { variables, strings, references } = gameDefinition;
@@ -97,6 +109,8 @@ const actions:Action[] = [
 
 const strings = {
      unreadable: `I'm not sure what you mean by 'item'.`,
+     'future support for it': `Future version will support referring to the last item you picked up. For now, you need to specify the item.`,
+     'action not safe': `It's probably not a good idea to do that.`,
 }
 
 export { 

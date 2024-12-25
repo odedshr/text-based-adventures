@@ -4,7 +4,7 @@ import print from "../../../default/print.js";
 const office = {
     actions: [
         {
-            input: /^look in bin$/,
+            input: /^look in (?:(trash|recycle|paper) )?bin$/,
             conditions(gameDefinition, userId) {
                 const userLocation = gameDefinition.variables[userId].location;
                 return [
@@ -13,6 +13,12 @@ const office = {
             },
             execute(gameDefinition, userId, _) {
                 print(gameDefinition, 'bin');
+            }
+        },
+        {
+            input: /^(?:clear|empty)( out)? (?:(trash|recycle|paper) )?bin$/,
+            execute(gameDefinition, userId, _) {
+                print(gameDefinition, 'no mess');
             }
         },
         {

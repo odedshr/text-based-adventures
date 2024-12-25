@@ -23,7 +23,13 @@ const toilet:PuzzlePiece = {
                 {item: userId, property: 'location', value: 'toilet', textId:'location-fail:user'},
             ],
             execute: (gameDefinition:GameDefinition, userId:string,_:string) => print(gameDefinition, 'check cistern')
-        }
+        },
+        {
+            input: /\b(?:take a piss|take a leak|use the toilet|go to the bathroom|relieve (?:myself|yourself|oneself)|pee|piss|urinate|go number one|tinkle|hit the restroom|visit the loo|go wee|have a wee|spend a penny|drain the lizard|water the grass|answer nature's call|use the facilities|take a whiz|make water|go potty)\b/,
+            execute(gameDefinition:GameDefinition, userId:string,_:string) {
+                print(gameDefinition, 'no mess');
+            }
+        },
     ],
     variables: {
         'toilet': { type: 'room' },

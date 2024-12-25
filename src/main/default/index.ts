@@ -49,6 +49,7 @@ const generic:PuzzlePiece = {
         countdown: `Time is ticking, better hurry up!`,
         player1: `That's you! you're still alive, but you better hurry!`,
         lives: `You got 1 life left, better not waste it.`,
+        'no mess': `It's probably best to keep the place clean.`,
         ...pickUpItemStrings,
         ...inspectItemStrings,
         ...passages
