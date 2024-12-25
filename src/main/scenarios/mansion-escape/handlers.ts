@@ -1,4 +1,4 @@
-import { GameDefinition, NumberVariable, Variable, VariableModifyUpdate } from '../../types.js';
+import { GameDefinition, DataVariable, Variable, VariableModifyUpdate } from '../../types.js';
 import print from "../../default/print.js";
 
 import { handlers as pantryHandlers } from './rooms/pantry.js';
@@ -6,7 +6,7 @@ import { listErrors } from '../../default/error-logging.js';
 
 function finishGame(gameDefinition: GameDefinition) {
     const { stopTimer } = gameDefinition;
-    gameDefinition.variables.lives = {...gameDefinition.variables.lives, value: 0 } as NumberVariable;
+    gameDefinition.variables.lives = {...gameDefinition.variables.lives, value: 0 } as DataVariable;
     listErrors(gameDefinition);
     stopTimer('countdown');
 }
@@ -14,7 +14,7 @@ function finishGame(gameDefinition: GameDefinition) {
 const handlers:VariableModifyUpdate[] = [
     ...pantryHandlers,
     (gameDefinition: GameDefinition, variableName:string, variable:Variable) => {
-        if (variableName==='countdown' && (variable as NumberVariable).value <= 0) {
+        if (variableName==='countdown' && +(variable as DataVariable).value <= 0) {
             print(gameDefinition, 'time\'s up');
             finishGame(gameDefinition);
         }

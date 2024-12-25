@@ -14,7 +14,7 @@ function formatTime(seconds:number) {
 
 const timerElement = document.getElementById('timer') as HTMLTimeElement;
 
-function updateTimer(timeLeft:number) {
+function updateClock(timeLeft:number) {
     if (timeLeft) {
         if (timeLeft > 0) {
             const formattedTime = formatTime(--timeLeft);
@@ -36,6 +36,6 @@ function updateScore(score:number) {
 }
 
 export {
-    updateTimer,
+    updateClock,
     updateScore
 };

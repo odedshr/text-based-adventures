@@ -19,7 +19,7 @@ const items = {
         canBeHeld: true,
         state: 'full'
     },
-    batteryPower: { type: "number", value: 300, state: 'decreasing' },
+    batteryPower: { type: "data", value: 300, state: 'decreasing' },
 };
 const actions = [];
 const strings = {
@@ -38,7 +38,7 @@ const handlers = [
     (gameDefinition, variableName, variable) => {
         if (variableName === 'batteryPower') {
             const { variables, stopTimer } = gameDefinition;
-            if (variable.value <= 0) {
+            if (+variable.value <= 0) {
                 const batteries = variables.batteries;
                 variables.batteries = Object.assign(Object.assign({}, batteries), { state: 'empty' });
                 const flashlight = variables.flashlight;

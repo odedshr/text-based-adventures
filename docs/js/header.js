@@ -10,7 +10,7 @@ function formatTime(seconds) {
     return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
 }
 const timerElement = document.getElementById('timer');
-function updateTimer(timeLeft) {
+function updateClock(timeLeft) {
     if (timeLeft) {
         if (timeLeft > 0) {
             const formattedTime = formatTime(--timeLeft);
@@ -30,4 +30,4 @@ function updateScore(score) {
     const scoreElement = document.getElementById('score');
     scoreElement.textContent = `${score}`;
 }
-export { updateTimer, updateScore };
+export { updateClock, updateScore };

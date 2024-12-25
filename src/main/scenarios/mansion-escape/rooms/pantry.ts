@@ -1,7 +1,7 @@
-import { Action, GameDefinition, ItemVariable, NumberVariable, PassageVariable, RoomVariable, Variable, VariableModifyUpdate, Variables } from '../../../types';
+import { Action, GameDefinition, ItemVariable, DataVariable, PassageVariable, RoomVariable, Variable, VariableModifyUpdate, Variables } from '../../../types';
 import print from '../../../default/print.js';
 
-const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable|NumberVariable } = {
+const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable|DataVariable } = {
     'pantry': { type: 'room' },
     'larder hatch': {
         type: 'passage',
@@ -21,7 +21,7 @@ const items:{ [key:string]: ItemVariable|RoomVariable|PassageVariable|NumberVari
         canBeHeld: true,
         state: 'full'
     },
-    batteryPower: { type: "number", value: 300, state: 'decreasing' },
+    batteryPower: { type: "data", value: 300, state: 'decreasing' },
 };
 
 const actions:Action[] = [];
@@ -46,7 +46,7 @@ const handlers:VariableModifyUpdate[] = [
     (gameDefinition: GameDefinition, variableName:string, variable:Variable) => {
         if (variableName==='batteryPower') {
             const { variables, stopTimer } = gameDefinition;
-            if ((variable as NumberVariable).value <= 0 ) {
+            if (+(variable as DataVariable).value <= 0 ) {
                 const batteries = variables.batteries;
                 variables.batteries = { ...batteries, state: 'empty' } as ItemVariable;
                 const flashlight = variables.flashlight;

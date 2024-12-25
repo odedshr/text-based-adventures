@@ -7,6 +7,11 @@ import { actions as pickGenericItem, strings as pickUpItemStrings } from './pick
 import { actions as passageActions, strings as passages } from './passages.js';
 import { actions as errorLoggingActions } from './error-logging.js';
 
+const variables = {
+    achievements:  { type: "data", value: [] },
+    errors:  { type: "data", value: [] }
+}
+
 const actions:Action[] = [
     ...pickGenericItem,
     ...inspectRoomActions,
@@ -40,6 +45,7 @@ const strings = {
     window: `There are bars on the windows. It's very dark outside. You can't see a thing. This place is probably very isolated.`,
     'open-window': 'Alas! the window is bolted shut. You can\'t open it.',
     achievements: `You achieved quite a lot but you're not out of the woods yet.`,
+    errors: `You made a few mistakes, but you're still alive. This list is used for debugging purposes.`,
     countdown: `Time is ticking, better hurry up!`,
     player1: `That's you! you're still alive, but you better hurry!`,
     lives: `You got 1 life left, better not waste it.`,
@@ -50,5 +56,6 @@ const strings = {
 
 export {
     actions,
-    strings
+    strings,
+    variables
 };

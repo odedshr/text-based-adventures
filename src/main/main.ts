@@ -1,9 +1,9 @@
-import { ConsoleVariable, GameDefinition, ListVariable, NumberVariable, Variable } from './types.js';
+import { GameDefinition, DataVariable, Variable } from './types.js';
 
 import processMethod from './processor.js';
 import log from './log.js';
 import initGame from './game-generator.js';
-import { updateScore, updateTimer } from './header.js';
+import { updateScore, updateClock } from './header.js';
 
 import { actions, strings, variables, handlers } from './scenarios/mansion-escape/index.js';
 
@@ -75,10 +75,10 @@ function init() {
 
     gameDefinition.handlers.push((_: GameDefinition, variableName:string, item:Variable) => {
         switch(variableName) {
-            case 'achievements': updateScore((item as ListVariable).value.length); break;
-            case 'countdown': updateTimer((item as NumberVariable).value); break;
-            case 'console': appendToPrint((item as ConsoleVariable).value); break;
-            case 'lives': if ((item as NumberVariable).value===0) { inputField.setAttribute('hidden', 'true') } break;
+            case 'achievements': updateScore(((item as DataVariable).value as string[]).length); break;
+            case 'countdown': updateClock(+(item as DataVariable).value); break;
+            case 'console': appendToPrint((item as DataVariable).value as string); break;
+            case 'lives': if ((item as DataVariable).value===0) { inputField.setAttribute('hidden', 'true') } break;
         }
     });
     

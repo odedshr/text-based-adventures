@@ -24,10 +24,9 @@ import { items as securityRoom } from './rooms/security-room.js';
 import { items as toilet } from './rooms/toilet.js';
 
 const variables:Variables = {
-    achievements:  { type: "list", value: [] },
-    countdown: { type: "number", value: 3600, state: 'decreasing' },
+    countdown: { type: "data", value: 3600, state: 'decreasing' },
     player1: { type: "player", location: "office", canContain: 1 },
-    lives: { type:"number", value: 1 },
+    lives: { type:"data", value: 1 },
 
     ...attic,
     ...backyard,

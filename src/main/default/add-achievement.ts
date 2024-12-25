@@ -1,11 +1,12 @@
-import { GameDefinition, ListVariable } from "../types";
+import { GameDefinition, DataVariable } from "../types";
 
 export default function addAchievement(gameDefinition: GameDefinition, userId:string, achievement: string) {
     const { variables } = gameDefinition;
 
     const achievementWithUserId = `${userId} ${achievement}`;
-    const achievements = (variables.achievements as ListVariable) || { type: "list", value: [] };
-    if ((achievements.value.indexOf(achievementWithUserId) === -1)) {
-        variables.achievements = { type: "list", value: [ ...achievements.value, achievementWithUserId] };
+    const achievements = (variables.achievements as DataVariable) || { type: "data", value: [] };
+    const value = achievements.value as string[];
+    if ((value.indexOf(achievementWithUserId) === -1)) {
+        variables.achievements = { type: "data", value: [ ...value, achievementWithUserId] };
     }
 }

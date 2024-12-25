@@ -15,7 +15,17 @@ function getProxy(gameDefinition, variables) {
 function startTimer(variables, name) {
     timers[name] = setInterval(() => {
         const variable = variables[name];
-        const value = variable.state === 'decreasing' ? variable.value - 1 : variable.value + 1;
+        let value = variable.value;
+        if (!isNaN(value)) {
+            switch (variable.state) {
+                case 'decreasing':
+                    value--;
+                    break;
+                case 'increasing':
+                    value++;
+                    break;
+            }
+        }
         variables[name] = Object.assign(Object.assign({}, variable), { value });
     }, 1000);
 }

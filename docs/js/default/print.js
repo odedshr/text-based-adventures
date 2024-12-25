@@ -13,9 +13,6 @@ export default function print(gameDefinition, textId, itemName, locationName) {
         if (locationName) {
             value = value.replace(/location/g, locationName);
         }
-        if (!variables.console) {
-            variables.console = { type: 'console', value: '' };
-        }
         variables.console = Object.assign(Object.assign({}, variables.console), { value });
     }
     else {

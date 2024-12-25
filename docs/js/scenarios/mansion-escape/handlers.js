@@ -10,7 +10,7 @@ function finishGame(gameDefinition) {
 const handlers = [
     ...pantryHandlers,
     (gameDefinition, variableName, variable) => {
-        if (variableName === 'countdown' && variable.value <= 0) {
+        if (variableName === 'countdown' && +variable.value <= 0) {
             print(gameDefinition, 'time\'s up');
             finishGame(gameDefinition);
         }

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import processMethod from './processor.js';
 import log from './log.js';
 import initGame from './game-generator.js';
-import { updateScore, updateTimer } from './header.js';
+import { updateScore, updateClock } from './header.js';
 import { actions, strings, variables, handlers } from './scenarios/mansion-escape/index.js';
 const gameDefinition = initGame(variables, actions, strings, handlers);
 // Get the DOM elements
@@ -78,7 +78,7 @@ function init() {
                 updateScore(item.value.length);
                 break;
             case 'countdown':
-                updateTimer(item.value);
+                updateClock(+item.value);
                 break;
             case 'console':
                 appendToPrint(item.value);

@@ -1,4 +1,4 @@
-import { ConsoleVariable, GameDefinition, GetStringMethod } from "../types";
+import { DataVariable, GameDefinition, GetStringMethod } from "../types";
 import { logError } from './error-logging.js';
 
 export default function print(gameDefinition: GameDefinition, textId:string, itemName?:string, locationName?: string) {
@@ -17,10 +17,7 @@ export default function print(gameDefinition: GameDefinition, textId:string, ite
             value = value.replace(/location/g, locationName);
         }
         
-        if (!variables.console) {
-            variables.console = { type: 'console', value: '' }
-        }
-        variables.console = { ...variables.console, value } as ConsoleVariable;
+        variables.console = { ...variables.console, value } as DataVariable;
     } else {
         logError(gameDefinition, `Unknown textId: ${textId} `);
     }

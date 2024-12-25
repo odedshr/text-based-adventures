@@ -1,4 +1,4 @@
-import { GameDefinition, Variables, VariableModifyUpdate, NumberVariable, ItemVariable, Variable, GetStringMethod, Action } from './types.js';
+import { GameDefinition, Variables, VariableModifyUpdate, ItemVariable, Variable, GetStringMethod, Action, DataVariable } from './types.js';
 
 const timers:{[key:string]:number} = {};
 // const handlers:VariableModifyUpdate[] = [];
@@ -19,9 +19,16 @@ function getProxy(gameDefinition: GameDefinition, variables: Variables) {
 
 function startTimer(variables:Variables, name:string) {
     timers[name] = setInterval(() => {
-        const variable = (variables[name] as NumberVariable);
-        const value = variable.state === 'decreasing' ? variable.value - 1 : variable.value + 1;
-        variables[name] = { ... variable ,value } as NumberVariable
+        const variable = (variables[name] as DataVariable);
+        let value = variable.value as number;
+        if (!isNaN(value)) {
+            switch(variable.state) {
+                case 'decreasing': value--; break;
+                case 'increasing': value++; break;
+            }
+        }
+
+        variables[name] = { ... variable ,value }
     }, 1000) as unknown as number;
 }
 

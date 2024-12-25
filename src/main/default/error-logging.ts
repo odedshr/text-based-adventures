@@ -1,16 +1,16 @@
-import { Action, GameDefinition, ListVariable } from "../types";
+import { Action, GameDefinition, DataVariable } from "../types";
 
 function logError(gameDefinition: GameDefinition, error: string) {
     const { variables } = gameDefinition;
 
-    const errors = (variables.errors as ListVariable) || { type: "list", value: [] };
-    variables.errors = { type: "list", value: [ ...errors.value, error] };
+    const errors = (variables.errors as DataVariable) || { type: "list", value: [] };
+    variables.errors = { type: "data", value: [ ...errors.value as string[], error] };
 }
 
 function listErrors(gameDefinition: GameDefinition) {
     const { variables } = gameDefinition;
     if (variables.errors) {
-        console.log((variables.errors as ListVariable).value);
+        console.log((variables.errors as DataVariable).value);
     }
 }
 
