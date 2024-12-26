@@ -13,19 +13,19 @@ const actions = [
         }
     },
     {
-        input: /\b(break|fire)\b/,
-        execute: (gameDefinition, userId, input) => {
+        input: /\b(kick|punch|hit|break|smash|fire)\b/,
+        execute: (gameDefinition, _, input) => {
             print(gameDefinition, 'action not safe', input);
         }
     },
     {
-        input: /\b(push|tug|pull|lift|move)\b/,
+        input: /\b(push|tug|pull|lift|move|shift|budge)\b/,
         execute: (gameDefinition, userId, input) => {
             print(gameDefinition, 'not budge', input);
         }
     },
     {
-        input: /\b(look under|look in)\b/,
+        input: /\b(?:(look|inspect|search|examine|what is) (under|in|behind))\b/,
         execute: (gameDefinition, userId, input) => {
             print(gameDefinition, 'nothing special', input);
         }
@@ -41,7 +41,7 @@ const actions = [
         input: inspectItemRegExp,
         execute: (gameDefinition, userId, input) => {
             var _a;
-            const { variables, strings, references } = gameDefinition;
+            const { variables, strings } = gameDefinition;
             const itemName = (_a = input.match(inspectItemRegExp)) === null || _a === void 0 ? void 0 : _a.pop();
             if (!itemName) {
                 logError(gameDefinition, input);
@@ -51,7 +51,7 @@ const actions = [
             let item = findByReference(gameDefinition, userId, itemName);
             if (!!item) { // it's a variable, make sure it's in the same location as the user
                 if (!isInRootLocation(variables, item, variables[userId].location)) {
-                    print(gameDefinition, 'not sure where is item', itemName);
+                    print(gameDefinition, 'item not here', itemName);
                     return;
                 }
             }
@@ -61,7 +61,7 @@ const actions = [
             }
             if (!item) {
                 logError(gameDefinition, input);
-                print(gameDefinition, 'not sure what is item', 'item');
+                print(gameDefinition, 'examine unknown item', itemName);
                 return;
             }
             print(gameDefinition, item);
@@ -124,6 +124,8 @@ const strings = {
     'not budge': `It doesn't budge.`,
     'nothing special': `You don't see anything special.`,
     'item not found': `You look for item but can't find it.`,
+    'item not here': `You don't see item here.`,
+    'examine unknown item': `You examine the item but don't see anything special.`
 };
 export { actions, strings };
 function getEverythingIn(variables, location) {
