@@ -18,6 +18,8 @@ export default function findByReference(gameDefinition:GameDefinition, userId:st
 
     // TODO: handle scenarios where there are multiple items in the same location
     // TODO: handle "it"
-    return candidates.find(candidate => 
-        (variables[candidate] as PassageVariable).between?.includes(currentLocation) || isInRootLocation(variables, candidate, currentLocation));
+    return candidates.find(candidate => {
+        const passage = variables[candidate] as PassageVariable;
+        return passage.in === currentLocation || passage.out === currentLocation || isInRootLocation(variables, candidate, currentLocation);
+    });
 }

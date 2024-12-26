@@ -1,6 +1,29 @@
 import addAchievement from '../../../default/add-achievement.js';
 import print from "../../../default/print.js";
 const masterBedroom = {
+    variables: {
+        'master bedroom': { type: 'room' },
+        'lavish door': {
+            type: 'passage',
+            in: 'master bedroom',
+            out: 'hallway',
+            allowedStates: ['opened', 'closed'],
+            state: 'closed',
+            synonyms: ['door']
+        },
+        'nightstand drawer': {
+            type: 'item',
+            location: 'master bedroom',
+            state: 'locked',
+            synonyms: ['drawer', 'nightstand', 'bedside drawer'],
+        },
+        'security badge': {
+            type: 'item',
+            location: 'nightstand drawer',
+            canBeHeld: true,
+            synonyms: ['badge']
+        }
+    },
     actions: [
         {
             input: /\b(?:unlock|open|unfasten|access)\s*(?:the\s*)?((?:nightstand|bedside)\s*)?(?:drawer|compartment)$/,
@@ -50,28 +73,6 @@ const masterBedroom = {
             }
         }
     ],
-    variables: {
-        'master bedroom': { type: 'room' },
-        'lavish door': {
-            type: 'passage',
-            between: ['hallway', 'master bedroom'],
-            allowedStates: ['opened', 'closed'],
-            state: 'closed',
-            synonyms: ['door']
-        },
-        'nightstand drawer': {
-            type: 'item',
-            location: 'master bedroom',
-            state: 'locked',
-            synonyms: ['drawer', 'nightstand', 'bedside drawer'],
-        },
-        'security badge': {
-            type: 'item',
-            location: 'nightstand drawer',
-            canBeHeld: true,
-            synonyms: ['badge']
-        }
-    },
     strings: {
         'master bedroom': `A luxurious bedroom with a king-sized bed and an ornate wooden furniture.
         There's a nightstand beside the bed.`,

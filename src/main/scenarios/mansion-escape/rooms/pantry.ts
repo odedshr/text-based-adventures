@@ -2,12 +2,12 @@ import { GameDefinition, ItemVariable, DataVariable, Variable, Variables, Puzzle
 import print from '../../../default/print.js';
 
 const pantry:PuzzlePiece = {
-    actions: [],
     variables: {
         'pantry': { type: 'room' },
         'larder hatch': {
             type: 'passage',
-            between: ['kitchen', 'pantry'],
+            in: 'pantry',
+            out: 'kitchen',
             allowedStates: ['opened'],
             state: 'opened',
         },
@@ -25,6 +25,7 @@ const pantry:PuzzlePiece = {
         },
         batteryPower: { type: "data", value: 300, state: 'decreasing' },
     },
+    actions: [],
     strings: {
         pantry(variables:Variables) {
             const dogFood = (variables['dog food'] as ItemVariable).location === 'pantry';

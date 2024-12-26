@@ -4,6 +4,46 @@ import addToInventory from '../../../default/add-to-inventory.js';
 import print from "../../../default/print.js";
 
 const hobbyRoom:PuzzlePiece = {
+    variables: {
+        'hobby room': { type: 'room' },
+        'craft door': {
+            type: 'passage',
+            in: 'hobby room',
+            out: 'hallway',
+            allowedStates: ['closed','opened'],
+            state: 'closed',
+        },
+        glue: {
+            type: 'item',
+            location: 'hobby room',
+            canBeHeld: true,
+            synonyms: ['10second glue','10second glue tube', 'glue tube']
+        },
+        aquarium: {
+            type: 'item',
+            state: 'hungry-fish',
+            location: 'hobby room',
+            canContain: 'treasure box'
+        },
+        'fish food': {
+            type: 'item',
+            state: 'full',
+            location: 'hobby room',
+            canBeHeld: true
+        },
+        'treasure box': {
+            type: 'item',
+            location: 'aquarium',
+            state: 'closed',
+            canContain: 'small key',
+            canBeHeld: true
+        },
+        'small key': {
+            type: 'item',
+            location: 'treasure box',
+            canBeHeld: true
+        }
+    },
     actions: [
         {
             input: /\b(?:feed|give|offer|provide)\s*(?:the\s*)?(?:fish|fishes)\s*(?:(?:in\s*(?:the\s*)?(?:aquarium|tank|fish\s*tank))?\s*(?:using|with|by\s*using)?\s*(?:the\s*)?(?:fish\s*food|food)?)?\b/,
@@ -69,45 +109,6 @@ const hobbyRoom:PuzzlePiece = {
             }
         }
     ],
-    variables: {
-        'hobby room': { type: 'room' },
-        'craft door': {
-            type: 'passage',
-            between: ['hallway', 'hobby room'],
-            allowedStates: ['closed','opened'],
-            state: 'closed',
-        },
-        glue: {
-            type: 'item',
-            location: 'hobby room',
-            canBeHeld: true,
-            synonyms: ['10second glue','10second glue tube', 'glue tube']
-        },
-        aquarium: {
-            type: 'item',
-            state: 'hungry-fish',
-            location: 'hobby room',
-            canContain: 'treasure box'
-        },
-        'fish food': {
-            type: 'item',
-            state: 'full',
-            location: 'hobby room',
-            canBeHeld: true
-        },
-        'treasure box': {
-            type: 'item',
-            location: 'aquarium',
-            state: 'closed',
-            canContain: 'small key',
-            canBeHeld: true
-        },
-        'small key': {
-            type: 'item',
-            location: 'treasure box',
-            canBeHeld: true
-        }
-    },
     strings: {
         'hobby room': (variables:Variables) => `A room dedicated to various hobbies, including shelves of crafting supplies, a large table for working on projects, and a cello in one corner.
         There's a large aquarium in the center of the room${(variables.glue as ItemVariable).location==='hobby room' ? ' and a glue tube on the table' : ''}.`,

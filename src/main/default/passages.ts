@@ -1,37 +1,14 @@
-import { Action, GameDefinition, PassageVariable, PlayerVariable, RoomVariable } from "../types";
+import { Action, GameDefinition, PassageVariable, PlayerVariable, RoomVariable, Variables } from "../types";
 import addAchievement from "./add-achievement.js";
 import findByReference from "./find-by-reference.js";
 import print from "./print.js";
+import { logError } from "./error-logging.js";
 
 const openDoorCommands = /open\s?(the\s+)?(.*)/;
 const closeDoorCommands = /close (the)\s+?(.*)/;
 const enterRoom = /enter (the\s+)?(.*)/;
 const goCommands = /(climb|go|walk|move|enter|step|pass|proceed)\s+(through|into|to|toward|towards|in)\s+(the\s)?(.*)/;
-const climbCommands = /climb\s(?:up\s|down\s)?(?:the\s)?(.*)/;
-
-const exitRoomDoor:{[key:string]:string} = {
-    attic: 'attic ladder',
-    basement: 'cellar stairs',
-    backyard: 'glass door',
-    bathroom: 'washroom entry',
-    conservatory: 'back door',
-    'dining room': 'fdining entranceyer',
-    'ensuite bathroom': 'bathing nook',
-    foyer: 'entrance door',
-    garage: 'wooden door',
-    'guest bedroom': 'bedroom door',
-    hallway: 'grand archway',
-    'hobby room': 'craft door',
-    kitchen: 'swinging door',
-    library: 'lounge arch',
-    'living room': 'parlor door',
-    'master bedroom': 'lavish door',
-    office: 'blue door',
-    pantry: 'larder hatch',
-    'secret room': 'secret door',
-    'security room': 'vault door',
-    'toilet': 'toilet door',
-};
+const climbCommands = /(climb|go)\s(?:up\s|down\s)?(?:the\s)?(.*)/;
 
 const actions:Action[] = [
     {
@@ -67,13 +44,7 @@ const actions:Action[] = [
                 return passThroughPassage(gameDefinition, destination, userId );
             } else if ((variables[destination] as RoomVariable).type ==='room') {
                 const userLocation = (variables[userId] as PlayerVariable).location;
-                const passageName = Object.keys(variables)
-                    .find(key => {
-                        const passage = variables[key] as PassageVariable;
-                        return (passage.type === 'passage') && 
-                            passage.between.includes(userLocation) &&
-                            passage.between.includes(destination)
-                    });
+                const passageName = getPassageName(variables, userLocation, destination);
     
                 if (!passageName) {
                     print(gameDefinition,'how-to-get-there',userLocation,destination);
@@ -93,13 +64,8 @@ const actions:Action[] = [
 
             if (destination && (variables[destination] as RoomVariable).type ==='room') {
                 const userLocation = (variables[userId] as PlayerVariable).location;
-                const passageName = Object.keys(variables)
-                    .find(key => {
-                        const passage = variables[key] as PassageVariable;
-                        return (passage.type === 'passage') && 
-                            passage.between.includes(userLocation) &&
-                            passage.between.includes(destination)
-                    });
+                const passageName = getPassageName(variables, userLocation, destination);
+
                 if (!passageName) {
                     print(gameDefinition,'how-to-get-there',userLocation,destination);
                     return;
@@ -128,9 +94,11 @@ const actions:Action[] = [
                 }
                 
                 const userLocation = (variables[userId] as PlayerVariable).location;
-                passageName = Object.keys(variables).find(key => {
+                passageName = Object.keys(variables)
+                    .filter(key => variables[key].type === 'passage')
+                    .find(key => {
                     const passage = variables[key] as PassageVariable;
-                    return passage.type === 'passage' && passage.between.includes(userLocation) &&
+                    return [passage.in, passage.out].includes(userLocation) &&
                         (passage.synonyms?.includes('stairs') || passage.synonyms?.includes('ladder'));
                 });
 
@@ -144,13 +112,35 @@ const actions:Action[] = [
     },
     {
         input: /(exit|leave|walk out of|get out( of)?|step outside( of)?)((\s+the)?\s+(room|mansion))?/,
-        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+        execute: (gameDefinition:GameDefinition, userId:string, _:string) => {
             const { variables } = gameDefinition;
             const userLocation = (variables[userId] as PlayerVariable).location;
-            passThroughPassage(gameDefinition, exitRoomDoor[userLocation], userId);
+            const outside = Object
+                .keys(variables)
+                .find(key => variables[key].type === 'passage' && variables[key].in === userLocation);
+            
+            if (!outside) {
+                logError(gameDefinition, `Room with no exit: ${userLocation}`);
+                print(gameDefinition, 'no item in here', 'exit');
+                return;
+            }
+            
+            passThroughPassage(gameDefinition, outside, userId);
         }
     }
 ];
+
+function getPassageName(variables:Variables, from:string, to:string):string | undefined {
+    return Object
+        .keys(variables)
+        .filter(key => variables[key].type === 'passage')
+        .find(key => {
+            const passage = variables[key] as PassageVariable;
+            const between = [ passage.in, passage.out ];
+            return between.includes(from) &&
+                    between.includes(to)
+        });
+}
 
 function findItem(gameDefinition:GameDefinition, userId:string, reference?:string):string | undefined {
     if (!reference) { 
@@ -179,7 +169,7 @@ function passThroughPassage(gameDefinition:GameDefinition, passageName:string, u
         case undefined:
         case 'opened':         
             const user = variables[userId] as PlayerVariable;
-            const destination = passage.between.find(x => x !== userLocation) || userLocation;
+            const destination = passage.in === userLocation ? passage.out : passage.in;
             const location = variables[destination] as RoomVariable;
 
             (variables[userId] as PlayerVariable) = { ...user, location: destination };

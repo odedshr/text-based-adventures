@@ -1,10 +1,10 @@
 const ensuiteBathroom = {
-    actions: [],
     variables: {
         'ensuite bathroom': { type: 'room' },
         'bathing nook': {
             type: 'passage',
-            between: ['master bedroom', 'ensuite bathroom'],
+            in: 'ensuite bathroom',
+            out: 'master bedroom',
             allowedStates: ['opened', 'closed'],
             state: 'opened',
         },
@@ -22,6 +22,7 @@ const ensuiteBathroom = {
             synonyms: ['sleeping pill', 'pill', 'pills', 'bottle of sleeping pills', 'sleeping pills bottle']
         }
     },
+    actions: [],
     strings: {
         'ensuite bathroom': `A private bathroom with marble countertops, a clawfoot tub, a separate shower, and elegant fixtures.
         There's a small cabinet behind the mirror.`,

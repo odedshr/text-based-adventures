@@ -1,11 +1,11 @@
 import print from '../../../default/print.js';
 const pantry = {
-    actions: [],
     variables: {
         'pantry': { type: 'room' },
         'larder hatch': {
             type: 'passage',
-            between: ['kitchen', 'pantry'],
+            in: 'pantry',
+            out: 'kitchen',
             allowedStates: ['opened'],
             state: 'opened',
         },
@@ -23,6 +23,7 @@ const pantry = {
         },
         batteryPower: { type: "data", value: 300, state: 'decreasing' },
     },
+    actions: [],
     strings: {
         pantry(variables) {
             const dogFood = variables['dog food'].location === 'pantry';

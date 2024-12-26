@@ -1,10 +1,10 @@
 const garage = {
-    actions: [],
     variables: {
         'garage': { type: 'room' },
         'wooden door': {
             type: 'passage',
-            between: ['backyard', 'garage'],
+            in: 'garage',
+            out: 'backyard',
             allowedStates: ['opened'],
             state: 'opened',
         },
@@ -25,6 +25,7 @@ const garage = {
             location: 'garage',
         }
     },
+    actions: [],
     strings: {
         garage: 'A large space with room for several cars, tools hanging neatly on the walls, and shelves filled with spare parts and car cleaning supplies.',
         'wooden door': `The door leads to a smaller building, separated from the mansion.`,

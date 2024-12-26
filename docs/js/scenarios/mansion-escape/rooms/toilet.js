@@ -2,6 +2,37 @@ import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
 import print from "../../../default/print.js";
 const toilet = {
+    variables: {
+        'toilet': { type: 'room' },
+        'toilet door': {
+            type: 'passage',
+            in: 'toilet',
+            out: 'foyer',
+            allowedStates: ['opened'],
+            state: 'opened',
+        },
+        valve: {
+            type: 'item',
+            location: 'toilet',
+            canBeHeld: true,
+            synonyms: ['red valve', 'red water valve', 'water valve']
+        },
+        cistern: {
+            type: 'item',
+            location: 'toilet',
+        },
+        sink: {
+            type: 'item',
+            location: 'toilet',
+        },
+        tap: {
+            type: 'item',
+            location: 'toilet',
+            canContain: 'water valve',
+            state: 'turned-off',
+            synonyms: ['faucet', 'water tap']
+        }
+    },
     actions: [
         {
             input: /\b(?:unscrew|pick\s+(?:up)?|take)\s+(?:red\s+)?(?:water\s+)?valve\b/,
@@ -29,36 +60,6 @@ const toilet = {
             }
         },
     ],
-    variables: {
-        'toilet': { type: 'room' },
-        'toilet door': {
-            type: 'passage',
-            between: ['foyer', 'toilet'],
-            allowedStates: ['opened'],
-            state: 'opened',
-        },
-        valve: {
-            type: 'item',
-            location: 'toilet',
-            canBeHeld: true,
-            synonyms: ['red valve', 'red water valve', 'water valve']
-        },
-        cistern: {
-            type: 'item',
-            location: 'toilet',
-        },
-        sink: {
-            type: 'item',
-            location: 'toilet',
-        },
-        tap: {
-            type: 'item',
-            location: 'toilet',
-            canContain: 'water valve',
-            state: 'turned-off',
-            synonyms: ['faucet', 'water tap']
-        }
-    },
     strings: {
         'toilet': (variables) => `The toilet room is small and functional. It has a sink and cistern, but no mirror.${variables.valve.location === 'toilet' ? ` There's a very bright red water valve on the pipe connected to the cistern.` : ''}`,
         'toilet door': 'A discreet wooden door tucked in a corner of the foyer. Simple in design, it blends in with the walls, leading quietly to the small guest toilet.',

@@ -1,6 +1,22 @@
 import print from '../../../default/print.js';
 import addAchievement from '../../../default/add-achievement.js';
 const kitchen = {
+    variables: {
+        'kitchen': { type: 'room' },
+        'swinging door': {
+            type: 'passage',
+            in: 'kitchen',
+            out: 'dining room',
+            allowedStates: ['opened'],
+            state: 'opened',
+        },
+        pupcake: {
+            type: 'item',
+            state: 'no-pill', // no-pull | drugged
+            location: 'kitchen',
+            canBeHeld: true
+        }
+    },
     actions: [
         {
             input: /\b(?:make|prepare|bake|create)\s*(?:a\s*)?(?:pupcakes?|dog\s*cakes?|treat|dog food)\s*(?:using|with|by\s*using|containing)\s*(?:sleeping\s*pills?|sleep\s*medication|pills?)\b/,
@@ -49,21 +65,6 @@ const kitchen = {
             }
         }
     ],
-    variables: {
-        'kitchen': { type: 'room' },
-        'swinging door': {
-            type: 'passage',
-            between: ['kitchen', 'dining room'],
-            allowedStates: ['opened'],
-            state: 'opened',
-        },
-        pupcake: {
-            type: 'item',
-            state: 'no-pill', // no-pull | drugged
-            location: 'kitchen',
-            canBeHeld: true
-        }
-    },
     strings: {
         kitchen: 'A modern kitchen with stainless steel appliances, marble countertops, and a large central island. The room smells of fresh herbs and baking bread.',
         'swinging door': 'A large, swinging door, padded to reduce noise. It swings silently back and forth, allowing the kitchen staff to easily transport dishes between the kitchen and dining room.',

@@ -1,4 +1,4 @@
-import { ItemVariable, GameDefinition, Variables } from "../types";
+import { ItemVariable, GameDefinition, Variables, PlayerVariable } from "../types";
 import findRoomByItem from "./find-room-by-item.js";
 import isItemAvailable from "./is-item-available.js";
 import isValidAction from "./is-valid-action.js";

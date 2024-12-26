@@ -50,7 +50,8 @@ const basement:PuzzlePiece = {
         basement: { type: 'room' },
         'cellar stairs': {
             type: 'passage',
-            between: ['basement', 'kitchen'],
+            in: 'basement',
+            out: 'kitchen',
             allowedStates: ['opened'],
             state: 'opened',
         },

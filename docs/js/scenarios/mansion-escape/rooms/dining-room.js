@@ -1,10 +1,10 @@
 const diningRoom = {
-    actions: [],
     variables: {
         'dining room': { type: 'room' },
         'dining entrance': {
             type: 'passage',
-            between: ['foyer', 'dining room'],
+            in: 'dining room',
+            out: 'foyer',
             allowedStates: ['opened'],
             state: 'opened',
         },
@@ -15,6 +15,7 @@ const diningRoom = {
             synonyms: ['dog bowl', 'bowl', 'bowl of dog food']
         }
     },
+    actions: [],
     strings: {
         'dining room': (variables) => `A formal dining room with a long table, elegant chandeliers, and a sideboard for serving.
         Fine china and silverware are neatly arranged for guests.${variables['dog food bowl'].location === 'dining room' ? ' A dog food bowl sits on the floor.' : ''}`,

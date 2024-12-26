@@ -1,34 +1,12 @@
 import addAchievement from "./add-achievement.js";
 import findByReference from "./find-by-reference.js";
 import print from "./print.js";
+import { logError } from "./error-logging.js";
 const openDoorCommands = /open\s?(the\s+)?(.*)/;
 const closeDoorCommands = /close (the)\s+?(.*)/;
 const enterRoom = /enter (the\s+)?(.*)/;
 const goCommands = /(climb|go|walk|move|enter|step|pass|proceed)\s+(through|into|to|toward|towards|in)\s+(the\s)?(.*)/;
-const climbCommands = /climb\s(?:up\s|down\s)?(?:the\s)?(.*)/;
-const exitRoomDoor = {
-    attic: 'attic ladder',
-    basement: 'cellar stairs',
-    backyard: 'glass door',
-    bathroom: 'washroom entry',
-    conservatory: 'back door',
-    'dining room': 'fdining entranceyer',
-    'ensuite bathroom': 'bathing nook',
-    foyer: 'entrance door',
-    garage: 'wooden door',
-    'guest bedroom': 'bedroom door',
-    hallway: 'grand archway',
-    'hobby room': 'craft door',
-    kitchen: 'swinging door',
-    library: 'lounge arch',
-    'living room': 'parlor door',
-    'master bedroom': 'lavish door',
-    office: 'blue door',
-    pantry: 'larder hatch',
-    'secret room': 'secret door',
-    'security room': 'vault door',
-    'toilet': 'toilet door',
-};
+const climbCommands = /(climb|go)\s(?:up\s|down\s)?(?:the\s)?(.*)/;
 const actions = [
     {
         input: openDoorCommands,
@@ -64,13 +42,7 @@ const actions = [
             }
             else if (variables[destination].type === 'room') {
                 const userLocation = variables[userId].location;
-                const passageName = Object.keys(variables)
-                    .find(key => {
-                    const passage = variables[key];
-                    return (passage.type === 'passage') &&
-                        passage.between.includes(userLocation) &&
-                        passage.between.includes(destination);
-                });
+                const passageName = getPassageName(variables, userLocation, destination);
                 if (!passageName) {
                     print(gameDefinition, 'how-to-get-there', userLocation, destination);
                     return;
@@ -88,13 +60,7 @@ const actions = [
             const destination = findItem(gameDefinition, userId, (_a = input.match(enterRoom)) === null || _a === void 0 ? void 0 : _a.pop());
             if (destination && variables[destination].type === 'room') {
                 const userLocation = variables[userId].location;
-                const passageName = Object.keys(variables)
-                    .find(key => {
-                    const passage = variables[key];
-                    return (passage.type === 'passage') &&
-                        passage.between.includes(userLocation) &&
-                        passage.between.includes(destination);
-                });
+                const passageName = getPassageName(variables, userLocation, destination);
                 if (!passageName) {
                     print(gameDefinition, 'how-to-get-there', userLocation, destination);
                     return;
@@ -122,10 +88,12 @@ const actions = [
                     return true;
                 }
                 const userLocation = variables[userId].location;
-                passageName = Object.keys(variables).find(key => {
+                passageName = Object.keys(variables)
+                    .filter(key => variables[key].type === 'passage')
+                    .find(key => {
                     var _a, _b;
                     const passage = variables[key];
-                    return passage.type === 'passage' && passage.between.includes(userLocation) &&
+                    return [passage.in, passage.out].includes(userLocation) &&
                         (((_a = passage.synonyms) === null || _a === void 0 ? void 0 : _a.includes('stairs')) || ((_b = passage.synonyms) === null || _b === void 0 ? void 0 : _b.includes('ladder')));
                 });
                 if (!passageName) {
@@ -137,13 +105,32 @@ const actions = [
     },
     {
         input: /(exit|leave|walk out of|get out( of)?|step outside( of)?)((\s+the)?\s+(room|mansion))?/,
-        execute: (gameDefinition, userId, input) => {
+        execute: (gameDefinition, userId, _) => {
             const { variables } = gameDefinition;
             const userLocation = variables[userId].location;
-            passThroughPassage(gameDefinition, exitRoomDoor[userLocation], userId);
+            const outside = Object
+                .keys(variables)
+                .find(key => variables[key].type === 'passage' && variables[key].in === userLocation);
+            if (!outside) {
+                logError(gameDefinition, `Room with no exit: ${userLocation}`);
+                print(gameDefinition, 'no item in here', 'exit');
+                return;
+            }
+            passThroughPassage(gameDefinition, outside, userId);
         }
     }
 ];
+function getPassageName(variables, from, to) {
+    return Object
+        .keys(variables)
+        .filter(key => variables[key].type === 'passage')
+        .find(key => {
+        const passage = variables[key];
+        const between = [passage.in, passage.out];
+        return between.includes(from) &&
+            between.includes(to);
+    });
+}
 function findItem(gameDefinition, userId, reference) {
     if (!reference) {
         print(gameDefinition, 'destination-unknown');
@@ -173,7 +160,7 @@ function passThroughPassage(gameDefinition, passageName, userId) {
         case undefined:
         case 'opened':
             const user = variables[userId];
-            const destination = passage.between.find(x => x !== userLocation) || userLocation;
+            const destination = passage.in === userLocation ? passage.out : passage.in;
             const location = variables[destination];
             variables[userId] = Object.assign(Object.assign({}, user), { location: destination });
             if (destination !== 'outside') {

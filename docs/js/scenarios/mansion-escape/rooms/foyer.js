@@ -1,6 +1,17 @@
 import addAchievement from '../../../default/add-achievement.js';
 import print from '../../../default/print.js';
 const foyer = {
+    variables: {
+        'foyer': { type: 'room' },
+        'entrance door': {
+            type: 'passage',
+            in: 'foyer',
+            out: 'outside',
+            state: 'locked',
+            allowedStates: ['locked', 'closed', 'opened'],
+            synonyms: ['front door', 'main door', 'mansion door'],
+        },
+    },
     actions: [
         {
             input: /\bunlock main door using master key\b/,
@@ -18,16 +29,6 @@ const foyer = {
             },
         },
     ],
-    variables: {
-        'foyer': { type: 'room' },
-        'entrance door': {
-            state: 'locked',
-            allowedStates: ['locked', 'closed', 'opened'],
-            type: 'passage',
-            synonyms: ['front door', 'main door', 'mansion door'],
-            between: ['foyer', 'outside'],
-        },
-    },
     strings: {
         foyer: (_) => `The grand entrance to the mansion with a grand archway to the hallway, a chandelier, and a large rug.
         A coat stand and an empty umbrella holder are by the door. The entrance door is what stands between you and freedom.

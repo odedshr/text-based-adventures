@@ -3,6 +3,29 @@ import addToInventory from '../../../default/add-to-inventory.js';
 import print from "../../../default/print.js";
 const returnIfFlashlightOn = (variables, output) => variables.flashlight && variables.flashlight.state === 'on' ? output : `The room is utter darkness. You can't see anything.`;
 const attic = {
+    variables: {
+        'attic': {
+            type: 'room'
+        },
+        'attic ladder': {
+            type: 'passage',
+            in: 'attic',
+            out: 'hallway',
+            synonyms: ['ladder'],
+        },
+        'boxes': {
+            type: 'item',
+            location: 'attic',
+            canContain: 5,
+            canBeHeld: false
+        },
+        'forensic kit': {
+            type: 'item',
+            location: 'boxes',
+            state: 'no fingerprints',
+            canBeHeld: true
+        }
+    },
     actions: [
         {
             input: /\b(?:retrieve|take\s*out|pull\s*out|remove|grab|get|pick\s*up)\s(?:the\s)?(?:forensic\s)?kit\s(?:out\s)?(?:of\s)?(?:the\s)?(?:box|boxes)\b/,
@@ -30,28 +53,6 @@ const attic = {
             }
         }
     ],
-    variables: {
-        'attic': {
-            type: 'room'
-        },
-        'attic ladder': {
-            type: 'passage',
-            between: ['hallway', 'attic'],
-            synonyms: ['ladder'],
-        },
-        'boxes': {
-            type: 'item',
-            location: 'attic',
-            canContain: 5,
-            canBeHeld: false
-        },
-        'forensic kit': {
-            type: 'item',
-            location: 'boxes',
-            state: 'no fingerprints',
-            canBeHeld: true
-        }
-    },
     strings: {
         attic: (variables) => returnIfFlashlightOn(variables, 'A dusty, dimly lit space filled with old trunks, forgotten furniture, and cobwebs. The air smells of age and memories.'),
         'attic ladder': 'A retractable wooden ladder hidden in the ceiling. When pulled down, it creaks ominously, allowing access to the dusty attic above.',

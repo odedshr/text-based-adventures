@@ -1,12 +1,36 @@
 import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
-import { ItemVariable, GameDefinition, RoomVariable, PassageVariable, Variables, PuzzlePiece } from '../../../types.js';
+import { ItemVariable, GameDefinition, Variables, PuzzlePiece } from '../../../types.js';
 import print from "../../../default/print.js";
 
 const returnIfFlashlightOn = (variables:Variables, output:string) =>
     variables.flashlight && (variables.flashlight as ItemVariable).state === 'on' ? output : `The room is utter darkness. You can't see anything.`
 
 const attic:PuzzlePiece = {
+    variables: {
+        'attic': {
+            type: 'room'
+        },
+        'attic ladder': {
+            type: 'passage',
+            in: 'attic',
+            out: 'hallway',
+            synonyms: ['ladder'],
+        },
+        'boxes': {
+            type: 'item',
+            location: 'attic',
+            canContain: 5,
+            canBeHeld: false
+        },
+        'forensic kit': {
+            type: 'item',
+            location: 'boxes',
+            state: 'no fingerprints',
+            canBeHeld: true
+        }
+    },
+
     actions: [
         {
             input: /\b(?:retrieve|take\s*out|pull\s*out|remove|grab|get|pick\s*up)\s(?:the\s)?(?:forensic\s)?kit\s(?:out\s)?(?:of\s)?(?:the\s)?(?:box|boxes)\b/,
@@ -37,29 +61,6 @@ const attic:PuzzlePiece = {
             }
         }
     ],
-
-    variables: {
-        'attic': {
-            type: 'room'
-        },
-        'attic ladder': {
-            type: 'passage',
-            between: ['hallway', 'attic'],
-            synonyms: ['ladder'],
-        },
-        'boxes': {
-            type: 'item',
-            location: 'attic',
-            canContain: 5,
-            canBeHeld: false
-        },
-        'forensic kit': {
-            type: 'item',
-            location: 'boxes',
-            state: 'no fingerprints',
-            canBeHeld: true
-        }
-    },
 
     strings: {
         attic: (variables:Variables) => returnIfFlashlightOn(variables, 

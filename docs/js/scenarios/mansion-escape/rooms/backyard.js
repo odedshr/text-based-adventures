@@ -2,6 +2,33 @@ import addAchievement from '../../../default/add-achievement.js';
 import addToInventory from '../../../default/add-to-inventory.js';
 import print from "../../../default/print.js";
 const backyard = {
+    variables: {
+        'backyard': { type: 'room' },
+        'glass door': {
+            type: 'passage',
+            in: 'conservatory',
+            out: 'backyard',
+            allowedStates: ['opened', 'closed'],
+            state: 'opened',
+        },
+        dog: {
+            type: 'item',
+            location: 'backyard',
+            state: 'hostile'
+        },
+        pool: {
+            type: 'item',
+            location: 'backyard',
+            canContain: 'key',
+            state: 'full'
+        },
+        key: {
+            type: 'item',
+            location: 'pool',
+            canBeHeld: true,
+            synonyms: ['master key']
+        }
+    },
     actions: [
         {
             input: /\b(?:feed|give|offer)\s*(?:the\s*)?(((?:pupcake|cake|treat)\s*(?:to\s*(?:the\s*)?(?:dog|puppy))|((?:dog|puppy)\s+with\s*(?:the\s*)?(?:pupcake|cake|treat))))\b/,
@@ -29,6 +56,15 @@ const backyard = {
             }
         },
         {
+            input: /^(?:call|pet|feed|walk|play(?: with)?|scratch|train|teach|command|give (?:a )?(?:treat|food)|cuddle|hug|brush|groom|bathe|wash|talk to|comfort|pick up|carry|chase|throw (?:a )?(?:ball|stick)|run with|sit with|rub|pat|bond with|observe|reward|discipline|scold|love|snuggle)(.*)\s*(?:the\s*)?(?:dog|puppy|rottweiler)$/,
+            conditions: (_, userId) => [
+                { item: userId, property: 'location', value: 'backyard', textId: 'location-fail:user' }
+            ],
+            execute: (gameDefinition, userId, input) => {
+                print(gameDefinition, 'dog not friendly');
+            }
+        },
+        {
             input: /\b(?:pick\s*up|fetch|grab|retrieve|get|take|collect)\s*(?:the\s*)?(?:key|keys)\s*(?:from\s*(?:the\s*)?(?:bottom|depths|floor)\s*of\s*(?:the\s*)?(?:pool|swimming\s*pool|water)|from\s*(?:the\s*)?(?:pool|swimming\s*pool))?\b/,
             conditions: (_, userId) => [
                 { item: userId, property: 'location', value: 'backyard', textId: 'location-fail:user' },
@@ -43,32 +79,6 @@ const backyard = {
             }
         }
     ],
-    variables: {
-        'backyard': { type: 'room' },
-        'glass door': {
-            type: 'passage',
-            between: ['conservatory', 'backyard'],
-            allowedStates: ['opened', 'closed'],
-            state: 'opened',
-        },
-        dog: {
-            type: 'item',
-            location: 'backyard',
-            state: 'hostile'
-        },
-        pool: {
-            type: 'item',
-            location: 'backyard',
-            canContain: 'key',
-            state: 'full'
-        },
-        key: {
-            type: 'item',
-            location: 'pool',
-            canBeHeld: true,
-            synonyms: ['master key']
-        }
-    },
     strings: {
         backyard(variables) {
             const isFull = variables.pool.state == 'full';
@@ -91,6 +101,7 @@ const backyard = {
                 `It's a rottweiler in the size of a small horse. It's growling at you in way that means nothing but death.`;
         },
         key: `It's a key to door. By the looks of it you can guess it's big heavy old door.`,
+        'dog not friendly': `The dog doesn't look friendly at all. You'd better not try to approach it.`,
         'dog too hostile': 'The dog growls at you when you try to approach the pool. You dare not step any further.',
         'fed dog': `The dog ate the pupcake in a single bite. It doesn't look any less hostile though.`,
         'drugged dog': 'Finally the dogs comes down and heads to sleep in its kennel.'

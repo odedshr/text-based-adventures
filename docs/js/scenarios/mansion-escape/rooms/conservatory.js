@@ -1,6 +1,22 @@
 import print from "../../../default/print.js";
 import addAchievement from '../../../default/add-achievement.js';
 const conservatory = {
+    variables: {
+        'conservatory': { type: 'room' },
+        'back door': {
+            type: 'passage',
+            in: 'conservatory',
+            out: 'living room',
+            allowedStates: ['opened'],
+            state: 'opened',
+        },
+        statue: {
+            type: 'item',
+            location: 'conservatory',
+            synonyms: ['statue', 'plaque', 'statue plaque', 'plaque on statue'],
+            state: 'unread'
+        }
+    },
     actions: [
         {
             input: /\b(?:read|examine|inspect|check|look\s*at|study|view|scan|peruse)\s*(?:the\s*)?(?:statue|statue\s*plaque|plaque\s*on\s*the\s*statue|statue\s*inscription|plaque)\b/,
@@ -14,21 +30,6 @@ const conservatory = {
             }
         }
     ],
-    variables: {
-        'conservatory': { type: 'room' },
-        'back door': {
-            type: 'passage',
-            between: ['living room', 'conservatory'],
-            allowedStates: ['opened'],
-            state: 'opened',
-        },
-        statue: {
-            type: 'item',
-            location: 'conservatory',
-            synonyms: ['statue', 'plaque', 'statue plaque', 'plaque on statue'],
-            state: 'unread'
-        }
-    },
     strings: {
         conservatory: `Glass walls offer a panoramic view of the surrounding garden and yard.
         The room is filled with lush greenery and a big statue in the center.`,

@@ -23,6 +23,24 @@ const actions:Action[] = [
         }
     },
     {
+        input: /\b(push|tug|pull|lift|move)\b/,
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            print(gameDefinition, 'not budge', input);      
+        }
+    },
+    {
+        input: /\b(look under|look in)\b/,
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            print(gameDefinition, 'nothing special', input);      
+        }
+    },
+    {
+        input: /\b(look for|search for)\s+(.+)\b/,
+        execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
+            print(gameDefinition, 'item not found', input.match(/\b(look for|search for)\s+(.+)\b/)?.pop());      
+        }
+    },
+    {
         input: inspectItemRegExp,
         execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
             const { variables, strings, references } = gameDefinition;
@@ -111,6 +129,9 @@ const strings = {
      unreadable: `I'm not sure what you mean by 'item'.`,
      'future support for it': `Future version will support referring to the last item you picked up. For now, you need to specify the item.`,
      'action not safe': `It's probably not a good idea to do that.`,
+     'not budge': `It doesn't budge.`,
+     'nothing special': `You don't see anything special.`,
+     'item not found': `You look for item but can't find it.`,
 }
 
 export { 

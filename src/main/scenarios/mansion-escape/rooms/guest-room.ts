@@ -4,6 +4,32 @@ import isValidAction from '../../../default/is-valid-action.js';
 import print from "../../../default/print.js";
 
 const guestRoom:PuzzlePiece = {
+    variables: {
+        'guest room': {
+            type: 'room',
+            state: 'dark',
+            synonyms: ['bedroom']
+        },
+        'bedroom door': {
+            type: 'passage',
+            in: 'guest room',
+            out: 'hallway',
+            allowedStates: ['closed', 'opened'],
+            state: 'closed',
+        },
+        'light switch': {
+            type: 'item',
+            location: 'guest room',
+            state: 'hidden'
+        },
+        bag: {
+            type: 'item',
+            location: 'guest room',
+            canBeHeld: true,
+            canContain: 100,
+            synonyms: ['backpack']
+        }
+    },
     actions: [
         {
             input: /\b(?:look\s*for|search\s*for|find|locate|check\s*for|seek\s*out)\s*(?:the\s*)?(?:light\s*switch|switch|light\s*control|lighting\s*switch)\b/,
@@ -73,31 +99,6 @@ const guestRoom:PuzzlePiece = {
             variables['guest room'] = { ... variables['guest room'], state: 'dark' as string } as RoomVariable;
         }}
     ],
-    variables: {
-        'guest room': {
-            type: 'room',
-            state: 'dark',
-            synonyms: ['bedroom']
-        },
-        'bedroom door': {
-            type: 'passage',
-            between: ['hallway', 'guest room'],
-            allowedStates: ['closed', 'opened'],
-            state: 'closed',
-        },
-        'light switch': {
-            type: 'item',
-            location: 'guest room',
-            state: 'hidden'
-        },
-        bag: {
-            type: 'item',
-            location: 'guest room',
-            canBeHeld: true,
-            canContain: 100,
-            synonyms: ['backpack']
-        }
-    },
     strings: {
         'guest room': (variables:Variables) => {
             const room = variables['guest room'] as RoomVariable;

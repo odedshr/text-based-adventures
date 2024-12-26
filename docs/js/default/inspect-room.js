@@ -25,13 +25,16 @@ function listRoomPassages(gameDefinition, roomName) {
     const { variables } = gameDefinition;
     const passages = Object.keys(variables).filter(key => {
         const passage = variables[key];
-        return passage.type === 'passage' && passage.between.includes(roomName) && passage.state !== 'hidden';
+        return passage.type === 'passage' && getPassageSides(passage).includes(roomName) && passage.state !== 'hidden';
     }).map(doorName => {
         const passage = variables[doorName];
-        const otherRoomName = passage.between.find(x => x !== roomName);
+        const otherRoomName = passage.in === roomName ? passage.out : passage.in;
         return doesKnowWhatsOnOtherSide(passage) ? `a ${doorName} leading to the ${otherRoomName}` : `a ${doorName}`;
     });
     return passages.length > 1 ? passages.slice(0, -1).join(', ') + ' and ' + passages.slice(-1) : passages[0];
+}
+function getPassageSides(passage) {
+    return [passage.in, passage.out];
 }
 function doesKnowWhatsOnOtherSide(passage) {
     return !passage.state || passage.state === 'opened' || passage.passed === true;

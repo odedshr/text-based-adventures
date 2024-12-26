@@ -1,16 +1,17 @@
 import { PuzzlePiece } from '../../../types.js';
 
 const hallway:PuzzlePiece = {
-    actions: [],
     variables: {
         'hallway': { type: 'room' },
         'grand archway': {
             type: 'passage',
-            between: ['foyer', 'hallway'],
+            in: 'hallway',
+            out: 'foyer',
             allowedStates: ['opened'],
             state: 'opened',
         },
     },
+    actions: [],
     strings: {
         hallway: `A long corridor lined with portraits and elegant sconces.
         On one side of the hallway, a grand archway leads to the foyer.

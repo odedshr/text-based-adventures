@@ -4,7 +4,8 @@ const bathroom = {
         'bathroom': { type: 'room' },
         'washroom entry': {
             type: 'passage',
-            between: ['hallway', 'bathroom'],
+            in: 'bathroom',
+            out: 'hallway',
             allowedStates: ['opened'],
             state: 'opened',
         },

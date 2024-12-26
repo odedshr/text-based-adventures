@@ -22,7 +22,7 @@ const actions:Action[] = [
             const item = findByReference(gameDefinition, userId, itemRef);
             if (!item) {
                 logError(gameDefinition, input);
-                print(gameDefinition, 'not sure what is item', itemRef);
+                print(gameDefinition, 'picking item not helpful', itemRef);
                 return;
             }
 
@@ -49,10 +49,17 @@ const actions:Action[] = [
     {
     input: pickUpItem,
     execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
-        const item = findByReference(gameDefinition, userId, input.match(pickUpItem)?.pop());
-        if (!item) {
+        const match = input.match(pickUpItem)?.pop();
+        if (!match) {
             logError(gameDefinition, input);
             print(gameDefinition, 'not sure what is item');
+            return;
+        }
+
+        const item = findByReference(gameDefinition, userId, match);
+        if (!item) {
+            logError(gameDefinition, input);
+            print(gameDefinition, 'picking item not helpful', match);
             return;
         }
 
@@ -75,7 +82,8 @@ const strings = {
     'you-picked-up-the-item': 'You picked up the item.',
     'did you mean pick up': 'Did you mean "pick up"?',
     'item not in location': 'The item is not in the location.',
-    'need to be more specific': 'You need to be more specific.'
+    'need to be more specific': 'You need to be more specific.',
+    'picking item not helpful': `Picking up item will not help you (trust me).`
 };
 
 

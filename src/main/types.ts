@@ -3,7 +3,7 @@ export type Attributes = { [key: string]: string };
 
 export type RoomVariable =  { type: "room", state?: string | Attributes, synonyms?: string[], visited?: boolean };
 export type PassageState = "locked" | "hidden" | "opened" | "closed";
-export type PassageVariable =  { type: "passage", between: string[], state?:PassageState, allowedStates?:PassageState[], passed?: boolean, synonyms?: string[] };
+export type PassageVariable =  { type: "passage", in: string, out: string, state?:PassageState, allowedStates?:PassageState[], passed?: boolean, synonyms?: string[] };
 export type PlayerVariable =  { type: "player", location: string, canContain?: number | string };
 export type ItemVariable =  { type: "item", canContain?: number | string, canBeHeld?: boolean, state?: string | Attributes, location: string, touched?: boolean, synonyms?: string[] };
 export type DataVariable =  { type: "data", value: string | number | any[], state?: 'decreasing' | 'increasing' | 'static' };

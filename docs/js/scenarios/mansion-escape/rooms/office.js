@@ -2,6 +2,77 @@ import addToInventory from '../../../default/add-to-inventory.js';
 import addAchievement from '../../../default/add-achievement.js';
 import print from "../../../default/print.js";
 const office = {
+    variables: {
+        'office': {
+            type: 'room',
+            synonyms: ['room', 'home-office', 'work den'],
+            visited: true
+        },
+        'blue door': {
+            type: 'passage',
+            in: 'office',
+            out: 'hallway',
+            allowedStates: ['closed', 'opened'],
+            state: 'closed',
+            synonyms: ['door']
+        },
+        portrait: {
+            type: 'item',
+            state: {
+                placement: 'wall', // wall/floor
+                identity: 'unknown', // unknown/cartwright
+            },
+            location: 'office',
+            synonyms: ['portrait', 'picture', 'painting', 'paintings']
+        },
+        bin: {
+            type: 'item',
+            location: 'office',
+            canBeHeld: true,
+            canContain: 3,
+            synonyms: ['trash bin', 'trash', 'paper bin']
+        },
+        newspaper: {
+            type: 'item',
+            location: 'bin',
+            canBeHeld: true,
+            synonyms: [
+                'crumpled newspaper',
+                'wrinkled newspaper',
+                'folded newspaper',
+                'crumpled paper'
+            ]
+        },
+        vase: {
+            type: 'item',
+            location: 'office',
+            canBeHeld: true,
+            state: 'broken',
+            synonyms: [
+                'pieces of vase', 'pieces', 'broken vase pieces', 'vase pieces', 'broken vase', 'shattered vase'
+            ]
+        },
+        safe: {
+            type: 'item',
+            location: 'office',
+            state: {
+                locked: 'yes',
+                fingerprints: 'no'
+            },
+            canContain: 'ledger',
+            synonyms: ['vault']
+        },
+        ledger: {
+            type: 'item',
+            location: 'safe',
+            canBeHeld: true,
+        },
+        journal: {
+            type: 'item',
+            location: 'office',
+            synonyms: ['diary', 'calendar', 'leather journal']
+        }
+    },
     actions: [
         {
             input: /^look in (?:(trash|recycle|paper) )?bin$/,
@@ -206,76 +277,6 @@ const office = {
             }
         }
     ],
-    variables: {
-        'office': {
-            type: 'room',
-            synonyms: ['room', 'home-office', 'work den'],
-            visited: true
-        },
-        'blue door': {
-            type: 'passage',
-            between: ['hallway', 'office'],
-            allowedStates: ['closed', 'opened'],
-            state: 'closed',
-            synonyms: ['door']
-        },
-        portrait: {
-            type: 'item',
-            state: {
-                placement: 'wall', // wall/floor
-                identity: 'unknown', // unknown/cartwright
-            },
-            location: 'office',
-            synonyms: ['portrait', 'picture', 'painting', 'paintings']
-        },
-        bin: {
-            type: 'item',
-            location: 'office',
-            canBeHeld: true,
-            canContain: 3,
-            synonyms: ['trash bin', 'trash', 'paper bin']
-        },
-        newspaper: {
-            type: 'item',
-            location: 'bin',
-            canBeHeld: true,
-            synonyms: [
-                'crumpled newspaper',
-                'wrinkled newspaper',
-                'folded newspaper',
-                'crumpled paper'
-            ]
-        },
-        vase: {
-            type: 'item',
-            location: 'office',
-            canBeHeld: true,
-            state: 'broken',
-            synonyms: [
-                'pieces of vase', 'pieces', 'broken vase pieces', 'vase pieces', 'broken vase', 'shattered vase'
-            ]
-        },
-        safe: {
-            type: 'item',
-            location: 'office',
-            state: {
-                locked: 'yes',
-                fingerprints: 'no'
-            },
-            canContain: 'ledger',
-            synonyms: ['vault']
-        },
-        ledger: {
-            type: 'item',
-            location: 'safe',
-            canBeHeld: true,
-        },
-        journal: {
-            type: 'item',
-            location: 'office',
-            synonyms: ['diary', 'calendar', 'leather journal']
-        }
-    },
     strings: {
         office(variables) {
             const portrait = variables.portrait;

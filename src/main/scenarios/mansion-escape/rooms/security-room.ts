@@ -3,6 +3,31 @@ import print from '../../../default/print.js';
 import addAchievement from '../../../default/add-achievement.js';
 
 const securityRoom:PuzzlePiece = {
+    variables: {
+        'security room': { type: 'room' },
+        'vault door': {
+            type: 'passage',
+            in: 'security room',
+            out: 'basement',
+            allowedStates: ['locked', 'opened'],
+            state: 'locked',
+        },
+        cctv: {
+            type: 'item',
+            location: 'security room',
+            state: {
+                watched: 'no',
+                scrubbed: 'no',
+            },
+            synonyms: ['recording', 'surveillance tapes', 'footage', 'video']
+        },
+        flashlight: {
+            type: 'item',
+            location: 'security room',
+            canBeHeld: true,
+            state: 'off'
+        },
+    },
     actions: [
         {
             input: /\b(?:watch|view|check|see|look\s*at|access|examine|check)\s*(?:the\s*)?(?:cctv|security|camera)\s*(?:recording|footage|video|feed)\b/,
@@ -87,30 +112,6 @@ const securityRoom:PuzzlePiece = {
             },
         }
     ],
-    variables: {
-        'security room': { type: 'room' },
-        'vault door': {
-            type: 'passage',
-            between: ['basement', 'security room'],
-            allowedStates: ['locked', 'opened'],
-            state: 'locked',
-        },
-        cctv: {
-            type: 'item',
-            location: 'security room',
-            state: {
-                watched: 'no',
-                scrubbed: 'no',
-            },
-            synonyms: ['recording', 'surveillance tapes', 'footage', 'video']
-        },
-        flashlight: {
-            type: 'item',
-            location: 'security room',
-            canBeHeld: true,
-            state: 'off'
-        },
-    },
     strings: {
         'security room' (variables:Variables) {
             const flashlightPresent = (variables.flashlight as ItemVariable).location === 'security room';
