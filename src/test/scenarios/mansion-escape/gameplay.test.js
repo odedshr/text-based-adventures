@@ -145,6 +145,9 @@ describe('Game-play', () => {
         await processMethod('go to library', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('A grand library filled with tall bookshelves, a rolling ladder, and comfortable reading chairs.');
         
+        await processMethod('climb the ladder', gameDefinition, userId);
+        expect(gameDefinition.variables.console.value).toBe(`You can't imagine how to climb that.`);
+
         await processMethod('go to office', gameDefinition, userId);
         expect(gameDefinition.variables.console.value).toBe('You entered the office.');
 

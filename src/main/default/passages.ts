@@ -79,32 +79,35 @@ const actions:Action[] = [
     {
         input: climbCommands,
         execute: (gameDefinition:GameDefinition, userId:string, input:string) => {
-            const reference = input.match(climbCommands)?.pop()
-            if (!reference) { return false; }
+            const reference = input.match(climbCommands)?.pop();
+            if (!reference) { return; }
 
+            const { variables } = gameDefinition;
+            const userLocation = (variables[userId] as PlayerVariable).location;
+            
             let passageName = findByReference(gameDefinition, userId, reference);           
             if (!passageName) { 
-                const { variables } = gameDefinition;
-
                 // sentence might have been 'climb up' without reference. we'll try to guess.
                 if (['stairs', 'ladder'].includes(reference)) {
                     // sentence was very explicit about something that is not in this room
                     print(gameDefinition, 'no item in here', reference);
-                    return true;
+                    return;
                 }
                 
-                const userLocation = (variables[userId] as PlayerVariable).location;
                 passageName = Object.keys(variables)
                     .filter(key => variables[key].type === 'passage')
                     .find(key => {
-                    const passage = variables[key] as PassageVariable;
-                    return [passage.in, passage.out].includes(userLocation) &&
-                        (passage.synonyms?.includes('stairs') || passage.synonyms?.includes('ladder'));
+                    const synonyms = (variables[key] as PassageVariable).synonyms || [];
+                    return isUserNextToPassage(variables, userId, key) &&
+                        (synonyms.includes('stairs') || synonyms.includes('ladder'));
                 });
 
                 if (!passageName) {
-                    return false; 
+                    return; 
                 }
+            } else if (!isUserNextToPassage(variables, userId, passageName)) {
+                print(gameDefinition, 'cant climb', passageName);
+                return;
             }
 
             return passThroughPassage(gameDefinition, passageName, userId );
@@ -129,6 +132,12 @@ const actions:Action[] = [
         }
     }
 ];
+
+function isUserNextToPassage(variables:Variables, userId:string, passageName:string):boolean {
+    const passage = variables[passageName] as PassageVariable;
+    const userLocation = (variables[userId] as PlayerVariable).location;
+    return [ passage.in, passage.out ].includes(userLocation);
+}
 
 function getPassageName(variables:Variables, from:string, to:string):string | undefined {
     return Object
@@ -245,7 +254,8 @@ const strings = {
     'how-to-get-there': `I don't know how to get from item to location`,
     'no item in here': `No item here!`,
     'door is locked': 'The door is locked.',
-    'door is not locked': 'The door is not locked.'
+    'door is not locked': 'The door is not locked.',
+    'cant climb': `You can't imagine how to climb that.`,
 }
 
 export {
